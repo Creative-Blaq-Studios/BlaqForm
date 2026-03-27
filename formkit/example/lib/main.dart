@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:formkit/formkit.dart';
 
+import 'examples/builder_signup_form.dart';
 import 'examples/checkout_form.dart';
 import 'examples/signup_form.dart';
+import 'examples/wizard_onboarding.dart';
 
 void main() {
   // Enable FormKit logging so you can see lifecycle events in the console.
@@ -74,6 +76,36 @@ class ExampleListScreen extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               MaterialPageRoute(builder: (_) => const CheckoutFormExample()),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // -- Builder signup form example card --
+          _ExampleCard(
+            icon: Icons.bolt_outlined,
+            title: 'Signup (FkFormBuilder)',
+            description:
+                'The same signup form rewritten with FkFormBuilder — zero '
+                'StatefulWidget, zero dispose, ~50 lines of declarative config.',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const BuilderSignupFormExample()),
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          // -- Wizard onboarding example card --
+          _ExampleCard(
+            icon: Icons.linear_scale_outlined,
+            title: 'Onboarding (FkWizard)',
+            description:
+                'A three-step onboarding wizard with per-step validation, '
+                'progress indicator, and a review/confirm screen.',
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (_) => const WizardOnboardingExample()),
             ),
           ),
         ],
