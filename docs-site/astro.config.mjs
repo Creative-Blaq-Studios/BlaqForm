@@ -36,6 +36,7 @@ export default defineConfig({
           items: [
             { label: 'All Validators', link: '/reference/validators/' },
             { label: 'All Field Types', link: '/reference/fields/' },
+            { label: 'Field Key Constants', link: '/reference/field-keys/' },
           ],
         },
       ],
