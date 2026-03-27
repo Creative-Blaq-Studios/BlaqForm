@@ -1,40 +1,40 @@
 ---
 title: Introduction
-description: What FormKit is and why you'd use it.
+description: What BlaqForm is and why you'd use it.
 ---
 
-FormKit is a composable, extensible Flutter forms package. It provides:
+BlaqForm is a composable, extensible Flutter forms package. It provides:
 
 - **20+ field widgets** — text, password, dropdown, date, phone, currency, OTP, signature, rating, chips, sliders, and more
 - **Composable validators** — chain with `.and()`, `.or()`, `.when()`. Async support with debounce.
-- **Zero-boilerplate mode** — `FkFormBuilder` auto-manages controllers. No `initState`, no `dispose`.
-- **Multi-step wizard** — `FkWizard` with per-step validation and progress indicator
+- **Zero-boilerplate mode** — `BfFormBuilder` auto-manages controllers. No `initState`, no `dispose`.
+- **Multi-step wizard** — `BfWizard` with per-step validation and progress indicator
 - **State-management agnostic** — `ChangeNotifier`-based. Works with setState, Riverpod, Bloc, or anything.
 - **Zero external dependencies** — only Flutter SDK
 
 ## Architecture
 
-FormKit is organized into 5 layers:
+BlaqForm is organized into 5 layers:
 
 | Layer | What it does | Key types |
 |-------|-------------|-----------|
-| **State** | Per-field and per-form state management | `FkFieldController<T>`, `FkFormController` |
-| **Validation** | Composable sync + async validators | `FkValidator<T>`, `Fk.required()`, `Fk.email()` |
-| **Field** | Pre-built field widgets with auto-registration | `FkTextField`, `FkDropdownField<T>`, `FkDateField`, ... |
-| **Consumer** | Form shell, layout, submit button | `FkForm`, `FkFormSection`, `FkSubmitButton` |
-| **Theme** | ThemeExtension for consistent styling | `FkFormTheme` |
+| **State** | Per-field and per-form state management | `BfFieldController<T>`, `BfFormController` |
+| **Validation** | Composable sync + async validators | `BfValidator<T>`, `Bf.required()`, `Bf.email()` |
+| **Field** | Pre-built field widgets with auto-registration | `BfTextField`, `BfDropdownField<T>`, `BfDateField`, ... |
+| **Consumer** | Form shell, layout, submit button | `BfForm`, `BfFormSection`, `BfSubmitButton` |
+| **Theme** | ThemeExtension for consistent styling | `BfFormTheme` |
 
-Plus **Builder** (`FkFormBuilder`), **Wizard** (`FkWizard`), **Indicators** (`FkFormProgress`, `FkFieldStatus`), **Persistence** (`FkFormPersistence`), and **Extensions** (`toJson()`, `dirtyValues()`, `toPng()`).
+Plus **Builder** (`BfFormBuilder`), **Wizard** (`BfWizard`), **Indicators** (`BfFormProgress`, `BfFieldStatus`), **Persistence** (`BfFormPersistence`), and **Extensions** (`toJson()`, `dirtyValues()`, `toPng()`).
 
 ## Two Ways to Build Forms
 
 ### 1. Declarative (recommended)
 
 ```dart
-FkFormBuilder(
+BfFormBuilder(
   fields: {
-    'email': FkFieldConfig.email(validators: [Fk.required(), Fk.email()]),
-    'password': FkFieldConfig.password(validators: [Fk.required(), Fk.minLength(8)]),
+    'email': BfFieldConfig.email(validators: [Bf.required(), Bf.email()]),
+    'password': BfFieldConfig.password(validators: [Bf.required(), Bf.minLength(8)]),
   },
   onSubmit: (values) async => await api.login(values),
   builder: (context, form) => Column(children: [
@@ -49,8 +49,8 @@ FkFormBuilder(
 
 ```dart
 class _MyFormState extends State<MyForm> {
-  final form = FkFormController();
-  final email = FkFieldController<String>(validators: [Fk.required(), Fk.email()]);
+  final form = BfFormController();
+  final email = BfFieldController<String>(validators: [Bf.required(), Bf.email()]);
 
   @override
   void dispose() {
@@ -61,11 +61,11 @@ class _MyFormState extends State<MyForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FkForm(
+    return BfForm(
       controller: form,
       child: Column(children: [
-        FkTextField(name: 'email', controller: email),
-        FkSubmitButton(onSubmit: (ctrl) => ctrl.submit((v) async => ...)),
+        BfTextField(name: 'email', controller: email),
+        BfSubmitButton(onSubmit: (ctrl) => ctrl.submit((v) async => ...)),
       ]),
     );
   }

@@ -1,22 +1,22 @@
 ---
 title: Wizard (Multi-Step Forms)
-description: Build multi-step form flows with FkWizard, step-scoped validation, and a progress indicator.
+description: Build multi-step form flows with BfWizard, step-scoped validation, and a progress indicator.
 ---
 
-`FkWizard` extends the declarative approach of [FkFormBuilder](/guides/form-builder) with step-based navigation. Each step declares which fields it owns, and validation runs only on the current step's fields before advancing.
+`BfWizard` extends the declarative approach of [BfFormBuilder](/guides/form-builder) with step-based navigation. Each step declares which fields it owns, and validation runs only on the current step's fields before advancing.
 
 ## Core concepts
 
-- **FkWizardStep** -- an immutable config that declares a step's `title` and `fieldNames`.
-- **FkWizardController** -- a `ChangeNotifier` managing the current step index and navigation.
-- **FkWizardProgress** -- a visual stepper indicator that rebuilds automatically.
+- **BfWizardStep** -- an immutable config that declares a step's `title` and `fieldNames`.
+- **BfWizardController** -- a `ChangeNotifier` managing the current step index and navigation.
+- **BfWizardProgress** -- a visual stepper indicator that rebuilds automatically.
 
-## FkWizardStep
+## BfWizardStep
 
 Each step maps to a subset of the fields declared in the `fields` map:
 
 ```dart
-FkWizardStep(
+BfWizardStep(
   title: 'Personal Info',
   fieldNames: ['firstName', 'lastName'],
   subtitle: 'Enter your details',  // optional
@@ -31,7 +31,7 @@ FkWizardStep(
 | `subtitle` | `String?` | Optional extra context text. |
 | `icon` | `IconData?` | Optional icon for the step. |
 
-## FkWizardController
+## BfWizardController
 
 The controller is a `ChangeNotifier` that widgets can listen to for rebuilds.
 
@@ -41,8 +41,8 @@ The controller is a `ChangeNotifier` that widgets can listen to for rebuilds.
 |---|---|---|
 | `currentStep` | `int` | Index of the active step. |
 | `stepCount` | `int` | Total number of steps. |
-| `currentStepConfig` | `FkWizardStep` | Config object for the current step. |
-| `steps` | `List<FkWizardStep>` | All step configs. |
+| `currentStepConfig` | `BfWizardStep` | Config object for the current step. |
+| `steps` | `List<BfWizardStep>` | All step configs. |
 | `canGoBack` | `bool` | `true` if not on the first step. |
 | `canGoNext` | `bool` | `true` if not on the last step. |
 | `isFirstStep` | `bool` | Whether the current step is first. |
@@ -56,14 +56,14 @@ The controller is a `ChangeNotifier` that widgets can listen to for rebuilds.
 | `goNext()` | `void` | Advance to the next step (no validation). |
 | `goBack()` | `void` | Return to the previous step. |
 | `goTo(int index)` | `void` | Jump to a specific step (clamped to valid range). |
-| `validateAndGoNext(FkFormController)` | `Future<bool>` | Validate current step's fields, advance only if all pass. Returns `true` on success. |
+| `validateAndGoNext(BfFormController)` | `Future<bool>` | Validate current step's fields, advance only if all pass. Returns `true` on success. |
 
-## FkWizardProgress widget
+## BfWizardProgress widget
 
 A visual progress bar that auto-rebuilds when the wizard step changes:
 
 ```dart
-FkWizardProgress(
+BfWizardProgress(
   controller: wizard,
   activeColor: Colors.blue,    // defaults to theme primary
   inactiveColor: Colors.grey,  // defaults to grey
@@ -76,17 +76,17 @@ FkWizardProgress(
 - The active step shows a filled circle with the step number.
 - Future steps show an outlined circle.
 
-## FkWizard widget
+## BfWizard widget
 
 The top-level widget that wires everything together:
 
 ```dart
-FkWizard(
-  fields: { /* FkFieldConfig map */ },
-  steps: [ /* FkWizardStep list */ ],
+BfWizard(
+  fields: { /* BfFieldConfig map */ },
+  steps: [ /* BfWizardStep list */ ],
   builder: (context, scope, wizard) => /* widget tree */,
   onComplete: (values) async => /* handle submission */,
-  autovalidateMode: FkAutovalidateMode.onUserInteraction,
+  autovalidateMode: BfAutovalidateMode.onUserInteraction,
   crossValidators: [],
 )
 ```
@@ -94,8 +94,8 @@ FkWizard(
 The `builder` callback receives three arguments:
 
 1. `BuildContext context` -- the widget's build context.
-2. `FkFormBuilderScope scope` -- the same fluent scope from `FkFormBuilder` for rendering fields.
-3. `FkWizardController wizard` -- for navigation and step queries.
+2. `BfFormBuilderScope scope` -- the same fluent scope from `BfFormBuilder` for rendering fields.
+3. `BfWizardController wizard` -- for navigation and step queries.
 
 ## Complete example: 3-step onboarding
 
@@ -109,28 +109,28 @@ class OnboardingWizard extends StatelessWidget {
       appBar: AppBar(title: const Text('Onboarding')),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: FkWizard(
+        child: BfWizard(
           fields: {
             // Step 1: Account
-            'email': FkFieldConfig<String>.email(
+            'email': BfFieldConfig<String>.email(
               label: 'Email',
-              validators: [Fk.required(), Fk.email()],
+              validators: [Bf.required(), Bf.email()],
             ),
-            'password': FkFieldConfig<String>.password(
+            'password': BfFieldConfig<String>.password(
               label: 'Password',
-              validators: [Fk.required(), Fk.minLength(8)],
+              validators: [Bf.required(), Bf.minLength(8)],
             ),
             // Step 2: Profile
-            'name': FkFieldConfig<String>.text(
+            'name': BfFieldConfig<String>.text(
               label: 'Full Name',
-              validators: [Fk.required()],
+              validators: [Bf.required()],
             ),
-            'birthday': FkFieldConfig<DateTime>.date(
+            'birthday': BfFieldConfig<DateTime>.date(
               label: 'Date of Birth',
-              validators: [Fk.required<DateTime>(), Fk.age(18)],
+              validators: [Bf.required<DateTime>(), Bf.age(18)],
             ),
             // Step 3: Preferences
-            'country': FkFieldConfig<String>.dropdown(
+            'country': BfFieldConfig<String>.dropdown(
               label: 'Country',
               options: ['US', 'UK', 'CA'],
               optionLabels: {
@@ -138,25 +138,25 @@ class OnboardingWizard extends StatelessWidget {
                 'UK': 'United Kingdom',
                 'CA': 'Canada',
               },
-              validators: [Fk.required()],
+              validators: [Bf.required()],
             ),
-            'newsletter': FkFieldConfig<bool>.checkbox(
+            'newsletter': BfFieldConfig<bool>.checkbox(
               initialValue: false,
               label: 'Subscribe to newsletter',
             ),
           },
           steps: [
-            FkWizardStep(
+            BfWizardStep(
               title: 'Account',
               fieldNames: ['email', 'password'],
               icon: Icons.lock,
             ),
-            FkWizardStep(
+            BfWizardStep(
               title: 'Profile',
               fieldNames: ['name', 'birthday'],
               icon: Icons.person,
             ),
-            FkWizardStep(
+            BfWizardStep(
               title: 'Preferences',
               fieldNames: ['country', 'newsletter'],
               icon: Icons.settings,
@@ -171,7 +171,7 @@ class OnboardingWizard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 // Progress indicator
-                FkWizardProgress(controller: wizard),
+                BfWizardProgress(controller: wizard),
                 const SizedBox(height: 32),
 
                 // Step content
@@ -208,7 +208,7 @@ class OnboardingWizard extends StatelessWidget {
     );
   }
 
-  Widget _buildStepContent(FkFormBuilderScope scope, FkWizardController wizard) {
+  Widget _buildStepContent(BfFormBuilderScope scope, BfWizardController wizard) {
     switch (wizard.currentStep) {
       case 0:
         return Column(children: [
@@ -239,4 +239,4 @@ class OnboardingWizard extends StatelessWidget {
 
 - [Form Builder](/guides/form-builder) -- the single-page equivalent
 - [Validation](/guides/validation) -- validators used in each step
-- [Indicators](/guides/indicators) -- FkFormProgress for overall completion tracking
+- [Indicators](/guides/indicators) -- BfFormProgress for overall completion tracking

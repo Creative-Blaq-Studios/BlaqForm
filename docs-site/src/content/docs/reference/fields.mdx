@@ -1,41 +1,43 @@
 ---
 title: Fields Reference
-description: Complete reference for all FormKit field widgets, their value types, and key properties.
+description: Complete reference for all BlaqForm field widgets, their value types, and key properties.
+tableOfContents:
+  maxDepth: 2
 ---
 
-Every field widget requires a `name` (used for form registration) and a typed `controller`. All fields auto-register with the nearest `FkForm` ancestor.
+Every field widget requires a `name` (used for form registration) and a typed `controller`. All fields auto-register with the nearest `BfForm` ancestor.
 
 ## Field widgets
 
 | Widget | Value Type | Key Props | Description |
 |---|---|---|---|
-| `FkTextField` | `String` | `obscureText`, `maxLines`, `minLines`, `keyboardType`, `textInputAction`, `inputFormatters`, `autofillHints`, `prefixIcon`, `suffixIcon`, `hintText`, `labelText`, `enabled`, `readOnly`, `decoration` | Standard text input. |
-| `FkTextField.password` | `String` | Same as `FkTextField` (auto-sets `obscureText: true`, `maxLines: 1`) | Password text input. |
-| `FkTextField.email` | `String` | Same as `FkTextField` (auto-sets `keyboardType: TextInputType.emailAddress`) | Email text input. |
-| `FkDropdownField<T>` | `T` | `items`, `itemBuilder`, `hintText`, `labelText`, `decoration`, `enabled`, `isExpanded` | Dropdown selector. |
-| `FkCheckboxField` | `bool` | `label`, `subtitle`, `enabled`, `tristate` | Single checkbox toggle. |
-| `FkSwitchField` | `bool` | `label`, `subtitle`, `enabled` | Material switch toggle. |
-| `FkCheckboxGroupField<T>` | `List<T>` | `options`, `labelBuilder`, `enabled` | Multi-select checkbox group. |
-| `FkRadioGroupField<T>` | `T` | `options`, `labelBuilder`, `enabled` | Single-select radio group. |
-| `FkDateField` | `DateTime` | `firstDate`, `lastDate`, `dateFormat`, `hintText`, `labelText`, `decoration`, `enabled` | Date picker dialog. |
-| `FkDateRangeField` | `DateTimeRange` | `firstDate`, `lastDate`, `hintText`, `labelText`, `decoration`, `enabled` | Date range picker dialog. |
-| `FkPhoneField` | `String` | `defaultCountryCode`, `countries`, `labelText`, `hintText`, `enabled` | Phone number with country code selector. |
-| `FkCurrencyField` | `double` | `symbol`, `decimalPlaces`, `thousandSeparator`, `decimalSeparator`, `labelText`, `hintText`, `decoration`, `enabled` | Locale-aware currency input. |
-| `FkOtpField` | `String` | `length`, `obscureText`, `boxWidth`, `boxHeight`, `spacing`, `autofocus`, `labelText`, `enabled` | Multi-box OTP/PIN input. |
-| `FkAutocompleteField<T>` | `T` | `optionsBuilder`, `displayStringForOption`, `debounce`, `optionBuilder`, `labelText`, `hintText`, `decoration`, `enabled` | Async search autocomplete. |
-| `FkRatingField` | `double` | `maxRating`, `allowHalfRating`, `size`, `color`, `unratedColor`, `labelText`, `enabled` | Star rating. |
-| `FkChipSelectField<T>` | `List<T>` | `options`, `labelBuilder`, `avatarBuilder`, `wrap`, `spacing`, `runSpacing`, `labelText`, `enabled` | Chip-based multi-select. |
-| `FkSignatureField` | `List<List<Offset>>` | `height`, `strokeColor`, `strokeWidth`, `backgroundColor`, `showClearButton`, `labelText`, `enabled` | Signature drawing pad. |
-| `FkSliderField` | `double` | `min`, `max`, `divisions`, `showValue`, `activeColor`, `inactiveColor`, `labelText`, `enabled` | Numeric slider. |
-| `FkRangeSliderField` | `RangeValues` | `min`, `max`, `divisions`, `showValues`, `activeColor`, `inactiveColor`, `labelText`, `enabled` | Numeric range slider. |
+| `BfTextField` | `String` | `obscureText`, `maxLines`, `minLines`, `keyboardType`, `textInputAction`, `inputFormatters`, `autofillHints`, `prefixIcon`, `suffixIcon`, `hintText`, `labelText`, `enabled`, `readOnly`, `decoration` | Standard text input. |
+| `BfTextField.password` | `String` | Same as `BfTextField` (auto-sets `obscureText: true`, `maxLines: 1`) | Password text input. |
+| `BfTextField.email` | `String` | Same as `BfTextField` (auto-sets `keyboardType: TextInputType.emailAddress`) | Email text input. |
+| `BfDropdownField<T>` | `T` | `items`, `itemBuilder`, `hintText`, `labelText`, `decoration`, `enabled`, `isExpanded` | Dropdown selector. |
+| `BfCheckboxField` | `bool` | `label`, `subtitle`, `enabled`, `tristate` | Single checkbox toggle. |
+| `BfSwitchField` | `bool` | `label`, `subtitle`, `enabled` | Material switch toggle. |
+| `BfCheckboxGroupField<T>` | `List<T>` | `options`, `labelBuilder`, `enabled` | Multi-select checkbox group. |
+| `BfRadioGroupField<T>` | `T` | `options`, `labelBuilder`, `enabled` | Single-select radio group. |
+| `BfDateField` | `DateTime` | `firstDate`, `lastDate`, `dateFormat`, `hintText`, `labelText`, `decoration`, `enabled` | Date picker dialog. |
+| `BfDateRangeField` | `DateTimeRange` | `firstDate`, `lastDate`, `hintText`, `labelText`, `decoration`, `enabled` | Date range picker dialog. |
+| `BfPhoneField` | `String` | `defaultCountryCode`, `countries`, `labelText`, `hintText`, `enabled` | Phone number with country code selector. |
+| `BfCurrencyField` | `double` | `symbol`, `decimalPlaces`, `thousandSeparator`, `decimalSeparator`, `labelText`, `hintText`, `decoration`, `enabled` | Locale-aware currency input. |
+| `BfOtpField` | `String` | `length`, `obscureText`, `boxWidth`, `boxHeight`, `spacing`, `autofocus`, `labelText`, `enabled` | Multi-box OTP/PIN input. |
+| `BfAutocompleteField<T>` | `T` | `optionsBuilder`, `displayStringForOption`, `debounce`, `optionBuilder`, `labelText`, `hintText`, `decoration`, `enabled` | Async search autocomplete. |
+| `BfRatingField` | `double` | `maxRating`, `allowHalfRating`, `size`, `color`, `unratedColor`, `labelText`, `enabled` | Star rating. |
+| `BfChipSelectField<T>` | `List<T>` | `options`, `labelBuilder`, `avatarBuilder`, `wrap`, `spacing`, `runSpacing`, `labelText`, `enabled` | Chip-based multi-select. |
+| `BfSignatureField` | `List<List<Offset>>` | `height`, `strokeColor`, `strokeWidth`, `backgroundColor`, `showClearButton`, `labelText`, `enabled` | Signature drawing pad. |
+| `BfSliderField` | `double` | `min`, `max`, `divisions`, `showValue`, `activeColor`, `inactiveColor`, `labelText`, `enabled` | Numeric slider. |
+| `BfRangeSliderField` | `RangeValues` | `min`, `max`, `divisions`, `showValues`, `activeColor`, `inactiveColor`, `labelText`, `enabled` | Numeric range slider. |
 
 ## Layout widgets
 
 | Widget | Key Props | Description |
 |---|---|---|
-| `FkFormSection` | `title`, `description`, `collapsible`, `initiallyExpanded`, `padding`, `children` | Groups fields with optional title and collapse behavior. Spacing uses `FkFormTheme.fieldSpacing`. |
-| `FkFormRow` | `children`, `flexes`, `spacing` | Arranges fields horizontally with configurable flex ratios. |
-| `FkSubmitButton` | `onSubmit`, `label`, `child`, `loadingWidget`, `disableWhenInvalid`, `style` | Auto-disable/loading submit button. |
+| `BfFormSection` | `title`, `description`, `collapsible`, `initiallyExpanded`, `padding`, `children` | Groups fields with optional title and collapse behavior. Spacing uses `BfFormTheme.fieldSpacing`. |
+| `BfFormRow` | `children`, `flexes`, `spacing` | Arranges fields horizontally with configurable flex ratios. |
+| `BfSubmitButton` | `onSubmit`, `label`, `child`, `loadingWidget`, `disableWhenInvalid`, `style` | Auto-disable/loading submit button. |
 
 ## Common props on all fields
 
@@ -44,7 +46,7 @@ Every field widget shares these properties:
 | Prop | Type | Description |
 |---|---|---|
 | `name` | `String` | Key used for form registration and value maps. |
-| `controller` | `FkFieldController<T>` | The typed controller that owns value and validation state. |
+| `controller` | `BfFieldController<T>` | The typed controller that owns value and validation state. |
 | `enabled` | `bool` | Whether the field accepts user interaction. Defaults to `true`. |
 
 ## Controller extensions
@@ -53,11 +55,11 @@ Extensions available on specific controller types:
 
 | Extension | On | Method/Property | Description |
 |---|---|---|---|
-| `FkFieldControllerStringX` | `FkFieldController<String>` | `.trimmed` | Returns `value?.trim()`. |
-| `FkFieldControllerStringX` | `FkFieldController<String>` | `.wordCount` | Returns number of words in the value. |
-| `FkFieldControllerWidgetX` | `FkFieldController<T>` | `.watch(builder)` | Shorthand for `ListenableBuilder` that passes the controller. |
-| `FkFieldControllerSignatureX` | `FkFieldController<List<List<Offset>>>` | `.toPng(width, height, ...)` | Renders strokes to PNG bytes. |
-| `FkFieldControllerSignatureX` | `FkFieldController<List<List<Offset>>>` | `.toBase64(width, height, ...)` | Renders strokes to base64-encoded PNG string. |
+| `BfFieldControllerStringX` | `BfFieldController<String>` | `.trimmed` | Returns `value?.trim()`. |
+| `BfFieldControllerStringX` | `BfFieldController<String>` | `.wordCount` | Returns number of words in the value. |
+| `BfFieldControllerWidgetX` | `BfFieldController<T>` | `.watch(builder)` | Shorthand for `ListenableBuilder` that passes the controller. |
+| `BfFieldControllerSignatureX` | `BfFieldController<List<List<Offset>>>` | `.toPng(width, height, ...)` | Renders strokes to PNG bytes. |
+| `BfFieldControllerSignatureX` | `BfFieldController<List<List<Offset>>>` | `.toBase64(width, height, ...)` | Renders strokes to base64-encoded PNG string. |
 
 ## Related
 

@@ -3,14 +3,14 @@ title: Indicators & UX
 description: Progress bars, field status icons, unsaved-changes guards, and auto-disabling submit buttons.
 ---
 
-FormKit provides several widgets that enhance form UX without requiring manual state management. They all use `ListenableBuilder` internally and rebuild automatically when form or field state changes.
+BlaqForm provides several widgets that enhance form UX without requiring manual state management. They all use `ListenableBuilder` internally and rebuild automatically when form or field state changes.
 
-## FkFormProgress
+## BfFormProgress
 
 Displays a `LinearProgressIndicator` reflecting how many dirty fields are currently valid:
 
 ```dart
-FkFormProgress(
+BfFormProgress(
   controller: formController,
   showLabel: true,
   height: 4.0,
@@ -21,7 +21,7 @@ FkFormProgress(
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `controller` | `FkFormController` | required | The form controller to track. |
+| `controller` | `BfFormController` | required | The form controller to track. |
 | `showLabel` | `bool` | `true` | Show a "3 of 5" label below the bar. |
 | `labelBuilder` | `String Function(int valid, int total)?` | `null` | Custom label builder. Receives valid and total counts. |
 | `color` | `Color?` | theme primary | Filled portion color. |
@@ -31,13 +31,13 @@ FkFormProgress(
 ### Custom label
 
 ```dart
-FkFormProgress(
+BfFormProgress(
   controller: formController,
   labelBuilder: (valid, total) => '$valid/$total fields complete',
 )
 ```
 
-## FkFieldStatus
+## BfFieldStatus
 
 Displays an icon reflecting a single field's validation state:
 
@@ -50,29 +50,29 @@ Displays an icon reflecting a single field's validation state:
 Row(
   children: [
     Expanded(
-      child: FkTextField(name: 'email', controller: emailCtrl),
+      child: BfTextField(name: 'email', controller: emailCtrl),
     ),
     const SizedBox(width: 8),
-    FkFieldStatus(controller: emailCtrl),
+    BfFieldStatus(controller: emailCtrl),
   ],
 )
 ```
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `controller` | `FkFieldController` | required | The field controller to observe. |
+| `controller` | `BfFieldController` | required | The field controller to observe. |
 | `size` | `double` | `20.0` | Icon/spinner size. |
 | `validIcon` | `IconData?` | `Icons.check_circle` | Override valid icon. |
 | `errorIcon` | `IconData?` | `Icons.error` | Override error icon. |
 | `validColor` | `Color?` | `Colors.green` | Valid icon color. |
 | `errorColor` | `Color?` | theme error color | Error icon color. |
 
-## FkDirtyGuard
+## BfDirtyGuard
 
 Wraps a widget tree in a `PopScope` that prevents navigation when the form has unsaved changes. If the user tries to leave, a confirmation dialog appears.
 
 ```dart
-FkDirtyGuard(
+BfDirtyGuard(
   controller: formController,
   child: MyFormBody(),
 )
@@ -80,7 +80,7 @@ FkDirtyGuard(
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `controller` | `FkFormController` | required | Form controller whose `isDirty` state is monitored. |
+| `controller` | `BfFormController` | required | Form controller whose `isDirty` state is monitored. |
 | `child` | `Widget` | required | The widget subtree to display. |
 | `title` | `String` | `'Unsaved Changes'` | Dialog title. |
 | `message` | `String` | `'You have unsaved changes...'` | Dialog body. |
@@ -91,7 +91,7 @@ FkDirtyGuard(
 
 ```dart
 class EditProfilePage extends StatelessWidget {
-  final FkFormController formController;
+  final BfFormController formController;
 
   const EditProfilePage({super.key, required this.formController});
 
@@ -99,7 +99,7 @@ class EditProfilePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Profile')),
-      body: FkDirtyGuard(
+      body: BfDirtyGuard(
         controller: formController,
         title: 'Discard changes?',
         message: 'Your edits will be lost if you leave now.',
@@ -109,7 +109,7 @@ class EditProfilePage extends StatelessWidget {
           padding: const EdgeInsets.all(24),
           child: Column(
             children: [
-              FkFormProgress(controller: formController),
+              BfFormProgress(controller: formController),
               const SizedBox(height: 16),
               // ... form fields ...
             ],
@@ -121,16 +121,16 @@ class EditProfilePage extends StatelessWidget {
 }
 ```
 
-## FkSubmitButton
+## BfSubmitButton
 
-A submit button that integrates with the nearest `FkForm` ancestor. It automatically:
+A submit button that integrates with the nearest `BfForm` ancestor. It automatically:
 
 - Disables when the form is invalid (configurable).
 - Disables during submission to prevent double-taps.
 - Shows a loading spinner while the `onSubmit` future is running.
 
 ```dart
-FkSubmitButton(
+BfSubmitButton(
   label: 'Save Changes',
   disableWhenInvalid: true,
   onSubmit: (controller) async {
@@ -143,7 +143,7 @@ FkSubmitButton(
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `onSubmit` | `Future<void> Function(FkFormController)` | required | Called with the form controller on press. |
+| `onSubmit` | `Future<void> Function(BfFormController)` | required | Called with the form controller on press. |
 | `label` | `String?` | `'Submit'` | Button text (ignored if `child` is set). |
 | `child` | `Widget?` | `null` | Custom button content. |
 | `loadingWidget` | `Widget?` | small spinner | Custom widget shown during submission. |
@@ -153,7 +153,7 @@ FkSubmitButton(
 ### Custom loading widget
 
 ```dart
-FkSubmitButton(
+BfSubmitButton(
   label: 'Submit',
   loadingWidget: Row(
     mainAxisSize: MainAxisSize.min,
@@ -177,17 +177,17 @@ FkSubmitButton(
 A complete form with all indicator widgets working together:
 
 ```dart
-FkFormBuilder(
+BfFormBuilder(
   fields: {
-    'name': FkFieldConfig<String>.text(
+    'name': BfFieldConfig<String>.text(
       label: 'Name',
-      validators: [Fk.required()],
+      validators: [Bf.required()],
     ),
-    'email': FkFieldConfig<String>.email(
+    'email': BfFieldConfig<String>.email(
       label: 'Email',
-      validators: [Fk.required(), Fk.email()],
+      validators: [Bf.required(), Bf.email()],
       asyncValidators: [
-        Fk.unique<String>((e) => api.isEmailAvailable(e!)),
+        Bf.unique<String>((e) => api.isEmailAvailable(e!)),
       ],
     ),
   },
@@ -197,7 +197,7 @@ FkFormBuilder(
 
     return Column(
       children: [
-        FkFormProgress(controller: scope.formController),
+        BfFormProgress(controller: scope.formController),
         const SizedBox(height: 24),
         scope.text('name'),
         const SizedBox(height: 16),
@@ -205,7 +205,7 @@ FkFormBuilder(
           children: [
             Expanded(child: scope.email('email')),
             const SizedBox(width: 8),
-            FkFieldStatus(controller: emailCtrl),
+            BfFieldStatus(controller: emailCtrl),
           ],
         ),
         const SizedBox(height: 24),
@@ -220,4 +220,4 @@ FkFormBuilder(
 
 - [Form Builder](/guides/form-builder) -- declarative form setup
 - [Validation](/guides/validation) -- validators that drive indicator states
-- [Persistence](/guides/persistence) -- pair with FkDirtyGuard for draft saving
+- [Persistence](/guides/persistence) -- pair with BfDirtyGuard for draft saving

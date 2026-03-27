@@ -1,28 +1,28 @@
 ---
 title: Form Builder
-description: Build entire forms declaratively with FkFormBuilder — zero controller boilerplate.
+description: Build entire forms declaratively with BfFormBuilder — zero controller boilerplate.
 ---
 
-`FkFormBuilder` eliminates the manual work of creating controllers, wiring them to fields, and disposing them. You declare your fields as a configuration map, and FormKit handles the rest.
+`BfFormBuilder` eliminates the manual work of creating controllers, wiring them to fields, and disposing them. You declare your fields as a configuration map, and BlaqForm handles the rest.
 
 ## The problem it solves
 
-Without `FkFormBuilder`, every form requires you to:
+Without `BfFormBuilder`, every form requires you to:
 
-1. Create an `FkFieldController` for each field.
-2. Create an `FkFormController` and register fields.
+1. Create an `BfFieldController` for each field.
+2. Create an `BfFormController` and register fields.
 3. Pass controllers to widgets manually.
 4. Dispose everything in `dispose()`.
 
-`FkFormBuilder` reduces all of that to a single declarative widget.
+`BfFormBuilder` reduces all of that to a single declarative widget.
 
 ## Basic usage
 
 ```dart
-FkFormBuilder(
+BfFormBuilder(
   fields: {
-    'name': FkFieldConfig<String>.text(label: 'Name'),
-    'email': FkFieldConfig<String>.email(label: 'Email'),
+    'name': BfFieldConfig<String>.text(label: 'Name'),
+    'email': BfFieldConfig<String>.email(label: 'Email'),
   },
   onSubmit: (values) async {
     await api.register(values);
@@ -35,35 +35,35 @@ FkFormBuilder(
 )
 ```
 
-## FkFormBuilder API
+## BfFormBuilder API
 
 | Property | Type | Description |
 |---|---|---|
-| `fields` | `Map<String, FkFieldConfig>` | Declarative field configurations keyed by name. |
-| `builder` | `Widget Function(FkFormBuilderScope scope)` | Receives a scope with fluent field builders. |
+| `fields` | `Map<String, BfFieldConfig>` | Declarative field configurations keyed by name. |
+| `builder` | `Widget Function(BfFormBuilderScope scope)` | Receives a scope with fluent field builders. |
 | `onSubmit` | `Future<void> Function(Map<String, dynamic>)?` | Called on submission with all form values. |
-| `autovalidateMode` | `FkAutovalidateMode` | When fields show errors. Defaults to `onUserInteraction`. |
-| `crossValidators` | `List<FkValidator<Map<String, dynamic>>>` | Cross-field validators run at submit time. |
+| `autovalidateMode` | `BfAutovalidateMode` | When fields show errors. Defaults to `onUserInteraction`. |
+| `crossValidators` | `List<BfValidator<Map<String, dynamic>>>` | Cross-field validators run at submit time. |
 
-## FkFieldConfig constructors
+## BfFieldConfig constructors
 
-`FkFieldConfig` describes a field without creating its controller. Each named constructor sets the correct `FkFieldType`:
+`BfFieldConfig` describes a field without creating its controller. Each named constructor sets the correct `BfFieldType`:
 
 | Constructor | Type Parameter | Description |
 |---|---|---|
-| `FkFieldConfig<String>.text()` | `String` | Standard text input. |
-| `FkFieldConfig<String>.password()` | `String` | Password input with obscured text. |
-| `FkFieldConfig<String>.email()` | `String` | Email input with keyboard hints. |
-| `FkFieldConfig<bool>.checkbox()` | `bool` | Boolean checkbox toggle. |
-| `FkFieldConfig<T>.dropdown()` | `T` | Dropdown selector with `options` and `optionLabels`. |
-| `FkFieldConfig<DateTime>.date()` | `DateTime` | Date picker field. |
+| `BfFieldConfig<String>.text()` | `String` | Standard text input. |
+| `BfFieldConfig<String>.password()` | `String` | Password input with obscured text. |
+| `BfFieldConfig<String>.email()` | `String` | Email input with keyboard hints. |
+| `BfFieldConfig<bool>.checkbox()` | `bool` | Boolean checkbox toggle. |
+| `BfFieldConfig<T>.dropdown()` | `T` | Dropdown selector with `options` and `optionLabels`. |
+| `BfFieldConfig<DateTime>.date()` | `DateTime` | Date picker field. |
 
 All constructors share these common parameters:
 
 ```dart
-FkFieldConfig<String>.text(
+BfFieldConfig<String>.text(
   initialValue: 'hello',           // Starting value
-  validators: [Fk.required()],     // Sync validators
+  validators: [Bf.required()],     // Sync validators
   asyncValidators: [],             // Async validators
   asyncDebounce: Duration(milliseconds: 400),
   label: 'Full Name',             // Label text
@@ -77,7 +77,7 @@ FkFieldConfig<String>.text(
 The dropdown constructor adds `options` and `optionLabels`:
 
 ```dart
-FkFieldConfig<String>.dropdown(
+BfFieldConfig<String>.dropdown(
   label: 'Country',
   options: ['US', 'UK', 'CA'],
   optionLabels: {
@@ -85,13 +85,13 @@ FkFieldConfig<String>.dropdown(
     'UK': 'United Kingdom',
     'CA': 'Canada',
   },
-  validators: [Fk.required()],
+  validators: [Bf.required()],
 )
 ```
 
-## FkFormBuilderScope fluent methods
+## BfFormBuilderScope fluent methods
 
-The `scope` object passed to `builder` provides one method per field type. Each method reads defaults from the corresponding `FkFieldConfig` but allows per-callsite overrides.
+The `scope` object passed to `builder` provides one method per field type. Each method reads defaults from the corresponding `BfFieldConfig` but allows per-callsite overrides.
 
 ### Text fields
 
@@ -158,7 +158,7 @@ The submit button automatically disables when the form is invalid and shows a lo
 
 ## Accessing controllers directly
 
-Use `scope.controller<T>(name)` when you need the raw `FkFieldController`:
+Use `scope.controller<T>(name)` when you need the raw `BfFieldController`:
 
 ```dart
 builder: (scope) {
@@ -204,34 +204,34 @@ class SignupForm extends StatelessWidget {
       appBar: AppBar(title: const Text('Create Account')),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: FkFormBuilder(
+        child: BfFormBuilder(
           fields: {
-            'name': FkFieldConfig<String>.text(
+            'name': BfFieldConfig<String>.text(
               label: 'Full Name',
               hint: 'John Doe',
               prefixIcon: Icons.person,
-              validators: [Fk.required()],
+              validators: [Bf.required()],
             ),
-            'email': FkFieldConfig<String>.email(
+            'email': BfFieldConfig<String>.email(
               label: 'Email',
               hint: 'you@example.com',
               prefixIcon: Icons.email,
-              validators: [Fk.required(), Fk.email()],
+              validators: [Bf.required(), Bf.email()],
             ),
-            'password': FkFieldConfig<String>.password(
+            'password': BfFieldConfig<String>.password(
               label: 'Password',
               prefixIcon: Icons.lock,
-              validators: [Fk.required(), Fk.minLength(8)],
+              validators: [Bf.required(), Bf.minLength(8)],
             ),
-            'confirmPassword': FkFieldConfig<String>.password(
+            'confirmPassword': BfFieldConfig<String>.password(
               label: 'Confirm Password',
               prefixIcon: Icons.lock_outline,
               validators: [
-                Fk.required(),
-                Fk.matchFields('password', message: 'Passwords must match'),
+                Bf.required(),
+                Bf.matchFields('password', message: 'Passwords must match'),
               ],
             ),
-            'country': FkFieldConfig<String>.dropdown(
+            'country': BfFieldConfig<String>.dropdown(
               label: 'Country',
               options: ['US', 'UK', 'CA', 'DE'],
               optionLabels: {
@@ -240,13 +240,13 @@ class SignupForm extends StatelessWidget {
                 'CA': 'Canada',
                 'DE': 'Germany',
               },
-              validators: [Fk.required()],
+              validators: [Bf.required()],
             ),
-            'terms': FkFieldConfig<bool>.checkbox(
+            'terms': BfFieldConfig<bool>.checkbox(
               initialValue: false,
               label: 'I agree to the Terms of Service',
               validators: [
-                Fk.equals<bool>(true, message: 'You must accept the terms'),
+                Bf.equals<bool>(true, message: 'You must accept the terms'),
               ],
             ),
           },

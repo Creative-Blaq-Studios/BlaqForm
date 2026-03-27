@@ -1,22 +1,22 @@
 ---
 title: Theming
-description: Customize the look and feel of all FormKit fields with FkFormTheme, a Flutter ThemeExtension.
+description: Customize the look and feel of all BlaqForm fields with BfFormTheme, a Flutter ThemeExtension.
 ---
 
-`FkFormTheme` integrates with Flutter's `ThemeExtension` system. Define it once in your `ThemeData` and every FormKit field automatically picks up the configured styles.
+`BfFormTheme` integrates with Flutter's `ThemeExtension` system. Define it once in your `ThemeData` and every BlaqForm field automatically picks up the configured styles.
 
 ## Applying a theme
 
-Add `FkFormTheme` to your `MaterialApp`'s theme extensions:
+Add `BfFormTheme` to your `MaterialApp`'s theme extensions:
 
 ```dart
 MaterialApp(
   theme: ThemeData(
     extensions: [
-      FkFormTheme(
+      BfFormTheme(
         fieldSpacing: 16.0,
         sectionSpacing: 24.0,
-        errorDisplay: FkErrorDisplay.inline,
+        errorDisplay: BfErrorDisplay.inline,
         fieldBorderRadius: BorderRadius.circular(12),
         animationDuration: Duration(milliseconds: 200),
         animationCurve: Curves.easeInOut,
@@ -35,40 +35,40 @@ MaterialApp(
 | `labelStyle` | `TextStyle?` | `null` | Style for field labels. Falls back to ambient `InputDecorationTheme`. |
 | `errorStyle` | `TextStyle?` | `null` | Style for validation error text. Falls back to ambient `InputDecorationTheme`. |
 | `hintStyle` | `TextStyle?` | `null` | Style for hint text. Falls back to ambient `InputDecorationTheme`. |
-| `fieldSpacing` | `double` | `16.0` | Vertical spacing between fields in `FkFormSection`. |
+| `fieldSpacing` | `double` | `16.0` | Vertical spacing between fields in `BfFormSection`. |
 | `sectionSpacing` | `double` | `24.0` | Vertical spacing between form sections. |
-| `errorDisplay` | `FkErrorDisplay` | `inline` | How validation errors are displayed. |
+| `errorDisplay` | `BfErrorDisplay` | `inline` | How validation errors are displayed. |
 | `fieldBorderRadius` | `BorderRadius?` | `null` | Border radius for field containers. Falls back to `InputDecorationTheme`. |
 | `animationDuration` | `Duration` | `200ms` | Duration for field animations (error appear/disappear, focus transitions). |
 | `animationCurve` | `Curve` | `Curves.easeInOut` | Curve for field animations. |
 
-## FkErrorDisplay
+## BfErrorDisplay
 
 Controls how validation error messages are presented:
 
 | Value | Behavior |
 |---|---|
-| `FkErrorDisplay.inline` | Error text shown below the field (default Material behavior). |
-| `FkErrorDisplay.tooltip` | Error shown as a tooltip on hover/focus. |
-| `FkErrorDisplay.floating` | Error shown as a floating label above the field. |
+| `BfErrorDisplay.inline` | Error text shown below the field (default Material behavior). |
+| `BfErrorDisplay.tooltip` | Error shown as a tooltip on hover/focus. |
+| `BfErrorDisplay.floating` | Error shown as a floating label above the field. |
 
 ## Accessing the theme
 
-### FkFormTheme.of(context)
+### BfFormTheme.of(context)
 
-Returns the nearest `FkFormTheme` or a default instance. Guaranteed non-null:
+Returns the nearest `BfFormTheme` or a default instance. Guaranteed non-null:
 
 ```dart
-final theme = FkFormTheme.of(context);
+final theme = BfFormTheme.of(context);
 final spacing = theme.fieldSpacing; // always safe
 ```
 
-### FkFormTheme.maybeOf(context)
+### BfFormTheme.maybeOf(context)
 
-Returns the nearest `FkFormTheme` or `null` if none is registered:
+Returns the nearest `BfFormTheme` or `null` if none is registered:
 
 ```dart
-final theme = FkFormTheme.maybeOf(context);
+final theme = BfFormTheme.maybeOf(context);
 if (theme != null) {
   // custom theme is active
 }
@@ -79,16 +79,16 @@ if (theme != null) {
 Create a modified copy of an existing theme:
 
 ```dart
-final base = FkFormTheme.of(context);
+final base = BfFormTheme.of(context);
 final custom = base.copyWith(
   fieldSpacing: 24.0,
-  errorDisplay: FkErrorDisplay.tooltip,
+  errorDisplay: BfErrorDisplay.tooltip,
 );
 ```
 
 ## lerp support
 
-`FkFormTheme` implements `lerp` for smooth animated theme transitions. Numeric values (`fieldSpacing`, `sectionSpacing`, `animationDuration`) interpolate smoothly. Text styles use `TextStyle.lerp`. Enum and non-lerpable values switch at the halfway point.
+`BfFormTheme` implements `lerp` for smooth animated theme transitions. Numeric values (`fieldSpacing`, `sectionSpacing`, `animationDuration`) interpolate smoothly. Text styles use `TextStyle.lerp`. Enum and non-lerpable values switch at the halfway point.
 
 ## Complete example
 
@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorSchemeSeed: Colors.indigo,
         extensions: [
-          FkFormTheme(
+          BfFormTheme(
             inputDecoration: InputDecoration(
               filled: true,
               fillColor: Colors.grey.shade50,
@@ -127,7 +127,7 @@ class MyApp extends StatelessWidget {
             ),
             fieldSpacing: 20.0,
             sectionSpacing: 32.0,
-            errorDisplay: FkErrorDisplay.inline,
+            errorDisplay: BfErrorDisplay.inline,
             fieldBorderRadius: BorderRadius.circular(12),
             animationDuration: Duration(milliseconds: 300),
             animationCurve: Curves.easeOut,
@@ -137,15 +137,15 @@ class MyApp extends StatelessWidget {
       home: Scaffold(
         body: Padding(
           padding: const EdgeInsets.all(24),
-          child: FkFormBuilder(
+          child: BfFormBuilder(
             fields: {
-              'name': FkFieldConfig<String>.text(
+              'name': BfFieldConfig<String>.text(
                 label: 'Name',
-                validators: [Fk.required()],
+                validators: [Bf.required()],
               ),
-              'email': FkFieldConfig<String>.email(
+              'email': BfFieldConfig<String>.email(
                 label: 'Email',
-                validators: [Fk.required(), Fk.email()],
+                validators: [Bf.required(), Bf.email()],
               ),
             },
             onSubmit: (values) async => debugPrint('$values'),

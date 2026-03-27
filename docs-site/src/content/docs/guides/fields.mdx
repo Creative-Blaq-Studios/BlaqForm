@@ -1,38 +1,40 @@
 ---
 title: Field Widgets
-description: A catalog of all 17+ FormKit field widgets, from text inputs to signature pads.
+description: A catalog of all 17+ BlaqForm field widgets, from text inputs to signature pads.
+tableOfContents:
+  maxDepth: 2
 ---
 
-FormKit ships with a comprehensive set of field widgets. Every field binds to an `FkFieldController<T>`, auto-registers with the nearest `FkForm`, and displays validation errors automatically.
+BlaqForm ships with a comprehensive set of field widgets. Every field binds to an `BfFieldController<T>`, auto-registers with the nearest `BfForm`, and displays validation errors automatically.
 
 ## Field catalog
 
 | Widget | Value Type | Description |
 |---|---|---|
-| `FkTextField` | `String` | Standard text input with `.password()` and `.email()` convenience constructors. |
-| `FkDropdownField<T>` | `T` | Dropdown selector wrapping `DropdownButtonFormField`. |
-| `FkCheckboxField` | `bool` | Single checkbox toggle. |
-| `FkSwitchField` | `bool` | Material switch toggle. |
-| `FkCheckboxGroupField<T>` | `List<T>` | Multi-select checkbox group. |
-| `FkRadioGroupField<T>` | `T` | Single-select radio button group. |
-| `FkDateField` | `DateTime` | Date picker with formatted display. |
-| `FkDateRangeField` | `DateTimeRange` | Date range picker. |
-| `FkPhoneField` | `String` | Phone number input with country code selector. |
-| `FkCurrencyField` | `double` | Currency input with locale-aware formatting. |
-| `FkOtpField` | `String` | Multi-box OTP/PIN input with auto-advance. |
-| `FkAutocompleteField<T>` | `T` | Autocomplete with async suggestions and debounce. |
-| `FkRatingField` | `double` | Star rating with optional half-star support. |
-| `FkChipSelectField<T>` | `List<T>` | Multi-select using `FilterChip` widgets. |
-| `FkSignatureField` | `List<List<Offset>>` | Signature drawing pad with PNG/base64 export. |
-| `FkSliderField` | `double` | Slider for numeric values. |
-| `FkRangeSliderField` | `RangeValues` | Range slider for min/max selection. |
+| `BfTextField` | `String` | Standard text input with `.password()` and `.email()` convenience constructors. |
+| `BfDropdownField<T>` | `T` | Dropdown selector wrapping `DropdownButtonFormField`. |
+| `BfCheckboxField` | `bool` | Single checkbox toggle. |
+| `BfSwitchField` | `bool` | Material switch toggle. |
+| `BfCheckboxGroupField<T>` | `List<T>` | Multi-select checkbox group. |
+| `BfRadioGroupField<T>` | `T` | Single-select radio button group. |
+| `BfDateField` | `DateTime` | Date picker with formatted display. |
+| `BfDateRangeField` | `DateTimeRange` | Date range picker. |
+| `BfPhoneField` | `String` | Phone number input with country code selector. |
+| `BfCurrencyField` | `double` | Currency input with locale-aware formatting. |
+| `BfOtpField` | `String` | Multi-box OTP/PIN input with auto-advance. |
+| `BfAutocompleteField<T>` | `T` | Autocomplete with async suggestions and debounce. |
+| `BfRatingField` | `double` | Star rating with optional half-star support. |
+| `BfChipSelectField<T>` | `List<T>` | Multi-select using `FilterChip` widgets. |
+| `BfSignatureField` | `List<List<Offset>>` | Signature drawing pad with PNG/base64 export. |
+| `BfSliderField` | `double` | Slider for numeric values. |
+| `BfRangeSliderField` | `RangeValues` | Range slider for min/max selection. |
 
-## FkTextField
+## BfTextField
 
-The most commonly used field. Wraps a standard `TextField` and syncs with `FkFieldController<String>`.
+The most commonly used field. Wraps a standard `TextField` and syncs with `BfFieldController<String>`.
 
 ```dart
-FkTextField(
+BfTextField(
   name: 'bio',
   controller: bioController,
   labelText: 'Bio',
@@ -47,7 +49,7 @@ FkTextField(
 **Password** -- sets `obscureText: true` and `maxLines: 1`:
 
 ```dart
-FkTextField.password(
+BfTextField.password(
   name: 'password',
   controller: passwordController,
   labelText: 'Password',
@@ -57,19 +59,19 @@ FkTextField.password(
 **Email** -- sets `keyboardType: TextInputType.emailAddress`:
 
 ```dart
-FkTextField.email(
+BfTextField.email(
   name: 'email',
   controller: emailController,
   labelText: 'Email',
 )
 ```
 
-## FkDropdownField
+## BfDropdownField
 
 Generic dropdown for selecting from a list of items:
 
 ```dart
-FkDropdownField<String>(
+BfDropdownField<String>(
   name: 'country',
   controller: countryController,
   items: [
@@ -82,77 +84,77 @@ FkDropdownField<String>(
 )
 ```
 
-## FkCheckboxField and FkSwitchField
+## BfCheckboxField and BfSwitchField
 
 Boolean toggle fields:
 
 ```dart
-FkCheckboxField(
+BfCheckboxField(
   name: 'terms',
   controller: termsController,
   label: Text('I agree to the Terms of Service'),
 )
 
-FkSwitchField(
+BfSwitchField(
   name: 'notifications',
   controller: notifyController,
   label: Text('Enable notifications'),
 )
 ```
 
-## FkCheckboxGroupField and FkRadioGroupField
+## BfCheckboxGroupField and BfRadioGroupField
 
 Multi-select and single-select groups:
 
 ```dart
 // Multi-select
-FkCheckboxGroupField<String>(
+BfCheckboxGroupField<String>(
   name: 'toppings',
-  controller: toppingsController,  // FkFieldController<List<String>>
+  controller: toppingsController,  // BfFieldController<List<String>>
   options: ['Cheese', 'Pepperoni', 'Mushrooms'],
   labelBuilder: (t) => t,
 )
 
 // Single-select
-FkRadioGroupField<String>(
+BfRadioGroupField<String>(
   name: 'size',
-  controller: sizeController,  // FkFieldController<String>
+  controller: sizeController,  // BfFieldController<String>
   options: ['Small', 'Medium', 'Large'],
   labelBuilder: (s) => s,
 )
 ```
 
-## FkDateField and FkDateRangeField
+## BfDateField and BfDateRangeField
 
 Date pickers that open the native Material date dialog:
 
 ```dart
-FkDateField(
+BfDateField(
   name: 'birthDate',
-  controller: birthDateController,  // FkFieldController<DateTime>
+  controller: birthDateController,  // BfFieldController<DateTime>
   firstDate: DateTime(1900),
   lastDate: DateTime.now(),
   dateFormat: 'MM/dd/yyyy',
   labelText: 'Date of Birth',
 )
 
-FkDateRangeField(
+BfDateRangeField(
   name: 'vacation',
-  controller: vacationController,  // FkFieldController<DateTimeRange>
+  controller: vacationController,  // BfFieldController<DateTimeRange>
   firstDate: DateTime.now(),
   lastDate: DateTime.now().add(Duration(days: 365)),
   labelText: 'Vacation Period',
 )
 ```
 
-## FkPhoneField
+## BfPhoneField
 
 Phone input with a country code dropdown prefix. The controller stores the full string (e.g., `"+14155551234"`):
 
 ```dart
-FkPhoneField(
+BfPhoneField(
   name: 'phone',
-  controller: phoneController,  // FkFieldController<String>
+  controller: phoneController,  // BfFieldController<String>
   defaultCountryCode: '+1',
   labelText: 'Phone Number',
 )
@@ -160,14 +162,14 @@ FkPhoneField(
 
 Comes with a built-in list of common country codes (US, UK, AU, IN, etc.).
 
-## FkCurrencyField
+## BfCurrencyField
 
 Locale-aware currency input bound to `double`:
 
 ```dart
-FkCurrencyField(
+BfCurrencyField(
   name: 'price',
-  controller: priceController,  // FkFieldController<double>
+  controller: priceController,  // BfFieldController<double>
   symbol: '\$',
   decimalPlaces: 2,
   thousandSeparator: ',',
@@ -178,14 +180,14 @@ FkCurrencyField(
 
 Formatting is applied automatically as the user types.
 
-## FkOtpField
+## BfOtpField
 
 Multi-box OTP/PIN input. Focus auto-advances on input and retreats on backspace:
 
 ```dart
-FkOtpField(
+BfOtpField(
   name: 'otp',
-  controller: otpController,  // FkFieldController<String>
+  controller: otpController,  // BfFieldController<String>
   length: 6,
   obscureText: false,
   boxWidth: 48.0,
@@ -197,14 +199,14 @@ FkOtpField(
 
 The controller value is the concatenated digit string (e.g., `"123456"`).
 
-## FkAutocompleteField
+## BfAutocompleteField
 
 Async search with debounced suggestions:
 
 ```dart
-FkAutocompleteField<City>(
+BfAutocompleteField<City>(
   name: 'city',
-  controller: cityController,  // FkFieldController<City>
+  controller: cityController,  // BfFieldController<City>
   optionsBuilder: (query) => cityService.search(query),
   displayStringForOption: (city) => city.name,
   debounce: Duration(milliseconds: 300),
@@ -212,14 +214,14 @@ FkAutocompleteField<City>(
 )
 ```
 
-## FkRatingField
+## BfRatingField
 
 Tappable star rating:
 
 ```dart
-FkRatingField(
+BfRatingField(
   name: 'rating',
-  controller: ratingController,  // FkFieldController<double>
+  controller: ratingController,  // BfFieldController<double>
   maxRating: 5,
   allowHalfRating: true,
   size: 36.0,
@@ -228,14 +230,14 @@ FkRatingField(
 )
 ```
 
-## FkChipSelectField
+## BfChipSelectField
 
 Multi-select using filter chips:
 
 ```dart
-FkChipSelectField<String>(
+BfChipSelectField<String>(
   name: 'tags',
-  controller: tagsController,  // FkFieldController<List<String>>
+  controller: tagsController,  // BfFieldController<List<String>>
   options: ['Flutter', 'Dart', 'Firebase', 'Supabase'],
   labelBuilder: (tag) => tag,
   spacing: 8.0,
@@ -244,14 +246,14 @@ FkChipSelectField<String>(
 )
 ```
 
-## FkSignatureField
+## BfSignatureField
 
 Signature drawing pad using `CustomPainter` and `GestureDetector`:
 
 ```dart
-FkSignatureField(
+BfSignatureField(
   name: 'signature',
-  controller: signatureController,  // FkFieldController<List<List<Offset>>>
+  controller: signatureController,  // BfFieldController<List<List<Offset>>>
   height: 250,
   strokeColor: Colors.black,
   strokeWidth: 2.0,
@@ -263,7 +265,7 @@ FkSignatureField(
 
 ### Exporting signatures
 
-Use the extensions on `FkFieldController<List<List<Offset>>>` to export:
+Use the extensions on `BfFieldController<List<List<Offset>>>` to export:
 
 ```dart
 // Export as PNG bytes
@@ -282,14 +284,14 @@ final base64 = await signatureController.toBase64(
 );
 ```
 
-## FkSliderField and FkRangeSliderField
+## BfSliderField and BfRangeSliderField
 
 Numeric sliders:
 
 ```dart
-FkSliderField(
+BfSliderField(
   name: 'volume',
-  controller: volumeController,  // FkFieldController<double>
+  controller: volumeController,  // BfFieldController<double>
   min: 0,
   max: 100,
   divisions: 100,
@@ -297,9 +299,9 @@ FkSliderField(
   labelText: 'Volume',
 )
 
-FkRangeSliderField(
+BfRangeSliderField(
   name: 'priceRange',
-  controller: priceRangeController,  // FkFieldController<RangeValues>
+  controller: priceRangeController,  // BfFieldController<RangeValues>
   min: 0,
   max: 1000,
   divisions: 100,
@@ -308,42 +310,42 @@ FkRangeSliderField(
 )
 ```
 
-## Auto-registration with FkForm
+## Auto-registration with BfForm
 
-Every field auto-registers its controller with the nearest `FkForm` ancestor when it mounts, and unregisters when it disposes. You never need to call `formController.register()` manually when using field widgets.
+Every field auto-registers its controller with the nearest `BfForm` ancestor when it mounts, and unregisters when it disposes. You never need to call `formController.register()` manually when using field widgets.
 
 ## Layout widgets
 
-### FkFormSection
+### BfFormSection
 
 Groups fields with an optional title, description, and collapsible behavior:
 
 ```dart
-FkFormSection(
+BfFormSection(
   title: 'Personal Information',
   description: 'Enter your name and contact details.',
   collapsible: true,
   initiallyExpanded: true,
   children: [
-    FkTextField(name: 'firstName', controller: firstNameCtrl),
-    FkTextField(name: 'lastName', controller: lastNameCtrl),
+    BfTextField(name: 'firstName', controller: firstNameCtrl),
+    BfTextField(name: 'lastName', controller: lastNameCtrl),
   ],
 )
 ```
 
-Spacing between children uses `FkFormTheme.fieldSpacing`.
+Spacing between children uses `BfFormTheme.fieldSpacing`.
 
-### FkFormRow
+### BfFormRow
 
 Arranges fields horizontally with configurable flex ratios:
 
 ```dart
-FkFormRow(
+BfFormRow(
   flexes: [2, 1],
   spacing: 16.0,
   children: [
-    FkTextField(name: 'street', controller: streetCtrl),
-    FkTextField(name: 'zipCode', controller: zipCtrl),
+    BfTextField(name: 'street', controller: streetCtrl),
+    BfTextField(name: 'zipCode', controller: zipCtrl),
   ],
 )
 ```
@@ -352,7 +354,7 @@ When `flexes` is `null`, all children get equal flex.
 
 ## Controller extensions
 
-FormKit provides extensions on `FkFieldController` for convenience:
+BlaqForm provides extensions on `BfFieldController` for convenience:
 
 ```dart
 // String controllers

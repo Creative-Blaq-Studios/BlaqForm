@@ -1,9 +1,11 @@
 ---
 title: Validators Reference
-description: Complete reference table for all built-in FormKit validators.
+description: Complete reference table for all built-in BlaqForm validators.
+tableOfContents:
+  maxDepth: 2
 ---
 
-All validators are accessed through the `Fk` static namespace. Every validator accepts an optional `message` parameter to override the default error text.
+All validators are accessed through the `Bf` static namespace. Every validator accepts an optional `message` parameter to override the default error text.
 
 ## Sync validators
 
@@ -11,63 +13,63 @@ All validators are accessed through the `Fk` static namespace. Every validator a
 
 | Name | Signature | Description | Example | Default message |
 |---|---|---|---|---|
-| `Fk.required()` | `FkValidator<T>` | Value is not null and not empty (trims strings). | `Fk.required()` | "This field is required" |
-| `Fk.email()` | `FkValidator<String>` | Valid email address format. | `Fk.email()` | "Invalid email address" |
-| `Fk.minLength(n)` | `FkValidator<String>` | String has at least `n` characters. | `Fk.minLength(8)` | "Must be at least 8 characters" |
-| `Fk.maxLength(n)` | `FkValidator<String>` | String has at most `n` characters. | `Fk.maxLength(100)` | "Must be at most 100 characters" |
-| `Fk.pattern(regex)` | `FkValidator<String>` | String matches the given `RegExp`. | `Fk.pattern(RegExp(r'^[A-Z]'), message: 'Must start with uppercase')` | "Invalid format" |
-| `Fk.url()` | `FkValidator<String>` | Valid URL (http, https, ftp). | `Fk.url()` | "Invalid URL" |
-| `Fk.phone()` | `FkValidator<String>` | Valid phone number (digits, spaces, dashes, parens, optional leading +, 7+ digits). | `Fk.phone()` | "Invalid phone number" |
-| `Fk.creditCard()` | `FkValidator<String>` | Valid credit card number via Luhn algorithm. | `Fk.creditCard()` | "Invalid credit card number" |
+| `Bf.required()` | `BfValidator<T>` | Value is not null and not empty (trims strings). | `Bf.required()` | "This field is required" |
+| `Bf.email()` | `BfValidator<String>` | Valid email address format. | `Bf.email()` | "Invalid email address" |
+| `Bf.minLength(n)` | `BfValidator<String>` | String has at least `n` characters. | `Bf.minLength(8)` | "Must be at least 8 characters" |
+| `Bf.maxLength(n)` | `BfValidator<String>` | String has at most `n` characters. | `Bf.maxLength(100)` | "Must be at most 100 characters" |
+| `Bf.pattern(regex)` | `BfValidator<String>` | String matches the given `RegExp`. | `Bf.pattern(RegExp(r'^[A-Z]'), message: 'Must start with uppercase')` | "Invalid format" |
+| `Bf.url()` | `BfValidator<String>` | Valid URL (http, https, ftp). | `Bf.url()` | "Invalid URL" |
+| `Bf.phone()` | `BfValidator<String>` | Valid phone number (digits, spaces, dashes, parens, optional leading +, 7+ digits). | `Bf.phone()` | "Invalid phone number" |
+| `Bf.creditCard()` | `BfValidator<String>` | Valid credit card number via Luhn algorithm. | `Bf.creditCard()` | "Invalid credit card number" |
 
 ### Numeric validators
 
 | Name | Signature | Description | Example | Default message |
 |---|---|---|---|---|
-| `Fk.min(n)` | `FkValidator<num>` | Value is at least `n`. | `Fk.min(0)` | "Must be at least 0" |
-| `Fk.max(n)` | `FkValidator<num>` | Value is at most `n`. | `Fk.max(100)` | "Must be at most 100" |
-| `Fk.between(min, max)` | `FkValidator<num>` | Value is between `min` and `max` (inclusive). | `Fk.between(1, 10)` | "Must be between 1 and 10" |
+| `Bf.min(n)` | `BfValidator<num>` | Value is at least `n`. | `Bf.min(0)` | "Must be at least 0" |
+| `Bf.max(n)` | `BfValidator<num>` | Value is at most `n`. | `Bf.max(100)` | "Must be at most 100" |
+| `Bf.between(min, max)` | `BfValidator<num>` | Value is between `min` and `max` (inclusive). | `Bf.between(1, 10)` | "Must be between 1 and 10" |
 
 ### Date validators
 
 | Name | Signature | Description | Example | Default message |
 |---|---|---|---|---|
-| `Fk.after(date)` | `FkValidator<DateTime>` | Date is after the given date. | `Fk.after(DateTime(2024, 1, 1))` | "Must be after 2024-01-01" |
-| `Fk.before(date)` | `FkValidator<DateTime>` | Date is before the given date. | `Fk.before(DateTime(2030, 1, 1))` | "Must be before 2030-01-01" |
-| `Fk.age(years)` | `FkValidator<DateTime>` | Date represents an age of at least `years`. | `Fk.age(18)` | "Must be at least 18 years old" |
+| `Bf.after(date)` | `BfValidator<DateTime>` | Date is after the given date. | `Bf.after(DateTime(2024, 1, 1))` | "Must be after 2024-01-01" |
+| `Bf.before(date)` | `BfValidator<DateTime>` | Date is before the given date. | `Bf.before(DateTime(2030, 1, 1))` | "Must be before 2030-01-01" |
+| `Bf.age(years)` | `BfValidator<DateTime>` | Date represents an age of at least `years`. | `Bf.age(18)` | "Must be at least 18 years old" |
 
 ### Generic validators
 
 | Name | Signature | Description | Example | Default message |
 |---|---|---|---|---|
-| `Fk.equals(expected)` | `FkValidator<T>` | Value equals `expected`. | `Fk.equals<bool>(true, message: 'Must accept')` | "Value must equal \{expected\}" |
-| `Fk.custom(fn)` | `FkValidator<T>` | Custom sync validation callback. Return `null` for valid, `FkValidationResult` for invalid. | `Fk.custom<String>((v) => v?.contains('bad') == true ? FkValidationResult('Forbidden') : null)` | (your message) |
+| `Bf.equals(expected)` | `BfValidator<T>` | Value equals `expected`. | `Bf.equals<bool>(true, message: 'Must accept')` | "Value must equal \{expected\}" |
+| `Bf.custom(fn)` | `BfValidator<T>` | Custom sync validation callback. Return `null` for valid, `BfValidationResult` for invalid. | `Bf.custom<String>((v) => v?.contains('bad') == true ? BfValidationResult('Forbidden') : null)` | (your message) |
 
 ### Cross-field validators
 
 | Name | Signature | Description | Example | Default message |
 |---|---|---|---|---|
-| `Fk.matchFields(name)` | `FkValidator<T>` | Value equals the value of another field. Requires `FkValidationContext`. | `Fk.matchFields('password', message: 'Passwords must match')` | "Fields do not match" |
+| `Bf.matchFields(name)` | `BfValidator<T>` | Value equals the value of another field. Requires `BfValidationContext`. | `Bf.matchFields('password', message: 'Passwords must match')` | "Fields do not match" |
 
 ## Async validators
 
 | Name | Signature | Description | Example | Default message |
 |---|---|---|---|---|
-| `Fk.unique(checker)` | `FkAsyncValidator<T>` | Checks uniqueness via async callback. `checker` returns `true` if unique (valid). | `Fk.unique<String>((v) => api.isAvailable(v!))` | "This value is already taken" |
+| `Bf.unique(checker)` | `BfAsyncValidator<T>` | Checks uniqueness via async callback. `checker` returns `true` if unique (valid). | `Bf.unique<String>((v) => api.isAvailable(v!))` | "This value is already taken" |
 
 ## Composition operators
 
-All `FkValidator<T>` instances support these methods:
+All `BfValidator<T>` instances support these methods:
 
 | Method | Description | Example |
 |---|---|---|
-| `.and(other)` | Both must pass. Short-circuits on first failure. | `Fk.required().and(Fk.email())` |
-| `.or(other)` | At least one must pass. Returns second error if both fail. | `Fk.email().or(Fk.url())` |
-| `.when(predicate)` | Only runs when `predicate` returns `true`. | `Fk.required().when((ctx) => ctx?.sibling<String>('type') == 'business')` |
+| `.and(other)` | Both must pass. Short-circuits on first failure. | `Bf.required().and(Bf.email())` |
+| `.or(other)` | At least one must pass. Returns second error if both fail. | `Bf.email().or(Bf.url())` |
+| `.when(predicate)` | Only runs when `predicate` returns `true`. | `Bf.required().when((ctx) => ctx?.sibling<String>('type') == 'business')` |
 
 ## Validation result params
 
-Some validators include `params` in their `FkValidationResult` for template interpolation:
+Some validators include `params` in their `BfValidationResult` for template interpolation:
 
 | Validator | Params |
 |---|---|
@@ -83,7 +85,7 @@ Some validators include `params` in their `FkValidationResult` for template inte
 | `equals` | `expected`, `actual` |
 | `matchFields` | `{'otherField': fieldName}` |
 
-Use `FkMessageFormatter.format()` to interpolate these params into custom message templates.
+Use `BfMessageFormatter.format()` to interpolate these params into custom message templates.
 
 ## Related
 

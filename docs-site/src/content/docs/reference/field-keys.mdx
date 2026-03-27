@@ -1,34 +1,36 @@
 ---
 title: Field Key Constants
 description: Predefined field name constants for common form patterns.
+tableOfContents:
+  maxDepth: 2
 ---
 
-FormKit provides predefined string constants for common field names, giving you IDE autocomplete and eliminating typos. They're purely optional — plain strings still work everywhere.
+BlaqForm provides predefined string constants for common field names, giving you IDE autocomplete and eliminating typos. They're purely optional — plain strings still work everywhere.
 
 ## Usage
 
 ```dart
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
-FkFormBuilder(
+BfFormBuilder(
   fields: {
-    FkUserKeys.email: FkFieldConfig.email(
+    BfUserKeys.email: BfFieldConfig.email(
       label: 'Email',
-      validators: [Fk.required(), Fk.email()],
+      validators: [Bf.required(), Bf.email()],
     ),
-    FkUserKeys.password: FkFieldConfig.password(
+    BfUserKeys.password: BfFieldConfig.password(
       label: 'Password',
-      validators: [Fk.required(), Fk.minLength(8)],
+      validators: [Bf.required(), Bf.minLength(8)],
     ),
-    FkUserKeys.firstName: FkFieldConfig.text(
+    BfUserKeys.firstName: BfFieldConfig.text(
       label: 'First Name',
-      validators: [Fk.required()],
+      validators: [Bf.required()],
     ),
   },
   builder: (context, form) => Column(children: [
-    form.email(FkUserKeys.email),
-    form.password(FkUserKeys.password),
-    form.text(FkUserKeys.firstName),
+    form.email(BfUserKeys.email),
+    form.password(BfUserKeys.password),
+    form.text(BfUserKeys.firstName),
     form.submitButton('Sign Up'),
   ]),
 )
@@ -38,13 +40,13 @@ Constants are just `static const String` values — they're fully interchangeabl
 
 ```dart
 // These are identical:
-FkUserKeys.email      // 'email'
+BfUserKeys.email      // 'email'
 'email'               // 'email'
 ```
 
 ---
 
-## FkUserKeys
+## BfUserKeys
 
 User identity and account fields.
 
@@ -79,7 +81,7 @@ User identity and account fields.
 | `language` | `'language'` |
 | `timezone` | `'timezone'` |
 
-## FkContactKeys
+## BfContactKeys
 
 Contact information.
 
@@ -98,7 +100,7 @@ Contact information.
 | `emergencyContactPhone` | `'emergencyContactPhone'` |
 | `emergencyContactRelation` | `'emergencyContactRelation'` |
 
-## FkAddressKeys
+## BfAddressKeys
 
 Address and location fields.
 
@@ -128,7 +130,7 @@ Address and location fields.
 | `latitude` | `'latitude'` |
 | `longitude` | `'longitude'` |
 
-## FkPaymentKeys
+## BfPaymentKeys
 
 Payment, billing, and financial fields.
 
@@ -162,7 +164,7 @@ Payment, billing, and financial fields.
 | `billingZip` | `'billingZip'` |
 | `billingCountry` | `'billingCountry'` |
 
-## FkShippingKeys
+## BfShippingKeys
 
 Shipping and delivery fields.
 
@@ -182,7 +184,7 @@ Shipping and delivery fields.
 | `trackingNumber` | `'trackingNumber'` |
 | `orderNotes` | `'orderNotes'` |
 
-## FkCompanyKeys
+## BfCompanyKeys
 
 Company and business fields.
 
@@ -202,7 +204,7 @@ Company and business fields.
 | `companyEmail` | `'companyEmail'` |
 | `companyPhone` | `'companyPhone'` |
 
-## FkSocialKeys
+## BfSocialKeys
 
 Social media and online presence.
 
@@ -221,7 +223,7 @@ Social media and online presence.
 | `whatsapp` | `'whatsapp'` |
 | `skype` | `'skype'` |
 
-## FkPreferenceKeys
+## BfPreferenceKeys
 
 User preferences, settings, and consent.
 
@@ -242,7 +244,7 @@ User preferences, settings, and consent.
 | `rememberMe` | `'rememberMe'` |
 | `twoFactorEnabled` | `'twoFactorEnabled'` |
 
-## FkContentKeys
+## BfContentKeys
 
 Content creation, feedback, and reviews.
 
@@ -273,7 +275,7 @@ Content creation, feedback, and reviews.
 | `document` | `'document'` |
 | `signature` | `'signature'` |
 
-## FkDateTimeKeys
+## BfDateTimeKeys
 
 Date, time, and scheduling fields.
 
@@ -296,7 +298,7 @@ Date, time, and scheduling fields.
 | `checkIn` | `'checkIn'` |
 | `checkOut` | `'checkOut'` |
 
-## FkSearchKeys
+## BfSearchKeys
 
 Search, filter, and query fields.
 

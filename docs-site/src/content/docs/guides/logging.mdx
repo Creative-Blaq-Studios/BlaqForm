@@ -1,38 +1,38 @@
 ---
 title: Logging
-description: Configure FormKit's built-in logger for development debugging and production analytics.
+description: Configure BlaqForm's built-in logger for development debugging and production analytics.
 ---
 
-FormKit includes a structured, colorized logger that helps you understand what is happening inside your forms at runtime. It is silent by default and configured through the `FkLogger.instance` singleton.
+BlaqForm includes a structured, colorized logger that helps you understand what is happening inside your forms at runtime. It is silent by default and configured through the `BfLogger.instance` singleton.
 
 ## Quick start
 
 ```dart
 // Enable debug logging for everything
-FkLogger.instance.level = FkLogLevel.debug;
+BfLogger.instance.level = BfLogLevel.debug;
 
 // Only show validation and submission logs
-FkLogger.instance.enabledCategories = {
-  FkLogCategory.validation,
-  FkLogCategory.submission,
+BfLogger.instance.enabledCategories = {
+  BfLogCategory.validation,
+  BfLogCategory.submission,
 };
 
 // Silence all logging
-FkLogger.instance.level = FkLogLevel.none;
+BfLogger.instance.level = BfLogLevel.none;
 ```
 
 ## Configuration
 
-All configuration is done on `FkLogger.instance`:
+All configuration is done on `BfLogger.instance`:
 
 | Property | Type | Default | Description |
 |---|---|---|---|
-| `level` | `FkLogLevel` | `none` | Minimum severity to emit. |
-| `enabledCategories` | `Set<FkLogCategory>?` | `null` (all) | Which subsystem categories to include. `null` means all. |
-| `handler` | `FkLogHandler?` | `null` | Custom handler called before default output. Return `true` to suppress console output. |
+| `level` | `BfLogLevel` | `none` | Minimum severity to emit. |
+| `enabledCategories` | `Set<BfLogCategory>?` | `null` (all) | Which subsystem categories to include. `null` means all. |
+| `handler` | `BfLogHandler?` | `null` | Custom handler called before default output. Return `true` to suppress console output. |
 | `useColors` | `bool` | `true` | Whether to use ANSI color codes. Set to `false` for CI or Flutter DevTools. |
 
-## FkLogLevel
+## BfLogLevel
 
 Levels are ordered from most to least severe. Setting the logger to a level enables that level and all levels above it.
 
@@ -45,7 +45,7 @@ Levels are ordered from most to least severe. Setting the logger to a level enab
 | `debug` | 4 | Fine-grained development messages (e.g., value changed, sync validation ran). |
 | `verbose` | 5 | Very detailed output including async token tracking and debounce scheduling. |
 
-## FkLogCategory
+## BfLogCategory
 
 Filter logs to only the subsystems you care about:
 
@@ -60,9 +60,9 @@ Filter logs to only the subsystems you care about:
 ### Example: only validation logs
 
 ```dart
-FkLogger.instance
-  ..level = FkLogLevel.debug
-  ..enabledCategories = {FkLogCategory.validation};
+BfLogger.instance
+  ..level = BfLogLevel.debug
+  ..enabledCategories = {BfLogCategory.validation};
 ```
 
 ## Console output format
@@ -86,9 +86,9 @@ With colors enabled, levels and categories are color-coded:
 Intercept log entries for analytics, crash reporting, or custom formatting:
 
 ```dart
-FkLogger.instance.handler = (entry) {
+BfLogger.instance.handler = (entry) {
   // Send to analytics
-  myAnalytics.track('formkit_${entry.category.name}', {
+  myAnalytics.track('blaq_form_${entry.category.name}', {
     'level': entry.level.name,
     'message': entry.message,
     'field': entry.field,
@@ -101,14 +101,14 @@ FkLogger.instance.handler = (entry) {
 };
 ```
 
-### FkLogEntry
+### BfLogEntry
 
-The handler receives an `FkLogEntry` with these properties:
+The handler receives an `BfLogEntry` with these properties:
 
 | Property | Type | Description |
 |---|---|---|
-| `level` | `FkLogLevel` | Severity of this entry. |
-| `category` | `FkLogCategory` | Which subsystem produced it. |
+| `level` | `BfLogLevel` | Severity of this entry. |
+| `category` | `BfLogCategory` | Which subsystem produced it. |
 | `message` | `String` | Human-readable summary. |
 | `field` | `String?` | The field name this entry relates to. |
 | `detail` | `String?` | Extra detail (validation error, new value, etc.). |
@@ -116,16 +116,16 @@ The handler receives an `FkLogEntry` with these properties:
 
 ## Convenience methods
 
-`FkLogger.instance` provides shorthand methods for each level:
+`BfLogger.instance` provides shorthand methods for each level:
 
 ```dart
-final logger = FkLogger.instance;
+final logger = BfLogger.instance;
 
-logger.error(FkLogCategory.validation, 'Validator threw', field: 'email');
-logger.warning(FkLogCategory.form, 'Field registered twice', field: 'name');
-logger.info(FkLogCategory.submission, 'Form submitted');
-logger.debug(FkLogCategory.field, 'Value changed', field: 'email', detail: 'new@example.com');
-logger.verbose(FkLogCategory.validation, 'Async token issued', field: 'username');
+logger.error(BfLogCategory.validation, 'Validator threw', field: 'email');
+logger.warning(BfLogCategory.form, 'Field registered twice', field: 'name');
+logger.info(BfLogCategory.submission, 'Form submitted');
+logger.debug(BfLogCategory.field, 'Value changed', field: 'email', detail: 'new@example.com');
+logger.verbose(BfLogCategory.validation, 'Async token issued', field: 'username');
 ```
 
 ## Development setup example
@@ -133,8 +133,8 @@ logger.verbose(FkLogCategory.validation, 'Async token issued', field: 'username'
 ```dart
 void main() {
   // Enable verbose logging during development
-  FkLogger.instance
-    ..level = FkLogLevel.verbose
+  BfLogger.instance
+    ..level = BfLogLevel.verbose
     ..useColors = true;
 
   runApp(const MyApp());
@@ -146,8 +146,8 @@ void main() {
 ```dart
 void main() {
   // Only capture errors and warnings, send to analytics
-  FkLogger.instance
-    ..level = FkLogLevel.warning
+  BfLogger.instance
+    ..level = BfLogLevel.warning
     ..useColors = false
     ..handler = (entry) {
       Sentry.captureMessage(entry.toString());

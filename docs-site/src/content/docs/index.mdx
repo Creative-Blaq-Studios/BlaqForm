@@ -1,5 +1,5 @@
 ---
-title: FormKit for Flutter
+title: BlaqForm for Flutter
 description: Composable, extensible forms with zero boilerplate.
 template: splash
 hero:
@@ -9,23 +9,23 @@ hero:
       link: /getting-started/
       icon: right-arrow
     - text: View on GitHub
-      link: https://github.com/your-org/formkit
+      link: https://github.com/your-org/blaq_form
       variant: minimal
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
-## Why FormKit?
+## Why BlaqForm?
 
 <CardGrid stagger>
   <Card title="Zero Boilerplate" icon="rocket">
-    `FkFormBuilder` eliminates manual controller creation and disposal. Declare fields as data, get a working form.
+    `BfFormBuilder` eliminates manual controller creation and disposal. Declare fields as data, get a working form.
   </Card>
   <Card title="Composable Validation" icon="approve-check">
     Chain validators with `.and()`, `.or()`, `.when()`. Async validation with debounce. Cross-field matching built in.
   </Card>
   <Card title="Multi-Step Wizard" icon="list-format">
-    `FkWizard` handles step navigation, per-step validation, and progress tracking out of the box.
+    `BfWizard` handles step navigation, per-step validation, and progress tracking out of the box.
   </Card>
   <Card title="State-Management Agnostic" icon="setting">
     Works with `setState`, Riverpod, Bloc, or vanilla `ChangeNotifier`. No lock-in.
@@ -37,17 +37,17 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 ```dart
 // Before: 188 lines, StatefulWidget, manual controllers, manual dispose
 class _SignupFormState extends State<SignupForm> {
-  late final FkFormController _formController;
-  late final FkFieldController<String> _nameController;
-  late final FkFieldController<String> _emailController;
+  late final BfFormController _formController;
+  late final BfFieldController<String> _nameController;
+  late final BfFieldController<String> _emailController;
   // ... 5 more controllers, initState, dispose ...
 }
 
 // After: StatelessWidget, ~40 lines, zero ceremony
-FkFormBuilder(
+BfFormBuilder(
   fields: {
-    'name':  FkFieldConfig.text(label: 'Name', validators: [Fk.required()]),
-    'email': FkFieldConfig.email(label: 'Email', validators: [Fk.required(), Fk.email()]),
+    'name':  BfFieldConfig.text(label: 'Name', validators: [Bf.required()]),
+    'email': BfFieldConfig.email(label: 'Email', validators: [Bf.required(), Bf.email()]),
   },
   onSubmit: (values) async => await api.signup(values),
   builder: (context, form) => Column(children: [

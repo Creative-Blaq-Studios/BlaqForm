@@ -1,13 +1,13 @@
 ---
 title: Quick Start
-description: Build your first FormKit form in 2 minutes.
+description: Build your first BlaqForm form in 2 minutes.
 ---
 
 ## Your first form
 
 ```dart
 import 'package:flutter/material.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -18,16 +18,16 @@ class LoginForm extends StatelessWidget {
       appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: FkFormBuilder(
+        child: BfFormBuilder(
           fields: {
-            'email': FkFieldConfig.email(
+            'email': BfFieldConfig.email(
               label: 'Email',
               hint: 'you@example.com',
-              validators: [Fk.required(), Fk.email()],
+              validators: [Bf.required(), Bf.email()],
             ),
-            'password': FkFieldConfig.password(
+            'password': BfFieldConfig.password(
               label: 'Password',
-              validators: [Fk.required(), Fk.minLength(8)],
+              validators: [Bf.required(), Bf.minLength(8)],
             ),
           },
           onSubmit: (values) async {
@@ -56,14 +56,14 @@ That's it. No `StatefulWidget`, no `initState`, no `dispose`, no controller wiri
 
 ## What just happened?
 
-1. **`FkFormBuilder`** created an `FkFormController` and two `FkFieldController`s from your config
-2. **`form.email('email')`** returned a pre-wired `FkTextField` with email keyboard and your validators
+1. **`BfFormBuilder`** created an `BfFormController` and two `BfFieldController`s from your config
+2. **`form.email('email')`** returned a pre-wired `BfTextField` with email keyboard and your validators
 3. **`form.submitButton('Log In')`** returned a button that auto-disables when invalid and shows a spinner during submission
 4. **`onSubmit`** only fires after all validators pass
 5. When the widget is removed from the tree, everything is disposed automatically
 
 ## Next steps
 
-- [FkFormBuilder guide](/guides/form-builder/) — full API, dropdown, checkbox, custom fields
+- [BfFormBuilder guide](/guides/form-builder/) — full API, dropdown, checkbox, custom fields
 - [Validation guide](/guides/validation/) — composable validators, async, cross-field
-- [Multi-step wizard](/guides/wizard/) — `FkWizard` with step navigation
+- [Multi-step wizard](/guides/wizard/) — `BfWizard` with step navigation

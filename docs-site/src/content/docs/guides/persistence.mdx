@@ -1,21 +1,21 @@
 ---
 title: Persistence
-description: Save and restore form state with FkFormPersistence, from in-memory testing to SharedPreferences.
+description: Save and restore form state with BfFormPersistence, from in-memory testing to SharedPreferences.
 ---
 
-FormKit's persistence layer is defined by the `FkFormPersistence` abstract class. Implement it once for your storage backend and use the same API everywhere.
+BlaqForm's persistence layer is defined by the `BfFormPersistence` abstract class. Implement it once for your storage backend and use the same API everywhere.
 
-## FkFormPersistence interface
+## BfFormPersistence interface
 
 ```dart
-abstract class FkFormPersistence {
+abstract class BfFormPersistence {
   Future<void> save(Map<String, dynamic> values);
   Future<Map<String, dynamic>?> load();
   Future<void> clear();
 
   // Convenience methods (implemented in the base class):
-  Future<void> saveForm(FkFormController controller);
-  Future<void> restoreForm(FkFormController controller);
+  Future<void> saveForm(BfFormController controller);
+  Future<void> restoreForm(BfFormController controller);
 }
 ```
 
@@ -27,12 +27,12 @@ abstract class FkFormPersistence {
 | `saveForm(controller)` | Serializes all field values via `controller.toMap()` and calls `save()`. |
 | `restoreForm(controller)` | Loads persisted values and sets each matching field's value. Silently skips unregistered keys. |
 
-## FkMemoryPersistence
+## BfMemoryPersistence
 
 A built-in in-memory implementation for testing and short-lived draft state:
 
 ```dart
-final persistence = FkMemoryPersistence();
+final persistence = BfMemoryPersistence();
 
 // Save
 await persistence.save({'email': 'user@example.com', 'name': 'Jane'});
@@ -46,7 +46,7 @@ await persistence.clear();
 await persistence.load(); // => null
 ```
 
-Data lives only as long as the `FkMemoryPersistence` instance.
+Data lives only as long as the `BfMemoryPersistence` instance.
 
 ## SharedPreferences implementation
 
@@ -55,12 +55,12 @@ Here is how to implement persistence backed by `SharedPreferences`:
 ```dart
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
-class SharedPrefsPersistence extends FkFormPersistence {
+class SharedPrefsPersistence extends BfFormPersistence {
   final String key;
 
-  SharedPrefsPersistence({this.key = 'fk_form_draft'});
+  SharedPrefsPersistence({this.key = 'bf_form_draft'});
 
   @override
   Future<void> save(Map<String, dynamic> values) async {
@@ -112,13 +112,13 @@ class AutoSaveForm extends StatefulWidget {
 }
 
 class _AutoSaveFormState extends State<AutoSaveForm> {
-  late final FkFormController _formController;
+  late final BfFormController _formController;
   final _persistence = SharedPrefsPersistence(key: 'auto_save_draft');
 
   @override
   void initState() {
     super.initState();
-    _formController = FkFormController();
+    _formController = BfFormController();
     _formController.addListener(_onFormChanged);
 
     // Restore any previously saved draft
@@ -139,12 +139,12 @@ class _AutoSaveFormState extends State<AutoSaveForm> {
 
   @override
   Widget build(BuildContext context) {
-    return FkForm(
+    return BfForm(
       controller: _formController,
       child: Column(
         children: [
           // ... fields ...
-          FkSubmitButton(
+          BfSubmitButton(
             label: 'Submit',
             onSubmit: (controller) async {
               await controller.submit((values) async {
@@ -161,12 +161,12 @@ class _AutoSaveFormState extends State<AutoSaveForm> {
 }
 ```
 
-## Combining with FkDirtyGuard
+## Combining with BfDirtyGuard
 
-Persistence pairs naturally with `FkDirtyGuard`. Save the draft on every change, and warn the user before discarding it:
+Persistence pairs naturally with `BfDirtyGuard`. Save the draft on every change, and warn the user before discarding it:
 
 ```dart
-FkDirtyGuard(
+BfDirtyGuard(
   controller: formController,
   title: 'Discard draft?',
   message: 'Your progress has been saved. Leave anyway?',
@@ -176,5 +176,5 @@ FkDirtyGuard(
 
 ## Related
 
-- [Indicators](/guides/indicators) -- FkDirtyGuard for unsaved changes warnings
+- [Indicators](/guides/indicators) -- BfDirtyGuard for unsaved changes warnings
 - [Form Builder](/guides/form-builder) -- declarative forms with auto-managed controllers

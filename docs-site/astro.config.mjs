@@ -4,11 +4,12 @@ import starlight from '@astrojs/starlight';
 export default defineConfig({
   integrations: [
     starlight({
-      title: 'FormKit',
+      title: 'BlaqForm',
       description: 'A composable, extensible Flutter forms package.',
       social: {
-        github: 'https://github.com/your-org/formkit',
+        github: 'https://github.com/your-org/blaq_form',
       },
+      customCss: ['./src/styles/custom.css'],
       sidebar: [
         {
           label: 'Getting Started',
@@ -21,7 +22,7 @@ export default defineConfig({
         {
           label: 'Guides',
           items: [
-            { label: 'FkFormBuilder', link: '/guides/form-builder/' },
+            { label: 'BfFormBuilder', link: '/guides/form-builder/' },
             { label: 'Multi-Step Wizard', link: '/guides/wizard/' },
             { label: 'Validation', link: '/guides/validation/' },
             { label: 'Theming', link: '/guides/theming/' },
