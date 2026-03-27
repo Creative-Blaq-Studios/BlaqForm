@@ -14,3 +14,5 @@ export 'src/theme/theme.dart';
 export 'src/extensions/extensions.dart';
 export 'src/logging/logging.dart';
 export 'src/builder/builder.dart';
+export 'src/messages/messages.dart';
+export 'src/persistence/persistence.dart';
