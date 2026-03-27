@@ -1,7 +1,7 @@
 name: formkit
-description: "A new Flutter package project."
+description: "A composable, extensible Flutter forms package with prebuilt validations, adaptive field types, and a developer-first API."
 version: 0.0.1
-homepage:
+homepage: ""
 
 environment:
   sdk: ^3.11.4

@@ -1,0 +1,33 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FormKit Example App",
+      "type": "dart",
+      "request": "launch",
+      "program": "formkit/example/lib/main.dart",
+      "cwd": "${workspaceFolder}/formkit/example"
+    },
+    {
+      "name": "FormKit Example (Chrome)",
+      "type": "dart",
+      "request": "launch",
+      "program": "formkit/example/lib/main.dart",
+      "args": ["-d", "chrome"]
+    },
+    {
+      "name": "FormKit Example (macOS)",
+      "type": "dart",
+      "request": "launch",
+      "program": "formkit/example/lib/main.dart",
+      "args": ["-d", "macos","-v"]
+    },
+    {
+      "name": "FormKit Tests",
+      "type": "dart",
+      "request": "launch",
+      "program": "formkit/test/",
+      "cwd": "${workspaceFolder}/formkit"
+    }
+  ]
+}

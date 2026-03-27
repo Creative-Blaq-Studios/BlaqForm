@@ -1,12 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
-
 import 'package:formkit/formkit.dart';
 
+/// Smoke test verifying the barrel export can be imported without errors.
 void main() {
-  test('adds one to input values', () {
-    final calculator = Calculator();
-    expect(calculator.addOne(2), 3);
-    expect(calculator.addOne(-7), -6);
-    expect(calculator.addOne(0), 1);
+  test('formkit barrel export can be imported', () {
+    // Verify key types are accessible through the barrel import.
+    expect(Fk, isNotNull);
+    expect(FkFieldController<String>.new, isA<Function>());
+    expect(FkFormController.new, isA<Function>());
   });
 }
