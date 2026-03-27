@@ -13,4 +13,4 @@ export 'src/layout/layout.dart';
 export 'src/theme/theme.dart';
 export 'src/extensions/extensions.dart';
 export 'src/logging/logging.dart';
-export 'src/builder/fk_field_config.dart';
+export 'src/builder/builder.dart';
