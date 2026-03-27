@@ -1,0 +1,289 @@
+---
+title: Form Builder
+description: Build entire forms declaratively with FkFormBuilder — zero controller boilerplate.
+---
+
+`FkFormBuilder` eliminates the manual work of creating controllers, wiring them to fields, and disposing them. You declare your fields as a configuration map, and FormKit handles the rest.
+
+## The problem it solves
+
+Without `FkFormBuilder`, every form requires you to:
+
+1. Create an `FkFieldController` for each field.
+2. Create an `FkFormController` and register fields.
+3. Pass controllers to widgets manually.
+4. Dispose everything in `dispose()`.
+
+`FkFormBuilder` reduces all of that to a single declarative widget.
+
+## Basic usage
+
+```dart
+FkFormBuilder(
+  fields: {
+    'name': FkFieldConfig<String>.text(label: 'Name'),
+    'email': FkFieldConfig<String>.email(label: 'Email'),
+  },
+  onSubmit: (values) async {
+    await api.register(values);
+  },
+  builder: (scope) => Column(children: [
+    scope.text('name'),
+    scope.email('email'),
+    scope.submitButton('Register'),
+  ]),
+)
+```
+
+## FkFormBuilder API
+
+| Property | Type | Description |
+|---|---|---|
+| `fields` | `Map<String, FkFieldConfig>` | Declarative field configurations keyed by name. |
+| `builder` | `Widget Function(FkFormBuilderScope scope)` | Receives a scope with fluent field builders. |
+| `onSubmit` | `Future<void> Function(Map<String, dynamic>)?` | Called on submission with all form values. |
+| `autovalidateMode` | `FkAutovalidateMode` | When fields show errors. Defaults to `onUserInteraction`. |
+| `crossValidators` | `List<FkValidator<Map<String, dynamic>>>` | Cross-field validators run at submit time. |
+
+## FkFieldConfig constructors
+
+`FkFieldConfig` describes a field without creating its controller. Each named constructor sets the correct `FkFieldType`:
+
+| Constructor | Type Parameter | Description |
+|---|---|---|
+| `FkFieldConfig<String>.text()` | `String` | Standard text input. |
+| `FkFieldConfig<String>.password()` | `String` | Password input with obscured text. |
+| `FkFieldConfig<String>.email()` | `String` | Email input with keyboard hints. |
+| `FkFieldConfig<bool>.checkbox()` | `bool` | Boolean checkbox toggle. |
+| `FkFieldConfig<T>.dropdown()` | `T` | Dropdown selector with `options` and `optionLabels`. |
+| `FkFieldConfig<DateTime>.date()` | `DateTime` | Date picker field. |
+
+All constructors share these common parameters:
+
+```dart
+FkFieldConfig<String>.text(
+  initialValue: 'hello',           // Starting value
+  validators: [Fk.required()],     // Sync validators
+  asyncValidators: [],             // Async validators
+  asyncDebounce: Duration(milliseconds: 400),
+  label: 'Full Name',             // Label text
+  hint: 'Enter your name',        // Hint text
+  prefixIcon: Icons.person,       // Leading icon
+  suffixIcon: Icons.clear,        // Trailing icon
+  enabled: true,                  // Whether user can interact
+)
+```
+
+The dropdown constructor adds `options` and `optionLabels`:
+
+```dart
+FkFieldConfig<String>.dropdown(
+  label: 'Country',
+  options: ['US', 'UK', 'CA'],
+  optionLabels: {
+    'US': 'United States',
+    'UK': 'United Kingdom',
+    'CA': 'Canada',
+  },
+  validators: [Fk.required()],
+)
+```
+
+## FkFormBuilderScope fluent methods
+
+The `scope` object passed to `builder` provides one method per field type. Each method reads defaults from the corresponding `FkFieldConfig` but allows per-callsite overrides.
+
+### Text fields
+
+```dart
+scope.text('name')
+scope.text('name', label: 'Override Label', hint: 'Custom hint')
+scope.text('bio', maxLines: 4, minLines: 2)
+```
+
+### Password fields
+
+```dart
+scope.password('password')
+scope.password('password', label: 'Your Password')
+```
+
+### Email fields
+
+```dart
+scope.email('email')
+scope.email('email', prefixIcon: Icon(Icons.mail))
+```
+
+### Checkbox fields
+
+```dart
+scope.checkbox('terms')
+scope.checkbox('terms', label: 'I agree to the Terms of Service')
+```
+
+### Switch fields
+
+```dart
+scope.switchField('notifications')
+scope.switchField('notifications', label: 'Enable push notifications')
+```
+
+### Dropdown fields
+
+```dart
+scope.dropdown<String>('country')
+scope.dropdown<String>('country', hint: 'Select a country')
+```
+
+### Date fields
+
+```dart
+scope.date('birthday')
+scope.date('birthday', firstDate: DateTime(1900), lastDate: DateTime.now())
+```
+
+### Submit button
+
+```dart
+scope.submitButton('Register')
+scope.submitButton(
+  'Save',
+  disableWhenInvalid: true,
+  style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 48)),
+)
+```
+
+The submit button automatically disables when the form is invalid and shows a loading spinner during submission.
+
+## Accessing controllers directly
+
+Use `scope.controller<T>(name)` when you need the raw `FkFieldController`:
+
+```dart
+builder: (scope) {
+  final emailCtrl = scope.controller<String>('email');
+
+  return Column(children: [
+    scope.email('email'),
+    // React to controller changes
+    ListenableBuilder(
+      listenable: emailCtrl,
+      builder: (_, __) => Text('Current: ${emailCtrl.value ?? ""}'),
+    ),
+  ]);
+}
+```
+
+## Accessing all values
+
+`scope.values` returns a `Map<String, dynamic>` of all current field values:
+
+```dart
+builder: (scope) {
+  return Column(children: [
+    scope.text('name'),
+    scope.email('email'),
+    ElevatedButton(
+      onPressed: () => print(scope.values),
+      child: Text('Print Values'),
+    ),
+  ]);
+}
+```
+
+## Complete example: signup form
+
+```dart
+class SignupForm extends StatelessWidget {
+  const SignupForm({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Create Account')),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: FkFormBuilder(
+          fields: {
+            'name': FkFieldConfig<String>.text(
+              label: 'Full Name',
+              hint: 'John Doe',
+              prefixIcon: Icons.person,
+              validators: [Fk.required()],
+            ),
+            'email': FkFieldConfig<String>.email(
+              label: 'Email',
+              hint: 'you@example.com',
+              prefixIcon: Icons.email,
+              validators: [Fk.required(), Fk.email()],
+            ),
+            'password': FkFieldConfig<String>.password(
+              label: 'Password',
+              prefixIcon: Icons.lock,
+              validators: [Fk.required(), Fk.minLength(8)],
+            ),
+            'confirmPassword': FkFieldConfig<String>.password(
+              label: 'Confirm Password',
+              prefixIcon: Icons.lock_outline,
+              validators: [
+                Fk.required(),
+                Fk.matchFields('password', message: 'Passwords must match'),
+              ],
+            ),
+            'country': FkFieldConfig<String>.dropdown(
+              label: 'Country',
+              options: ['US', 'UK', 'CA', 'DE'],
+              optionLabels: {
+                'US': 'United States',
+                'UK': 'United Kingdom',
+                'CA': 'Canada',
+                'DE': 'Germany',
+              },
+              validators: [Fk.required()],
+            ),
+            'terms': FkFieldConfig<bool>.checkbox(
+              initialValue: false,
+              label: 'I agree to the Terms of Service',
+              validators: [
+                Fk.equals<bool>(true, message: 'You must accept the terms'),
+              ],
+            ),
+          },
+          onSubmit: (values) async {
+            // values = {'name': '...', 'email': '...', 'password': '...', ...}
+            await Future.delayed(const Duration(seconds: 2));
+            debugPrint('Registered: $values');
+          },
+          builder: (scope) => SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                scope.text('name'),
+                const SizedBox(height: 16),
+                scope.email('email'),
+                const SizedBox(height: 16),
+                scope.password('password'),
+                const SizedBox(height: 16),
+                scope.password('confirmPassword'),
+                const SizedBox(height: 16),
+                scope.dropdown<String>('country'),
+                const SizedBox(height: 16),
+                scope.checkbox('terms'),
+                const SizedBox(height: 24),
+                scope.submitButton('Create Account'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Related
+
+- [Validation](/guides/validation) -- all prebuilt validators
+- [Wizard](/guides/wizard) -- multi-step forms built on the same field config system
+- [Fields](/guides/fields) -- the full field widget catalog

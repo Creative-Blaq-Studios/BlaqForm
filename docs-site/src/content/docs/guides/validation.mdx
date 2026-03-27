@@ -1,0 +1,249 @@
+---
+title: Validation
+description: Composable, object-based validators with sync/async support, cross-field rules, and message formatting.
+---
+
+Validators in FormKit are objects, not callbacks. This design enables composition, serialization, and rich error metadata. All prebuilt validators are accessed through the `Fk` namespace.
+
+## FkValidator base class
+
+Every synchronous validator extends `FkValidator<T>`:
+
+```dart
+abstract class FkValidator<T> {
+  FkValidationResult? validate(T? value, [FkValidationContext? context]);
+}
+```
+
+Return `null` for valid, or an `FkValidationResult` for invalid.
+
+## FkValidationResult
+
+Each validation failure carries structured data:
+
+```dart
+FkValidationResult(
+  'Must be at least 8 characters',  // human-readable message
+  code: 'min_length',               // machine-readable for i18n
+  params: {'min': 8, 'actual': 3},  // for template interpolation
+)
+```
+
+## Composition
+
+Chain validators with `.and()`, `.or()`, and `.when()`:
+
+### AND -- both must pass
+
+```dart
+final validator = Fk.required().and(Fk.email());
+// Short-circuits: if required fails, email is not run.
+```
+
+### OR -- at least one must pass
+
+```dart
+final validator = Fk.email().or(Fk.url());
+// Valid if the value is either a valid email or a valid URL.
+```
+
+### WHEN -- conditional validation
+
+```dart
+final validator = Fk.required().when((ctx) {
+  return ctx?.sibling<String>('accountType') == 'business';
+});
+// Only validates when accountType is 'business'.
+```
+
+The `when` predicate receives an `FkValidationContext` so it can inspect sibling field values.
+
+## Prebuilt validators
+
+All accessed via the `Fk` static namespace:
+
+### String validators
+
+| Validator | Signature | Default message |
+|---|---|---|
+| `Fk.required()` | `FkValidator<T>` | "This field is required" |
+| `Fk.email()` | `FkValidator<String>` | "Invalid email address" |
+| `Fk.minLength(n)` | `FkValidator<String>` | "Must be at least n characters" |
+| `Fk.maxLength(n)` | `FkValidator<String>` | "Must be at most n characters" |
+| `Fk.pattern(regex)` | `FkValidator<String>` | "Invalid format" |
+| `Fk.url()` | `FkValidator<String>` | "Invalid URL" |
+| `Fk.phone()` | `FkValidator<String>` | "Invalid phone number" |
+| `Fk.creditCard()` | `FkValidator<String>` | "Invalid credit card number" |
+
+### Numeric validators
+
+| Validator | Signature | Default message |
+|---|---|---|
+| `Fk.min(n)` | `FkValidator<num>` | "Must be at least n" |
+| `Fk.max(n)` | `FkValidator<num>` | "Must be at most n" |
+| `Fk.between(min, max)` | `FkValidator<num>` | "Must be between min and max" |
+
+### Date validators
+
+| Validator | Signature | Default message |
+|---|---|---|
+| `Fk.after(date)` | `FkValidator<DateTime>` | "Must be after YYYY-MM-DD" |
+| `Fk.before(date)` | `FkValidator<DateTime>` | "Must be before YYYY-MM-DD" |
+| `Fk.age(years)` | `FkValidator<DateTime>` | "Must be at least N years old" |
+
+### Generic validators
+
+| Validator | Signature | Default message |
+|---|---|---|
+| `Fk.equals(expected)` | `FkValidator<T>` | "Value must equal expected" |
+| `Fk.custom(fn)` | `FkValidator<T>` | (your message) |
+
+### Cross-field validators
+
+| Validator | Signature | Default message |
+|---|---|---|
+| `Fk.matchFields(otherField)` | `FkValidator<T>` | "Fields do not match" |
+
+### Async validators
+
+| Validator | Signature | Default message |
+|---|---|---|
+| `Fk.unique(checker)` | `FkAsyncValidator<T>` | "This value is already taken" |
+
+All validators accept an optional `message` parameter to override the default.
+
+## Async validation
+
+Async validators extend `FkAsyncValidator<T>` and return `Future<FkValidationResult?>`:
+
+```dart
+FkFieldController<String>(
+  validators: [Fk.required(), Fk.email()],
+  asyncValidators: [
+    Fk.unique<String>((email) async {
+      return await api.isEmailAvailable(email!);
+    }),
+  ],
+  asyncDebounce: Duration(milliseconds: 500),
+)
+```
+
+Async validators only run after all sync validators pass. The `asyncDebounce` parameter (default 400ms) prevents rapid-fire API calls while the user types.
+
+During async validation, `controller.isValidating` is `true` -- use [FkFieldStatus](/guides/indicators) to show a spinner.
+
+### Writing a custom async validator
+
+```dart
+class UsernameAvailableValidator extends FkAsyncValidator<String> {
+  final ApiClient api;
+  const UsernameAvailableValidator(this.api);
+
+  @override
+  Future<FkValidationResult?> validate(
+    String? value, [
+    FkValidationContext? context,
+  ]) async {
+    if (value == null || value.isEmpty) return null;
+    final available = await api.checkUsername(value);
+    if (available) return null;
+    return FkValidationResult('Username is already taken', code: 'unique');
+  }
+}
+```
+
+## Cross-field validation with FkValidationContext
+
+`FkValidationContext` provides access to sibling field values without coupling validators to the form controller:
+
+```dart
+final context = FkValidationContext(
+  fieldValueGetter: <T>(name) => formController.field<T>(name).value,
+);
+
+// Inside a validator:
+final password = context.sibling<String>('password');
+```
+
+The built-in `Fk.matchFields()` uses this internally:
+
+```dart
+FkFieldController<String>(
+  validators: [
+    Fk.required(),
+    Fk.matchFields('password', message: 'Passwords must match'),
+  ],
+)
+```
+
+## FkMessageFormatter
+
+Use `FkMessageFormatter` to interpolate templates with field names and params:
+
+```dart
+FkMessageFormatter.format(
+  '{field} must be at least {min} characters',
+  fieldName: 'Password',
+  params: {'min': 8},
+);
+// => 'Password must be at least 8 characters'
+```
+
+You can also format directly from a validation result:
+
+```dart
+FkMessageFormatter.formatResult(
+  validationResult,
+  fieldName: 'Email',
+);
+```
+
+Tokens use `{curly braces}`. `{field}` is replaced with the field name. Any other `{key}` is replaced with the corresponding entry in `params`. Unmatched tokens are left unchanged.
+
+## Custom validators
+
+### Sync
+
+Use `Fk.custom()` for one-off validators:
+
+```dart
+Fk.custom<String>((value) {
+  if (value?.contains('bad') ?? false) {
+    return FkValidationResult('Contains a forbidden word');
+  }
+  return null;
+})
+```
+
+### Extending FkValidator
+
+For reusable validators, extend the base class:
+
+```dart
+class ContainsDigitValidator extends FkValidator<String> {
+  const ContainsDigitValidator();
+
+  @override
+  FkValidationResult? validate(String? value, [FkValidationContext? context]) {
+    if (value == null || value.isEmpty) return null;
+    if (!value.contains(RegExp(r'\d'))) {
+      return FkValidationResult(
+        'Must contain at least one digit',
+        code: 'contains_digit',
+      );
+    }
+    return null;
+  }
+}
+
+// Usage:
+FkFieldController<String>(
+  validators: [Fk.required(), const ContainsDigitValidator()],
+)
+```
+
+## Related
+
+- [Validators reference](/reference/validators) -- complete table of all validators
+- [Form Builder](/guides/form-builder) -- declarative forms using validators
+- [Indicators](/guides/indicators) -- FkFieldStatus for real-time validation feedback

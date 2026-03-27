@@ -1,0 +1,75 @@
+---
+title: Introduction
+description: What FormKit is and why you'd use it.
+---
+
+FormKit is a composable, extensible Flutter forms package. It provides:
+
+- **20+ field widgets** — text, password, dropdown, date, phone, currency, OTP, signature, rating, chips, sliders, and more
+- **Composable validators** — chain with `.and()`, `.or()`, `.when()`. Async support with debounce.
+- **Zero-boilerplate mode** — `FkFormBuilder` auto-manages controllers. No `initState`, no `dispose`.
+- **Multi-step wizard** — `FkWizard` with per-step validation and progress indicator
+- **State-management agnostic** — `ChangeNotifier`-based. Works with setState, Riverpod, Bloc, or anything.
+- **Zero external dependencies** — only Flutter SDK
+
+## Architecture
+
+FormKit is organized into 5 layers:
+
+| Layer | What it does | Key types |
+|-------|-------------|-----------|
+| **State** | Per-field and per-form state management | `FkFieldController<T>`, `FkFormController` |
+| **Validation** | Composable sync + async validators | `FkValidator<T>`, `Fk.required()`, `Fk.email()` |
+| **Field** | Pre-built field widgets with auto-registration | `FkTextField`, `FkDropdownField<T>`, `FkDateField`, ... |
+| **Consumer** | Form shell, layout, submit button | `FkForm`, `FkFormSection`, `FkSubmitButton` |
+| **Theme** | ThemeExtension for consistent styling | `FkFormTheme` |
+
+Plus **Builder** (`FkFormBuilder`), **Wizard** (`FkWizard`), **Indicators** (`FkFormProgress`, `FkFieldStatus`), **Persistence** (`FkFormPersistence`), and **Extensions** (`toJson()`, `dirtyValues()`, `toPng()`).
+
+## Two Ways to Build Forms
+
+### 1. Declarative (recommended)
+
+```dart
+FkFormBuilder(
+  fields: {
+    'email': FkFieldConfig.email(validators: [Fk.required(), Fk.email()]),
+    'password': FkFieldConfig.password(validators: [Fk.required(), Fk.minLength(8)]),
+  },
+  onSubmit: (values) async => await api.login(values),
+  builder: (context, form) => Column(children: [
+    form.email('email'),
+    form.password('password'),
+    form.submitButton('Log In'),
+  ]),
+)
+```
+
+### 2. Manual (full control)
+
+```dart
+class _MyFormState extends State<MyForm> {
+  final form = FkFormController();
+  final email = FkFieldController<String>(validators: [Fk.required(), Fk.email()]);
+
+  @override
+  void dispose() {
+    form.dispose();
+    email.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FkForm(
+      controller: form,
+      child: Column(children: [
+        FkTextField(name: 'email', controller: email),
+        FkSubmitButton(onSubmit: (ctrl) => ctrl.submit((v) async => ...)),
+      ]),
+    );
+  }
+}
+```
+
+Both approaches use the same validators, the same field widgets, and the same form controller under the hood.

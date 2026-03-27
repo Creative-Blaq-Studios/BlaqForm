@@ -6,7 +6,7 @@
       "type": "dart",
       "request": "launch",
       "program": "formkit/example/lib/main.dart",
-      "cwd": "${workspaceFolder}/formkit/example"
+      "args": ["-v"]
     },
     {
       "name": "FormKit Example (Chrome)",

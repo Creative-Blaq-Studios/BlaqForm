@@ -1,0 +1,371 @@
+---
+title: Field Widgets
+description: A catalog of all 17+ FormKit field widgets, from text inputs to signature pads.
+---
+
+FormKit ships with a comprehensive set of field widgets. Every field binds to an `FkFieldController<T>`, auto-registers with the nearest `FkForm`, and displays validation errors automatically.
+
+## Field catalog
+
+| Widget | Value Type | Description |
+|---|---|---|
+| `FkTextField` | `String` | Standard text input with `.password()` and `.email()` convenience constructors. |
+| `FkDropdownField<T>` | `T` | Dropdown selector wrapping `DropdownButtonFormField`. |
+| `FkCheckboxField` | `bool` | Single checkbox toggle. |
+| `FkSwitchField` | `bool` | Material switch toggle. |
+| `FkCheckboxGroupField<T>` | `List<T>` | Multi-select checkbox group. |
+| `FkRadioGroupField<T>` | `T` | Single-select radio button group. |
+| `FkDateField` | `DateTime` | Date picker with formatted display. |
+| `FkDateRangeField` | `DateTimeRange` | Date range picker. |
+| `FkPhoneField` | `String` | Phone number input with country code selector. |
+| `FkCurrencyField` | `double` | Currency input with locale-aware formatting. |
+| `FkOtpField` | `String` | Multi-box OTP/PIN input with auto-advance. |
+| `FkAutocompleteField<T>` | `T` | Autocomplete with async suggestions and debounce. |
+| `FkRatingField` | `double` | Star rating with optional half-star support. |
+| `FkChipSelectField<T>` | `List<T>` | Multi-select using `FilterChip` widgets. |
+| `FkSignatureField` | `List<List<Offset>>` | Signature drawing pad with PNG/base64 export. |
+| `FkSliderField` | `double` | Slider for numeric values. |
+| `FkRangeSliderField` | `RangeValues` | Range slider for min/max selection. |
+
+## FkTextField
+
+The most commonly used field. Wraps a standard `TextField` and syncs with `FkFieldController<String>`.
+
+```dart
+FkTextField(
+  name: 'bio',
+  controller: bioController,
+  labelText: 'Bio',
+  hintText: 'Tell us about yourself',
+  maxLines: 4,
+  minLines: 2,
+)
+```
+
+### Convenience constructors
+
+**Password** -- sets `obscureText: true` and `maxLines: 1`:
+
+```dart
+FkTextField.password(
+  name: 'password',
+  controller: passwordController,
+  labelText: 'Password',
+)
+```
+
+**Email** -- sets `keyboardType: TextInputType.emailAddress`:
+
+```dart
+FkTextField.email(
+  name: 'email',
+  controller: emailController,
+  labelText: 'Email',
+)
+```
+
+## FkDropdownField
+
+Generic dropdown for selecting from a list of items:
+
+```dart
+FkDropdownField<String>(
+  name: 'country',
+  controller: countryController,
+  items: [
+    DropdownMenuItem(value: 'US', child: Text('United States')),
+    DropdownMenuItem(value: 'UK', child: Text('United Kingdom')),
+    DropdownMenuItem(value: 'CA', child: Text('Canada')),
+  ],
+  labelText: 'Country',
+  hintText: 'Select a country',
+)
+```
+
+## FkCheckboxField and FkSwitchField
+
+Boolean toggle fields:
+
+```dart
+FkCheckboxField(
+  name: 'terms',
+  controller: termsController,
+  label: Text('I agree to the Terms of Service'),
+)
+
+FkSwitchField(
+  name: 'notifications',
+  controller: notifyController,
+  label: Text('Enable notifications'),
+)
+```
+
+## FkCheckboxGroupField and FkRadioGroupField
+
+Multi-select and single-select groups:
+
+```dart
+// Multi-select
+FkCheckboxGroupField<String>(
+  name: 'toppings',
+  controller: toppingsController,  // FkFieldController<List<String>>
+  options: ['Cheese', 'Pepperoni', 'Mushrooms'],
+  labelBuilder: (t) => t,
+)
+
+// Single-select
+FkRadioGroupField<String>(
+  name: 'size',
+  controller: sizeController,  // FkFieldController<String>
+  options: ['Small', 'Medium', 'Large'],
+  labelBuilder: (s) => s,
+)
+```
+
+## FkDateField and FkDateRangeField
+
+Date pickers that open the native Material date dialog:
+
+```dart
+FkDateField(
+  name: 'birthDate',
+  controller: birthDateController,  // FkFieldController<DateTime>
+  firstDate: DateTime(1900),
+  lastDate: DateTime.now(),
+  dateFormat: 'MM/dd/yyyy',
+  labelText: 'Date of Birth',
+)
+
+FkDateRangeField(
+  name: 'vacation',
+  controller: vacationController,  // FkFieldController<DateTimeRange>
+  firstDate: DateTime.now(),
+  lastDate: DateTime.now().add(Duration(days: 365)),
+  labelText: 'Vacation Period',
+)
+```
+
+## FkPhoneField
+
+Phone input with a country code dropdown prefix. The controller stores the full string (e.g., `"+14155551234"`):
+
+```dart
+FkPhoneField(
+  name: 'phone',
+  controller: phoneController,  // FkFieldController<String>
+  defaultCountryCode: '+1',
+  labelText: 'Phone Number',
+)
+```
+
+Comes with a built-in list of common country codes (US, UK, AU, IN, etc.).
+
+## FkCurrencyField
+
+Locale-aware currency input bound to `double`:
+
+```dart
+FkCurrencyField(
+  name: 'price',
+  controller: priceController,  // FkFieldController<double>
+  symbol: '\$',
+  decimalPlaces: 2,
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  labelText: 'Price',
+)
+```
+
+Formatting is applied automatically as the user types.
+
+## FkOtpField
+
+Multi-box OTP/PIN input. Focus auto-advances on input and retreats on backspace:
+
+```dart
+FkOtpField(
+  name: 'otp',
+  controller: otpController,  // FkFieldController<String>
+  length: 6,
+  obscureText: false,
+  boxWidth: 48.0,
+  boxHeight: 56.0,
+  spacing: 8.0,
+  autofocus: true,
+)
+```
+
+The controller value is the concatenated digit string (e.g., `"123456"`).
+
+## FkAutocompleteField
+
+Async search with debounced suggestions:
+
+```dart
+FkAutocompleteField<City>(
+  name: 'city',
+  controller: cityController,  // FkFieldController<City>
+  optionsBuilder: (query) => cityService.search(query),
+  displayStringForOption: (city) => city.name,
+  debounce: Duration(milliseconds: 300),
+  labelText: 'City',
+)
+```
+
+## FkRatingField
+
+Tappable star rating:
+
+```dart
+FkRatingField(
+  name: 'rating',
+  controller: ratingController,  // FkFieldController<double>
+  maxRating: 5,
+  allowHalfRating: true,
+  size: 36.0,
+  color: Colors.amber,
+  labelText: 'Your Rating',
+)
+```
+
+## FkChipSelectField
+
+Multi-select using filter chips:
+
+```dart
+FkChipSelectField<String>(
+  name: 'tags',
+  controller: tagsController,  // FkFieldController<List<String>>
+  options: ['Flutter', 'Dart', 'Firebase', 'Supabase'],
+  labelBuilder: (tag) => tag,
+  spacing: 8.0,
+  runSpacing: 4.0,
+  labelText: 'Interests',
+)
+```
+
+## FkSignatureField
+
+Signature drawing pad using `CustomPainter` and `GestureDetector`:
+
+```dart
+FkSignatureField(
+  name: 'signature',
+  controller: signatureController,  // FkFieldController<List<List<Offset>>>
+  height: 250,
+  strokeColor: Colors.black,
+  strokeWidth: 2.0,
+  backgroundColor: Colors.white,
+  showClearButton: true,
+  labelText: 'Sign Here',
+)
+```
+
+### Exporting signatures
+
+Use the extensions on `FkFieldController<List<List<Offset>>>` to export:
+
+```dart
+// Export as PNG bytes
+final pngBytes = await signatureController.toPng(
+  width: 600,
+  height: 300,
+  strokeColor: Colors.black,
+  strokeWidth: 2.0,
+  backgroundColor: Colors.white,
+);
+
+// Export as base64 string
+final base64 = await signatureController.toBase64(
+  width: 600,
+  height: 300,
+);
+```
+
+## FkSliderField and FkRangeSliderField
+
+Numeric sliders:
+
+```dart
+FkSliderField(
+  name: 'volume',
+  controller: volumeController,  // FkFieldController<double>
+  min: 0,
+  max: 100,
+  divisions: 100,
+  showValue: true,
+  labelText: 'Volume',
+)
+
+FkRangeSliderField(
+  name: 'priceRange',
+  controller: priceRangeController,  // FkFieldController<RangeValues>
+  min: 0,
+  max: 1000,
+  divisions: 100,
+  showValues: true,
+  labelText: 'Price Range',
+)
+```
+
+## Auto-registration with FkForm
+
+Every field auto-registers its controller with the nearest `FkForm` ancestor when it mounts, and unregisters when it disposes. You never need to call `formController.register()` manually when using field widgets.
+
+## Layout widgets
+
+### FkFormSection
+
+Groups fields with an optional title, description, and collapsible behavior:
+
+```dart
+FkFormSection(
+  title: 'Personal Information',
+  description: 'Enter your name and contact details.',
+  collapsible: true,
+  initiallyExpanded: true,
+  children: [
+    FkTextField(name: 'firstName', controller: firstNameCtrl),
+    FkTextField(name: 'lastName', controller: lastNameCtrl),
+  ],
+)
+```
+
+Spacing between children uses `FkFormTheme.fieldSpacing`.
+
+### FkFormRow
+
+Arranges fields horizontally with configurable flex ratios:
+
+```dart
+FkFormRow(
+  flexes: [2, 1],
+  spacing: 16.0,
+  children: [
+    FkTextField(name: 'street', controller: streetCtrl),
+    FkTextField(name: 'zipCode', controller: zipCtrl),
+  ],
+)
+```
+
+When `flexes` is `null`, all children get equal flex.
+
+## Controller extensions
+
+FormKit provides extensions on `FkFieldController` for convenience:
+
+```dart
+// String controllers
+emailController.trimmed       // value?.trim()
+bioController.wordCount        // split by whitespace and count
+
+// Any controller -- reactive widget builder
+emailController.watch((ctrl) => Text(ctrl.value ?? ''))
+```
+
+## Related
+
+- [Fields reference](/reference/fields) -- full table of all field props
+- [Form Builder](/guides/form-builder) -- use fields without manual controller setup
+- [Validation](/guides/validation) -- attach validators to any field
+- [Theming](/guides/theming) -- style all fields globally

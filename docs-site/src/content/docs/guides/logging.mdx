@@ -1,0 +1,164 @@
+---
+title: Logging
+description: Configure FormKit's built-in logger for development debugging and production analytics.
+---
+
+FormKit includes a structured, colorized logger that helps you understand what is happening inside your forms at runtime. It is silent by default and configured through the `FkLogger.instance` singleton.
+
+## Quick start
+
+```dart
+// Enable debug logging for everything
+FkLogger.instance.level = FkLogLevel.debug;
+
+// Only show validation and submission logs
+FkLogger.instance.enabledCategories = {
+  FkLogCategory.validation,
+  FkLogCategory.submission,
+};
+
+// Silence all logging
+FkLogger.instance.level = FkLogLevel.none;
+```
+
+## Configuration
+
+All configuration is done on `FkLogger.instance`:
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `level` | `FkLogLevel` | `none` | Minimum severity to emit. |
+| `enabledCategories` | `Set<FkLogCategory>?` | `null` (all) | Which subsystem categories to include. `null` means all. |
+| `handler` | `FkLogHandler?` | `null` | Custom handler called before default output. Return `true` to suppress console output. |
+| `useColors` | `bool` | `true` | Whether to use ANSI color codes. Set to `false` for CI or Flutter DevTools. |
+
+## FkLogLevel
+
+Levels are ordered from most to least severe. Setting the logger to a level enables that level and all levels above it.
+
+| Level | Value | What gets logged |
+|---|---|---|
+| `none` | 0 | Nothing. |
+| `error` | 1 | Errors that prevent normal operation (e.g., validation crash). |
+| `warning` | 2 | Potentially harmful situations (e.g., field registered twice). |
+| `info` | 3 | Key lifecycle events (e.g., form submitted, field registered). |
+| `debug` | 4 | Fine-grained development messages (e.g., value changed, sync validation ran). |
+| `verbose` | 5 | Very detailed output including async token tracking and debounce scheduling. |
+
+## FkLogCategory
+
+Filter logs to only the subsystems you care about:
+
+| Category | What it covers |
+|---|---|
+| `field` | Field value changes, dirty/touched state transitions. |
+| `validation` | Sync and async validator runs, results, composition. |
+| `form` | Field registration, unregistration, form aggregate state. |
+| `submission` | Submit lifecycle: start, validation gate, success/failure. |
+| `reset` | Field reset, form reset, error clearing. |
+
+### Example: only validation logs
+
+```dart
+FkLogger.instance
+  ..level = FkLogLevel.debug
+  ..enabledCategories = {FkLogCategory.validation};
+```
+
+## Console output format
+
+Each log entry is printed as:
+
+```
+HH:MM:SS.mmm  LVL  [CATEG] fieldName -> message -- detail
+```
+
+With colors enabled, levels and categories are color-coded:
+
+- **ERR** -- red bold
+- **WRN** -- yellow bold
+- **INF** -- green bold
+- **DBG** -- cyan
+- **VRB** -- gray
+
+## Custom handler
+
+Intercept log entries for analytics, crash reporting, or custom formatting:
+
+```dart
+FkLogger.instance.handler = (entry) {
+  // Send to analytics
+  myAnalytics.track('formkit_${entry.category.name}', {
+    'level': entry.level.name,
+    'message': entry.message,
+    'field': entry.field,
+    'detail': entry.detail,
+  });
+
+  // Return true to suppress default console output
+  // Return false to also print to console
+  return false;
+};
+```
+
+### FkLogEntry
+
+The handler receives an `FkLogEntry` with these properties:
+
+| Property | Type | Description |
+|---|---|---|
+| `level` | `FkLogLevel` | Severity of this entry. |
+| `category` | `FkLogCategory` | Which subsystem produced it. |
+| `message` | `String` | Human-readable summary. |
+| `field` | `String?` | The field name this entry relates to. |
+| `detail` | `String?` | Extra detail (validation error, new value, etc.). |
+| `timestamp` | `DateTime` | When the entry was created. |
+
+## Convenience methods
+
+`FkLogger.instance` provides shorthand methods for each level:
+
+```dart
+final logger = FkLogger.instance;
+
+logger.error(FkLogCategory.validation, 'Validator threw', field: 'email');
+logger.warning(FkLogCategory.form, 'Field registered twice', field: 'name');
+logger.info(FkLogCategory.submission, 'Form submitted');
+logger.debug(FkLogCategory.field, 'Value changed', field: 'email', detail: 'new@example.com');
+logger.verbose(FkLogCategory.validation, 'Async token issued', field: 'username');
+```
+
+## Development setup example
+
+```dart
+void main() {
+  // Enable verbose logging during development
+  FkLogger.instance
+    ..level = FkLogLevel.verbose
+    ..useColors = true;
+
+  runApp(const MyApp());
+}
+```
+
+## Production setup example
+
+```dart
+void main() {
+  // Only capture errors and warnings, send to analytics
+  FkLogger.instance
+    ..level = FkLogLevel.warning
+    ..useColors = false
+    ..handler = (entry) {
+      Sentry.captureMessage(entry.toString());
+      return true; // suppress console output in production
+    };
+
+  runApp(const MyApp());
+}
+```
+
+## Related
+
+- [Validation](/guides/validation) -- validation events appear in the `validation` category
+- [Form Builder](/guides/form-builder) -- form lifecycle events appear in the `form` and `submission` categories

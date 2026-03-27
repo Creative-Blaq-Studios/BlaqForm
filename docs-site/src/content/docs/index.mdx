@@ -1,0 +1,59 @@
+---
+title: FormKit for Flutter
+description: Composable, extensible forms with zero boilerplate.
+template: splash
+hero:
+  tagline: Build Flutter forms in minutes, not hours. Composable validators, adaptive fields, and a developer-first API.
+  actions:
+    - text: Get Started
+      link: /getting-started/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/your-org/formkit
+      variant: minimal
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Why FormKit?
+
+<CardGrid stagger>
+  <Card title="Zero Boilerplate" icon="rocket">
+    `FkFormBuilder` eliminates manual controller creation and disposal. Declare fields as data, get a working form.
+  </Card>
+  <Card title="Composable Validation" icon="approve-check">
+    Chain validators with `.and()`, `.or()`, `.when()`. Async validation with debounce. Cross-field matching built in.
+  </Card>
+  <Card title="Multi-Step Wizard" icon="list-format">
+    `FkWizard` handles step navigation, per-step validation, and progress tracking out of the box.
+  </Card>
+  <Card title="State-Management Agnostic" icon="setting">
+    Works with `setState`, Riverpod, Bloc, or vanilla `ChangeNotifier`. No lock-in.
+  </Card>
+</CardGrid>
+
+## The Difference
+
+```dart
+// Before: 188 lines, StatefulWidget, manual controllers, manual dispose
+class _SignupFormState extends State<SignupForm> {
+  late final FkFormController _formController;
+  late final FkFieldController<String> _nameController;
+  late final FkFieldController<String> _emailController;
+  // ... 5 more controllers, initState, dispose ...
+}
+
+// After: StatelessWidget, ~40 lines, zero ceremony
+FkFormBuilder(
+  fields: {
+    'name':  FkFieldConfig.text(label: 'Name', validators: [Fk.required()]),
+    'email': FkFieldConfig.email(label: 'Email', validators: [Fk.required(), Fk.email()]),
+  },
+  onSubmit: (values) async => await api.signup(values),
+  builder: (context, form) => Column(children: [
+    form.text('name'),
+    form.email('email'),
+    form.submitButton('Sign Up'),
+  ]),
+)
+```
