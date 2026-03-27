@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
-/// Wraps [child] in a MaterialApp + Scaffold + FkForm for widget testing.
+/// Wraps [child] in a MaterialApp + Scaffold + BfForm for widget testing.
 Widget buildTestForm({
   required Widget child,
-  FkFormController? controller,
-  FkAutovalidateMode autovalidateMode = FkAutovalidateMode.always,
+  BfFormController? controller,
+  BfAutovalidateMode autovalidateMode = BfAutovalidateMode.always,
 }) {
   return MaterialApp(
     home: Scaffold(
-      body: FkForm(
-        controller: controller ?? FkFormController(),
+      body: BfForm(
+        controller: controller ?? BfFormController(),
         autovalidateMode: autovalidateMode,
         child: child,
       ),
@@ -19,38 +19,38 @@ Widget buildTestForm({
 }
 
 /// A simple always-failing validator for testing purposes.
-class AlwaysInvalidValidator extends FkValidator<String> {
+class AlwaysInvalidValidator extends BfValidator<String> {
   final String errorMessage;
 
   const AlwaysInvalidValidator([this.errorMessage = 'This field is invalid']);
 
   @override
-  FkValidationResult? validate(String? value, [FkValidationContext? context]) {
-    return FkValidationResult(errorMessage);
+  BfValidationResult? validate(String? value, [BfValidationContext? context]) {
+    return BfValidationResult(errorMessage);
   }
 }
 
 /// A simple always-failing validator for bool fields.
-class AlwaysInvalidBoolValidator extends FkValidator<bool> {
+class AlwaysInvalidBoolValidator extends BfValidator<bool> {
   final String errorMessage;
 
   const AlwaysInvalidBoolValidator(
       [this.errorMessage = 'This field is invalid']);
 
   @override
-  FkValidationResult? validate(bool? value, [FkValidationContext? context]) {
-    return FkValidationResult(errorMessage);
+  BfValidationResult? validate(bool? value, [BfValidationContext? context]) {
+    return BfValidationResult(errorMessage);
   }
 }
 
 /// A validator that fails when the bool value is false or null.
-class RequiredBoolValidator extends FkValidator<bool> {
+class RequiredBoolValidator extends BfValidator<bool> {
   const RequiredBoolValidator();
 
   @override
-  FkValidationResult? validate(bool? value, [FkValidationContext? context]) {
+  BfValidationResult? validate(bool? value, [BfValidationContext? context]) {
     if (value != true) {
-      return const FkValidationResult('This field is required');
+      return const BfValidationResult('This field is required');
     }
     return null;
   }

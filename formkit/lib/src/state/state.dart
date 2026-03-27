@@ -1,8 +1,8 @@
 /// State layer for FlutterFormKit.
 ///
-/// Provides [FkFieldController] (per-field state) and [FkFormController]
+/// Provides [BfFieldController] (per-field state) and [BfFormController]
 /// (aggregate form state, cross-field validation, submission gating).
 library;
 
-export 'fk_field_controller.dart';
-export 'fk_form_controller.dart';
+export 'bf_field_controller.dart';
+export 'bf_form_controller.dart';

@@ -4,10 +4,10 @@
 ///
 /// ```dart
 /// // Enable during development
-/// FkLogger.instance.level = FkLogLevel.debug;
+/// BfLogger.instance.level = BfLogLevel.debug;
 /// ```
 library;
 
-export 'fk_log_category.dart';
-export 'fk_log_level.dart';
-export 'fk_logger.dart';
+export 'bf_log_category.dart';
+export 'bf_log_level.dart';
+export 'bf_logger.dart';

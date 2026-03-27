@@ -1,10 +1,10 @@
 /// Form infrastructure for FlutterFormKit.
 ///
-/// Provides the [FkForm] widget, [FkFieldMixin] for auto-registration,
-/// and [FkAutovalidateMode] for controlling validation timing.
+/// Provides the [BfForm] widget, [BfFieldMixin] for auto-registration,
+/// and [BfAutovalidateMode] for controlling validation timing.
 library;
 
-export 'fk_autovalidate_mode.dart';
-export 'fk_field_helpers.dart';
-export 'fk_field_mixin.dart';
-export 'fk_form.dart';
+export 'bf_autovalidate_mode.dart';
+export 'bf_field_helpers.dart';
+export 'bf_field_mixin.dart';
+export 'bf_form.dart';

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
 /// A complete signup form demonstrating core FormKit features:
 ///
-/// - [FkForm] with [FkFormController] for form-level state management
-/// - [FkTextField] for name, email, and password inputs
-/// - [FkTextField.email] convenience constructor
-/// - [FkTextField.password] convenience constructor with obscured text
-/// - Cross-field validation with [Fk.matchFields] (confirm password)
-/// - [FkCheckboxField] for terms agreement
-/// - [FkSubmitButton] with automatic loading/disabled state
-/// - Validators: [Fk.required], [Fk.email], [Fk.minLength], [Fk.matchFields]
+/// - [BfForm] with [BfFormController] for form-level state management
+/// - [BfTextField] for name, email, and password inputs
+/// - [BfTextField.email] convenience constructor
+/// - [BfTextField.password] convenience constructor with obscured text
+/// - Cross-field validation with [Bf.matchFields] (confirm password)
+/// - [BfCheckboxField] for terms agreement
+/// - [BfSubmitButton] with automatic loading/disabled state
+/// - Validators: [Bf.required], [Bf.email], [Bf.minLength], [Bf.matchFields]
 class SignupFormExample extends StatefulWidget {
   const SignupFormExample({super.key});
 
@@ -20,58 +20,58 @@ class SignupFormExample extends StatefulWidget {
 
 class _SignupFormExampleState extends State<SignupFormExample> {
   // -- Form controller aggregates all field controllers --
-  late final FkFormController _formController;
+  late final BfFormController _formController;
 
   // -- Individual field controllers with their validators --
-  late final FkFieldController<String> _nameController;
-  late final FkFieldController<String> _emailController;
-  late final FkFieldController<String> _passwordController;
-  late final FkFieldController<String> _confirmPasswordController;
-  late final FkFieldController<bool> _termsController;
+  late final BfFieldController<String> _nameController;
+  late final BfFieldController<String> _emailController;
+  late final BfFieldController<String> _passwordController;
+  late final BfFieldController<String> _confirmPasswordController;
+  late final BfFieldController<bool> _termsController;
 
   @override
   void initState() {
     super.initState();
 
-    _formController = FkFormController();
+    _formController = BfFormController();
 
     // Name: simply required
-    _nameController = FkFieldController<String>(
-      validators: [Fk.required(message: 'Please enter your name')],
+    _nameController = BfFieldController<String>(
+      validators: [Bf.required(message: 'Please enter your name')],
     );
 
     // Email: required + valid email format
-    _emailController = FkFieldController<String>(
+    _emailController = BfFieldController<String>(
       validators: [
-        Fk.required(message: 'Email is required'),
-        Fk.email(),
+        Bf.required(message: 'Email is required'),
+        Bf.email(),
       ],
     );
 
     // Password: required + minimum 8 characters
-    _passwordController = FkFieldController<String>(
+    _passwordController = BfFieldController<String>(
       validators: [
-        Fk.required(message: 'Password is required'),
-        Fk.minLength(8),
+        Bf.required(message: 'Password is required'),
+        Bf.minLength(8),
       ],
     );
 
     // Confirm password: required + must match the 'password' field.
-    // Fk.matchFields reads the sibling field value via FkValidationContext,
-    // which FkFormController provides automatically during submit().
-    _confirmPasswordController = FkFieldController<String>(
+    // Bf.matchFields reads the sibling field value via BfValidationContext,
+    // which BfFormController provides automatically during submit().
+    _confirmPasswordController = BfFieldController<String>(
       validators: [
-        Fk.required(message: 'Please confirm your password'),
-        Fk.matchFields<String>('password', message: 'Passwords do not match'),
+        Bf.required(message: 'Please confirm your password'),
+        Bf.matchFields<String>('password', message: 'Passwords do not match'),
       ],
     );
 
     // Terms checkbox: must be exactly true to proceed.
-    // Using Fk.equals(true) ensures the box is checked.
-    _termsController = FkFieldController<bool>(
+    // Using Bf.equals(true) ensures the box is checked.
+    _termsController = BfFieldController<bool>(
       initialValue: false,
       validators: [
-        Fk.equals<bool>(true, message: 'You must accept the terms'),
+        Bf.equals<bool>(true, message: 'You must accept the terms'),
       ],
     );
   }
@@ -96,14 +96,14 @@ class _SignupFormExampleState extends State<SignupFormExample> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        child: FkForm(
+        child: BfForm(
           controller: _formController,
-          autovalidateMode: FkAutovalidateMode.onUserInteraction,
+          autovalidateMode: BfAutovalidateMode.onUserInteraction,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // -- Full name --
-              FkTextField(
+              BfTextField(
                 name: 'name',
                 controller: _nameController,
                 labelText: 'Full Name',
@@ -114,7 +114,7 @@ class _SignupFormExampleState extends State<SignupFormExample> {
               const SizedBox(height: 16),
 
               // -- Email (uses .email() convenience constructor) --
-              FkTextField.email(
+              BfTextField.email(
                 name: 'email',
                 controller: _emailController,
                 labelText: 'Email',
@@ -126,7 +126,7 @@ class _SignupFormExampleState extends State<SignupFormExample> {
               const SizedBox(height: 16),
 
               // -- Password (uses .password() convenience constructor) --
-              FkTextField.password(
+              BfTextField.password(
                 name: 'password',
                 controller: _passwordController,
                 labelText: 'Password',
@@ -138,7 +138,7 @@ class _SignupFormExampleState extends State<SignupFormExample> {
               const SizedBox(height: 16),
 
               // -- Confirm password (cross-field validation) --
-              FkTextField.password(
+              BfTextField.password(
                 name: 'confirmPassword',
                 controller: _confirmPasswordController,
                 labelText: 'Confirm Password',
@@ -149,7 +149,7 @@ class _SignupFormExampleState extends State<SignupFormExample> {
               const SizedBox(height: 8),
 
               // -- Terms & conditions checkbox --
-              FkCheckboxField(
+              BfCheckboxField(
                 name: 'terms',
                 controller: _termsController,
                 label: const Text('I agree to the Terms and Conditions'),
@@ -157,9 +157,9 @@ class _SignupFormExampleState extends State<SignupFormExample> {
               const SizedBox(height: 24),
 
               // -- Submit button --
-              // FkSubmitButton auto-disables when the form is invalid or
+              // BfSubmitButton auto-disables when the form is invalid or
               // submitting, and shows a loading indicator during submission.
-              FkSubmitButton(
+              BfSubmitButton(
                 label: 'Create Account',
                 disableWhenInvalid: false,
                 onSubmit: (controller) async {

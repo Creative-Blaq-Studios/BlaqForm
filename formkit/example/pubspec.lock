@@ -9,6 +9,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.13.1"
+  blaq_form:
+    dependency: "direct main"
+    description:
+      path: ".."
+      relative: true
+    source: path
+    version: "0.0.1"
   boolean_selector:
     dependency: transitive
     description:
@@ -75,13 +82,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  formkit:
-    dependency: "direct main"
-    description:
-      path: ".."
-      relative: true
-    source: path
-    version: "0.0.1"
   leak_tracker:
     dependency: transitive
     description:

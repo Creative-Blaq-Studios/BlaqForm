@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
 /// A checkout form demonstrating layout and advanced field widgets:
 ///
-/// - [FkFormSection] for grouping fields under titled sections
-/// - [FkFormRow] for placing fields side-by-side (first/last name)
-/// - [FkDropdownField] for country selection
-/// - [FkDateField] for card expiry date
-/// - [FkTextField] with credit card validation ([Fk.creditCard])
-/// - Various validators: [Fk.required], [Fk.email], [Fk.creditCard],
-///   [Fk.minLength], [Fk.before]
-/// - [FkSubmitButton] tied to the form
+/// - [BfFormSection] for grouping fields under titled sections
+/// - [BfFormRow] for placing fields side-by-side (first/last name)
+/// - [BfDropdownField] for country selection
+/// - [BfDateField] for card expiry date
+/// - [BfTextField] with credit card validation ([Bf.creditCard])
+/// - Various validators: [Bf.required], [Bf.email], [Bf.creditCard],
+///   [Bf.minLength], [Bf.before]
+/// - [BfSubmitButton] tied to the form
 class CheckoutFormExample extends StatefulWidget {
   const CheckoutFormExample({super.key});
 
@@ -20,23 +20,23 @@ class CheckoutFormExample extends StatefulWidget {
 }
 
 class _CheckoutFormExampleState extends State<CheckoutFormExample> {
-  late final FkFormController _formController;
+  late final BfFormController _formController;
 
   // -- Personal info controllers --
-  late final FkFieldController<String> _firstNameController;
-  late final FkFieldController<String> _lastNameController;
-  late final FkFieldController<String> _emailController;
+  late final BfFieldController<String> _firstNameController;
+  late final BfFieldController<String> _lastNameController;
+  late final BfFieldController<String> _emailController;
 
   // -- Payment controllers --
-  late final FkFieldController<String> _cardNumberController;
-  late final FkFieldController<String> _cardHolderController;
-  late final FkFieldController<DateTime> _expiryDateController;
+  late final BfFieldController<String> _cardNumberController;
+  late final BfFieldController<String> _cardHolderController;
+  late final BfFieldController<DateTime> _expiryDateController;
 
   // -- Shipping controllers --
-  late final FkFieldController<String> _addressController;
-  late final FkFieldController<String> _cityController;
-  late final FkFieldController<String> _zipCodeController;
-  late final FkFieldController<String> _countryController;
+  late final BfFieldController<String> _addressController;
+  late final BfFieldController<String> _cityController;
+  late final BfFieldController<String> _zipCodeController;
+  late final BfFieldController<String> _countryController;
 
   static const _countries = [
     'United States',
@@ -53,55 +53,55 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
   void initState() {
     super.initState();
 
-    _formController = FkFormController();
+    _formController = BfFormController();
 
     // -- Personal info --
-    _firstNameController = FkFieldController<String>(
-      validators: [Fk.required(message: 'First name is required')],
+    _firstNameController = BfFieldController<String>(
+      validators: [Bf.required(message: 'First name is required')],
     );
-    _lastNameController = FkFieldController<String>(
-      validators: [Fk.required(message: 'Last name is required')],
+    _lastNameController = BfFieldController<String>(
+      validators: [Bf.required(message: 'Last name is required')],
     );
-    _emailController = FkFieldController<String>(
+    _emailController = BfFieldController<String>(
       validators: [
-        Fk.required(message: 'Email is required'),
-        Fk.email(),
+        Bf.required(message: 'Email is required'),
+        Bf.email(),
       ],
     );
 
     // -- Payment --
-    _cardNumberController = FkFieldController<String>(
+    _cardNumberController = BfFieldController<String>(
       validators: [
-        Fk.required(message: 'Card number is required'),
-        Fk.creditCard(),
+        Bf.required(message: 'Card number is required'),
+        Bf.creditCard(),
       ],
     );
-    _cardHolderController = FkFieldController<String>(
-      validators: [Fk.required(message: 'Cardholder name is required')],
+    _cardHolderController = BfFieldController<String>(
+      validators: [Bf.required(message: 'Cardholder name is required')],
     );
     // Expiry must be in the future
-    _expiryDateController = FkFieldController<DateTime>(
+    _expiryDateController = BfFieldController<DateTime>(
       validators: [
-        Fk.required(message: 'Expiry date is required'),
-        Fk.after(DateTime.now(), message: 'Card has expired'),
+        Bf.required(message: 'Expiry date is required'),
+        Bf.after(DateTime.now(), message: 'Card has expired'),
       ],
     );
 
     // -- Shipping --
-    _addressController = FkFieldController<String>(
-      validators: [Fk.required(message: 'Address is required')],
+    _addressController = BfFieldController<String>(
+      validators: [Bf.required(message: 'Address is required')],
     );
-    _cityController = FkFieldController<String>(
-      validators: [Fk.required(message: 'City is required')],
+    _cityController = BfFieldController<String>(
+      validators: [Bf.required(message: 'City is required')],
     );
-    _zipCodeController = FkFieldController<String>(
+    _zipCodeController = BfFieldController<String>(
       validators: [
-        Fk.required(message: 'ZIP code is required'),
-        Fk.minLength(4, message: 'ZIP code is too short'),
+        Bf.required(message: 'ZIP code is required'),
+        Bf.minLength(4, message: 'ZIP code is too short'),
       ],
     );
-    _countryController = FkFieldController<String>(
-      validators: [Fk.required(message: 'Please select a country')],
+    _countryController = BfFieldController<String>(
+      validators: [Bf.required(message: 'Please select a country')],
     );
   }
 
@@ -130,29 +130,29 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        child: FkForm(
+        child: BfForm(
           controller: _formController,
-          autovalidateMode: FkAutovalidateMode.onUserInteraction,
+          autovalidateMode: BfAutovalidateMode.onUserInteraction,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               // ---------------------------------------------------------------
               // Section 1: Personal Information
               // ---------------------------------------------------------------
-              FkFormSection(
+              BfFormSection(
                 title: 'Personal Information',
                 description: 'We need your details to process the order.',
                 children: [
-                  // First and last name side-by-side using FkFormRow
-                  FkFormRow(
+                  // First and last name side-by-side using BfFormRow
+                  BfFormRow(
                     children: [
-                      FkTextField(
+                      BfTextField(
                         name: 'firstName',
                         controller: _firstNameController,
                         labelText: 'First Name',
                         textInputAction: TextInputAction.next,
                       ),
-                      FkTextField(
+                      BfTextField(
                         name: 'lastName',
                         controller: _lastNameController,
                         labelText: 'Last Name',
@@ -160,7 +160,7 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
                       ),
                     ],
                   ),
-                  FkTextField.email(
+                  BfTextField.email(
                     name: 'email',
                     controller: _emailController,
                     labelText: 'Email',
@@ -175,11 +175,11 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
               // ---------------------------------------------------------------
               // Section 2: Payment
               // ---------------------------------------------------------------
-              FkFormSection(
+              BfFormSection(
                 title: 'Payment',
                 description: 'Enter your card details.',
                 children: [
-                  FkTextField(
+                  BfTextField(
                     name: 'cardNumber',
                     controller: _cardNumberController,
                     labelText: 'Card Number',
@@ -193,7 +193,7 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
                     ],
                     textInputAction: TextInputAction.next,
                   ),
-                  FkTextField(
+                  BfTextField(
                     name: 'cardHolder',
                     controller: _cardHolderController,
                     labelText: 'Cardholder Name',
@@ -202,7 +202,7 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
                     textInputAction: TextInputAction.next,
                   ),
                   // Expiry date using the date picker field
-                  FkDateField(
+                  BfDateField(
                     name: 'expiryDate',
                     controller: _expiryDateController,
                     labelText: 'Expiry Date',
@@ -218,11 +218,11 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
               // ---------------------------------------------------------------
               // Section 3: Shipping
               // ---------------------------------------------------------------
-              FkFormSection(
+              BfFormSection(
                 title: 'Shipping Address',
                 description: 'Where should we deliver your order?',
                 children: [
-                  FkTextField(
+                  BfTextField(
                     name: 'address',
                     controller: _addressController,
                     labelText: 'Street Address',
@@ -231,16 +231,16 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
                     textInputAction: TextInputAction.next,
                   ),
                   // City and ZIP code side-by-side with custom flex ratios
-                  FkFormRow(
+                  BfFormRow(
                     flexes: const [2, 1],
                     children: [
-                      FkTextField(
+                      BfTextField(
                         name: 'city',
                         controller: _cityController,
                         labelText: 'City',
                         textInputAction: TextInputAction.next,
                       ),
-                      FkTextField(
+                      BfTextField(
                         name: 'zipCode',
                         controller: _zipCodeController,
                         labelText: 'ZIP Code',
@@ -250,7 +250,7 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
                     ],
                   ),
                   // Country dropdown
-                  FkDropdownField<String>(
+                  BfDropdownField<String>(
                     name: 'country',
                     controller: _countryController,
                     labelText: 'Country',
@@ -268,7 +268,7 @@ class _CheckoutFormExampleState extends State<CheckoutFormExample> {
               // ---------------------------------------------------------------
               // Submit
               // ---------------------------------------------------------------
-              FkSubmitButton(
+              BfSubmitButton(
                 label: 'Place Order',
                 disableWhenInvalid: false,
                 onSubmit: (controller) async {

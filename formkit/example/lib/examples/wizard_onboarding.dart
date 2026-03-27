@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
-/// A three-step onboarding wizard demonstrating [FkWizard],
-/// [FkWizardProgress], and per-step validation.
+/// A three-step onboarding wizard demonstrating [BfWizard],
+/// [BfWizardProgress], and per-step validation.
 ///
 /// Steps:
 /// 1. **Account** — email and password
@@ -15,45 +15,45 @@ class WizardOnboardingExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Onboarding (FkWizard)'),
+        title: const Text('Onboarding (BfWizard)'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: FkWizard(
+      body: BfWizard(
         fields: {
-          'email': FkFieldConfig<String>.email(
+          'email': BfFieldConfig<String>.email(
             label: 'Email',
             hint: 'you@example.com',
             prefixIcon: Icons.email_outlined,
-            validators: [Fk.required(), Fk.email()],
+            validators: [Bf.required(), Bf.email()],
           ),
-          'password': FkFieldConfig<String>.password(
+          'password': BfFieldConfig<String>.password(
             label: 'Password',
             hint: 'At least 8 characters',
             prefixIcon: Icons.lock_outlined,
-            validators: [Fk.required(), Fk.minLength(8)],
+            validators: [Bf.required(), Bf.minLength(8)],
           ),
-          'name': FkFieldConfig<String>.text(
+          'name': BfFieldConfig<String>.text(
             label: 'Display Name',
             hint: 'How should we call you?',
             prefixIcon: Icons.person_outlined,
-            validators: [Fk.required()],
+            validators: [Bf.required()],
           ),
-          'bio': FkFieldConfig<String>.text(
+          'bio': BfFieldConfig<String>.text(
             label: 'Bio',
             hint: 'Tell us about yourself',
             prefixIcon: Icons.edit_outlined,
           ),
         },
         steps: [
-          const FkWizardStep(
+          const BfWizardStep(
             title: 'Account',
             fieldNames: ['email', 'password'],
           ),
-          const FkWizardStep(
+          const BfWizardStep(
             title: 'Profile',
             fieldNames: ['name', 'bio'],
           ),
-          const FkWizardStep(
+          const BfWizardStep(
             title: 'Confirm',
             fieldNames: [],
           ),
@@ -68,7 +68,7 @@ class WizardOnboardingExample extends StatelessWidget {
             child: Column(
               children: [
                 // -- Progress indicator --
-                FkWizardProgress(controller: wizard),
+                BfWizardProgress(controller: wizard),
                 const SizedBox(height: 32),
 
                 // -- Step content --
@@ -91,8 +91,8 @@ class WizardOnboardingExample extends StatelessWidget {
 
   static Widget _buildStepContent(
     BuildContext context,
-    FkFormBuilderScope scope,
-    FkWizardController wizard,
+    BfFormBuilderScope scope,
+    BfWizardController wizard,
   ) {
     switch (wizard.currentStep) {
       case 0:
@@ -180,8 +180,8 @@ class WizardOnboardingExample extends StatelessWidget {
 
   static Widget _buildNavigation(
     BuildContext context,
-    FkFormBuilderScope scope,
-    FkWizardController wizard,
+    BfFormBuilderScope scope,
+    BfWizardController wizard,
   ) {
     return Row(
       children: [

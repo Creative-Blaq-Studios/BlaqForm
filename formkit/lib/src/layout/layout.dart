@@ -1,9 +1,9 @@
 /// Layout widgets for structuring forms.
 ///
-/// Provides [FkFormSection] for grouping fields, [FkFormRow] for horizontal
-/// arrangement, and [FkSubmitButton] for form submission.
+/// Provides [BfFormSection] for grouping fields, [BfFormRow] for horizontal
+/// arrangement, and [BfSubmitButton] for form submission.
 library;
 
-export 'fk_form_row.dart';
-export 'fk_form_section.dart';
-export 'fk_submit_button.dart';
+export 'bf_form_row.dart';
+export 'bf_form_section.dart';
+export 'bf_submit_button.dart';

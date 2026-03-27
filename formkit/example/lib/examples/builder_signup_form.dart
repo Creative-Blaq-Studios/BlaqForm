@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:formkit/formkit.dart';
+import 'package:blaq_form/blaq_form.dart';
 
 /// The same signup form as [SignupFormExample], but rewritten with
-/// [FkFormBuilder] to show how much boilerplate it eliminates.
+/// [BfFormBuilder] to show how much boilerplate it eliminates.
 ///
 /// No StatefulWidget, no manual controller creation, no dispose — just a
 /// declarative fields map and a builder callback.
@@ -13,46 +13,46 @@ class BuilderSignupFormExample extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Signup (FkFormBuilder)'),
+        title: const Text('Signup (BfFormBuilder)'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        child: FkFormBuilder(
+        child: BfFormBuilder(
           fields: {
-            'name': FkFieldConfig<String>.text(
+            'name': BfFieldConfig<String>.text(
               label: 'Full Name',
               hint: 'John Doe',
               prefixIcon: Icons.person_outlined,
-              validators: [Fk.required(message: 'Please enter your name')],
+              validators: [Bf.required(message: 'Please enter your name')],
             ),
-            'email': FkFieldConfig<String>.email(
+            'email': BfFieldConfig<String>.email(
               label: 'Email',
               hint: 'you@example.com',
               prefixIcon: Icons.email_outlined,
-              validators: [Fk.required(), Fk.email()],
+              validators: [Bf.required(), Bf.email()],
             ),
-            'password': FkFieldConfig<String>.password(
+            'password': BfFieldConfig<String>.password(
               label: 'Password',
               hint: 'At least 8 characters',
               prefixIcon: Icons.lock_outlined,
-              validators: [Fk.required(), Fk.minLength(8)],
+              validators: [Bf.required(), Bf.minLength(8)],
             ),
-            'confirmPassword': FkFieldConfig<String>.password(
+            'confirmPassword': BfFieldConfig<String>.password(
               label: 'Confirm Password',
               hint: 'Re-enter your password',
               prefixIcon: Icons.lock_outlined,
               validators: [
-                Fk.required(),
-                Fk.matchFields<String>('password',
+                Bf.required(),
+                Bf.matchFields<String>('password',
                     message: 'Passwords do not match'),
               ],
             ),
-            'terms': FkFieldConfig<bool>.checkbox(
+            'terms': BfFieldConfig<bool>.checkbox(
               initialValue: false,
               label: 'I agree to the Terms and Conditions',
               validators: [
-                Fk.equals<bool>(true, message: 'You must accept the terms'),
+                Bf.equals<bool>(true, message: 'You must accept the terms'),
               ],
             ),
           },
