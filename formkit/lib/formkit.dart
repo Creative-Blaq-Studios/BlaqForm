@@ -17,3 +17,4 @@ export 'src/builder/builder.dart';
 export 'src/messages/messages.dart';
 export 'src/persistence/persistence.dart';
 export 'src/wizard/wizard.dart';
+export 'src/indicators/indicators.dart';
