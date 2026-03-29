@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <!--
+    BlaqForm Product Mark — Creative Blaq "Dev" edition
+    Language: dark / brutal / architectural
+    No rounded corners. Grid overlay. Orange accent on active field.
+  -->
+
+  <defs>
+    <!-- Subtle grid pattern — matches brand grid overlay -->
+    <pattern id="grid" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+      <path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="0.5"/>
+    </pattern>
+  </defs>
+
+  <!-- Outer shell — sharp, no radius -->
+  <rect width="512" height="512" fill="#080808"/>
+
+  <!-- Grid overlay -->
+  <rect width="512" height="512" fill="url(#grid)"/>
+
+  <!-- Border — brand 1px #1A1A1A -->
+  <rect x="1" y="1" width="510" height="510" fill="none" stroke="#1A1A1A" stroke-width="2"/>
+
+  <!-- Bracket marks — terminal / code aesthetic, top-left and bottom-right -->
+  <path d="M 56 56 L 56 100 L 72 100" fill="none" stroke="#FF6B00" stroke-width="6" stroke-linecap="square"/>
+  <path d="M 456 456 L 456 412 L 440 412" fill="none" stroke="#FF6B00" stroke-width="6" stroke-linecap="square"/>
+
+  <!-- "BF" monogram — Outfit-style geometry, uppercase, tight -->
+  <!-- B -->
+  <path d="
+    M 148 168
+    L 148 344
+    L 220 344
+    Q 268 344 268 308
+    Q 268 284 244 272
+    Q 268 260 268 232
+    Q 268 168 220 168
+    Z
+    M 176 196 L 210 196 Q 240 196 240 228 Q 240 252 210 252 L 176 252 Z
+    M 176 280 L 216 280 Q 240 280 240 308 Q 240 316 216 316 L 176 316 Z
+  " fill="#F5F5F5"/>
+
+  <!-- F -->
+  <path d="
+    M 296 168
+    L 296 344
+    L 324 344
+    L 324 272
+    L 388 272
+    L 388 244
+    L 324 244
+    L 324 196
+    L 396 196
+    L 396 168
+    Z
+  " fill="#F5F5F5"/>
+
+  <!-- Active cursor / underscore — brand orange, bottom -->
+  <rect x="148" y="362" width="100" height="8" fill="#FF6B00"/>
+
+  <!-- Inactive line — muted -->
+  <rect x="264" y="362" width="100" height="8" fill="#1A1A1A"/>
+
+</svg>

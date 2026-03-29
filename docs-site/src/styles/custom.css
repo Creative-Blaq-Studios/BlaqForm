@@ -1,15 +1,150 @@
-/* Give content more room by shrinking both sidebars */
+/* ════════════════════════════════════════════════════════════════
+   BlaqForm Docs — Creative Blaq "Dev" Brand Theme
+   Brand colors: #FF6B00 (accent), #0A0A0A (bg), #F5F5F5 (text)
+   Typography: Outfit (headings), JetBrains Mono (code/labels)
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── Layout ── */
 :root {
-  --sl-sidebar-width: 12rem;
+  --sl-sidebar-width: 13rem;
   --sl-content-width: 65rem;
 }
 
-/* Slightly smaller TOC text to fit more naturally */
-.right-sidebar a {
-  font-size: 0.8rem;
+/* ── Dark theme (default) ── */
+:root[data-theme='dark'] {
+  /* Accent — brand orange */
+  --sl-color-accent-low: #1f1005;
+  --sl-color-accent: #FF6B00;
+  --sl-color-accent-high: #ffb980;
+
+  /* Gray scale — brand dark palette */
+  --sl-color-white: #F5F5F5;
+  --sl-color-gray-1: #cccccc;
+  --sl-color-gray-2: #888888;
+  --sl-color-gray-3: #555555;
+  --sl-color-gray-4: #333333;
+  --sl-color-gray-5: #1A1A1A;
+  --sl-color-gray-6: #111111;
+  --sl-color-gray-7: #0A0A0A;
+  --sl-color-black: #050505;
+
+  /* Typography */
+  --sl-font: 'Outfit', system-ui, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Text */
+  --sl-color-text: #e0e0e0;
+  --sl-color-text-accent: #FF6B00;
 }
 
-/* Prevent awkward table cell wrapping */
+/* ── Light theme ── */
+:root[data-theme='light'] {
+  --sl-color-accent-low: #fff3e8;
+  --sl-color-accent: #e06000;
+  --sl-color-accent-high: #7a3400;
+
+  --sl-color-white: #1A1A1A;
+  --sl-color-gray-1: #444444;
+  --sl-color-gray-2: #666666;
+  --sl-color-gray-3: #999999;
+  --sl-color-gray-4: #cccccc;
+  --sl-color-gray-5: #e5e5e5;
+  --sl-color-gray-6: #f0f0f0;
+  --sl-color-gray-7: #fafafa;
+  --sl-color-black: #ffffff;
+
+  --sl-font: 'Outfit', system-ui, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  --sl-color-text: #333333;
+  --sl-color-text-accent: #e06000;
+}
+
+/* ── Nav logo ── */
+.site-title img {
+  height: 1.8rem;
+  width: auto;
+}
+
+.site-title span {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* ── Sidebar ── */
+nav.sidebar .top-level > li > details > summary,
+nav.sidebar .top-level > li > a {
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+nav.sidebar a {
+  font-size: 0.82rem;
+}
+
+nav.sidebar a[aria-current='page'] {
+  font-weight: 600;
+  border-inline-start-color: var(--sl-color-accent);
+}
+
+/* ── TOC (right sidebar) ── */
+.right-sidebar a {
+  font-size: 0.78rem;
+}
+
+/* ── Headings ── */
+.sl-markdown-content h1 {
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  font-size: 2.2rem;
+}
+
+.sl-markdown-content h2 {
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.sl-markdown-content h3 {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+/* ── Code blocks ── */
+.sl-markdown-content pre {
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 0;
+}
+
+:root[data-theme='dark'] .sl-markdown-content pre {
+  background: #080808;
+}
+
+.sl-markdown-content code {
+  font-size: 0.85em;
+}
+
+/* ── Inline code ── */
+.sl-markdown-content :not(pre) > code {
+  border-radius: 2px;
+  padding: 0.15em 0.35em;
+  font-size: 0.85em;
+}
+
+:root[data-theme='dark'] .sl-markdown-content :not(pre) > code {
+  background: #1a1a1a;
+  border: 1px solid #262626;
+  color: #ffb980;
+}
+
+:root[data-theme='light'] .sl-markdown-content :not(pre) > code {
+  background: #fff3e8;
+  border: 1px solid #ffe0c2;
+  color: #c45500;
+}
+
+/* ── Tables ── */
 table {
   font-size: 0.875rem;
 }
@@ -21,4 +156,116 @@ table code {
 
 table td, table th {
   padding: 0.4rem 0.6rem;
+}
+
+:root[data-theme='dark'] table th {
+  background: #111111;
+  border-color: #1a1a1a;
+}
+
+/* ── Cards ── */
+.card {
+  border-radius: 2px;
+}
+
+:root[data-theme='dark'] .card {
+  border-color: #1a1a1a;
+  background: #0d0d0d;
+}
+
+/* ── Hero section (splash page) ── */
+.hero {
+  padding-block: 4rem;
+}
+
+.hero .tagline {
+  font-weight: 300;
+  color: var(--sl-color-gray-2);
+}
+
+:root[data-theme='dark'] .hero .tagline {
+  color: #888888;
+}
+
+/* ── Primary action buttons ── */
+.hero .action.primary a {
+  background: #FF6B00;
+  border-color: #FF6B00;
+  color: #000;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+
+.hero .action.primary a:hover {
+  background: #e06000;
+  border-color: #e06000;
+}
+
+.hero .action.minimal a {
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+/* ── Links ── */
+.sl-markdown-content a {
+  text-decoration-color: rgba(255, 107, 0, 0.3);
+  text-underline-offset: 0.15em;
+}
+
+.sl-markdown-content a:hover {
+  text-decoration-color: #FF6B00;
+}
+
+/* ── Pagination buttons ── */
+.pagination-links a {
+  border-radius: 2px;
+}
+
+:root[data-theme='dark'] .pagination-links a {
+  border-color: #1a1a1a;
+}
+
+:root[data-theme='dark'] .pagination-links a:hover {
+  border-color: #FF6B00;
+}
+
+/* ── Search ── */
+site-search button[data-open-modal] {
+  border-radius: 2px;
+}
+
+/* ── Aside / callout boxes ── */
+.starlight-aside {
+  border-radius: 0;
+  border-width: 1px;
+  border-left-width: 3px;
+}
+
+/* ── Subtle grid background for dark theme ── */
+:root[data-theme='dark'] main {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Footer ── */
+.site-title:hover {
+  opacity: 0.8;
+}
+
+/* ── Scrollbar styling (dark mode) ── */
+:root[data-theme='dark'] ::-webkit-scrollbar {
+  width: 5px;
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+:root[data-theme='dark'] ::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 0;
 }
