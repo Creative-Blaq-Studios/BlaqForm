@@ -1,0 +1,33 @@
+---
+title: Installation
+description: How to add BlaqForm to your Flutter project.
+---
+
+## Add the dependency
+
+```yaml
+# pubspec.yaml
+dependencies:
+  blaq_form:
+    path: ../blaq_form  # or from pub.dev when published
+```
+
+Then run:
+
+```bash
+flutter pub get
+```
+
+## Import
+
+```dart
+import 'package:blaq_form/blaq_form.dart';
+```
+
+That single import gives you everything: validators, controllers, field widgets, builder, wizard, indicators, persistence, and logging.
+
+## Requirements
+
+- Flutter SDK `>=1.17.0`
+- Dart SDK `^3.11.4`
+- **Zero external dependencies** — BlaqForm only depends on the Flutter SDK

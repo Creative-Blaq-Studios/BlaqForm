@@ -1,0 +1,172 @@
+---
+title: Theming
+description: Customize the look and feel of all BlaqForm fields with BfFormTheme, a Flutter ThemeExtension.
+---
+
+`BfFormTheme` integrates with Flutter's `ThemeExtension` system. Define it once in your `ThemeData` and every BlaqForm field automatically picks up the configured styles.
+
+## Applying a theme
+
+Add `BfFormTheme` to your `MaterialApp`'s theme extensions:
+
+```dart
+MaterialApp(
+  theme: ThemeData(
+    extensions: [
+      BfFormTheme(
+        fieldSpacing: 16.0,
+        sectionSpacing: 24.0,
+        errorDisplay: BfErrorDisplay.inline,
+        fieldBorderRadius: BorderRadius.circular(12),
+        animationDuration: Duration(milliseconds: 200),
+        animationCurve: Curves.easeInOut,
+      ),
+    ],
+  ),
+  home: MyApp(),
+)
+```
+
+## All properties
+
+| Property | Type | Default | Description |
+|---|---|---|---|
+| `inputDecoration` | `InputDecoration?` | `null` | Base `InputDecoration` applied to all fields. Fields merge their own decoration on top. |
+| `labelStyle` | `TextStyle?` | `null` | Style for field labels. Falls back to ambient `InputDecorationTheme`. |
+| `errorStyle` | `TextStyle?` | `null` | Style for validation error text. Falls back to ambient `InputDecorationTheme`. |
+| `hintStyle` | `TextStyle?` | `null` | Style for hint text. Falls back to ambient `InputDecorationTheme`. |
+| `fieldSpacing` | `double` | `16.0` | Vertical spacing between fields in `BfFormSection`. |
+| `sectionSpacing` | `double` | `24.0` | Vertical spacing between form sections. |
+| `errorDisplay` | `BfErrorDisplay` | `inline` | How validation errors are displayed. |
+| `fieldBorderRadius` | `BorderRadius?` | `null` | Border radius for field containers. Falls back to `InputDecorationTheme`. |
+| `animationDuration` | `Duration` | `200ms` | Duration for field animations (error appear/disappear, focus transitions). |
+| `animationCurve` | `Curve` | `Curves.easeInOut` | Curve for field animations. |
+
+## BfErrorDisplay
+
+Controls how validation error messages are presented:
+
+| Value | Behavior |
+|---|---|
+| `BfErrorDisplay.inline` | Error text shown below the field (default Material behavior). |
+| `BfErrorDisplay.tooltip` | Error shown as a tooltip on hover/focus. |
+| `BfErrorDisplay.floating` | Error shown as a floating label above the field. |
+
+## Accessing the theme
+
+### BfFormTheme.of(context)
+
+Returns the nearest `BfFormTheme` or a default instance. Guaranteed non-null:
+
+```dart
+final theme = BfFormTheme.of(context);
+final spacing = theme.fieldSpacing; // always safe
+```
+
+### BfFormTheme.maybeOf(context)
+
+Returns the nearest `BfFormTheme` or `null` if none is registered:
+
+```dart
+final theme = BfFormTheme.maybeOf(context);
+if (theme != null) {
+  // custom theme is active
+}
+```
+
+## copyWith
+
+Create a modified copy of an existing theme:
+
+```dart
+final base = BfFormTheme.of(context);
+final custom = base.copyWith(
+  fieldSpacing: 24.0,
+  errorDisplay: BfErrorDisplay.tooltip,
+);
+```
+
+## lerp support
+
+`BfFormTheme` implements `lerp` for smooth animated theme transitions. Numeric values (`fieldSpacing`, `sectionSpacing`, `animationDuration`) interpolate smoothly. Text styles use `TextStyle.lerp`. Enum and non-lerpable values switch at the halfway point.
+
+## Complete example
+
+```dart
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        colorSchemeSeed: Colors.indigo,
+        extensions: [
+          BfFormTheme(
+            inputDecoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey.shade50,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 12,
+              ),
+            ),
+            labelStyle: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+            ),
+            errorStyle: TextStyle(
+              color: Colors.red.shade700,
+              fontSize: 12,
+            ),
+            hintStyle: TextStyle(
+              color: Colors.grey.shade400,
+            ),
+            fieldSpacing: 20.0,
+            sectionSpacing: 32.0,
+            errorDisplay: BfErrorDisplay.inline,
+            fieldBorderRadius: BorderRadius.circular(12),
+            animationDuration: Duration(milliseconds: 300),
+            animationCurve: Curves.easeOut,
+          ),
+        ],
+      ),
+      home: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: BfFormBuilder(
+            fields: {
+              'name': BfFieldConfig<String>.text(
+                label: 'Name',
+                validators: [Bf.required()],
+              ),
+              'email': BfFieldConfig<String>.email(
+                label: 'Email',
+                validators: [Bf.required(), Bf.email()],
+              ),
+            },
+            onSubmit: (values) async => debugPrint('$values'),
+            builder: (scope) => Column(
+              children: [
+                scope.text('name'),
+                const SizedBox(height: 20),
+                scope.email('email'),
+                const SizedBox(height: 24),
+                scope.submitButton('Submit'),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## Related
+
+- [Fields](/guides/fields) -- field widgets that consume the theme
+- [Form Builder](/guides/form-builder) -- declarative forms

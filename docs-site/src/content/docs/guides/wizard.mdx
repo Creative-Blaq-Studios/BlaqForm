@@ -1,0 +1,242 @@
+---
+title: Wizard (Multi-Step Forms)
+description: Build multi-step form flows with BfWizard, step-scoped validation, and a progress indicator.
+---
+
+`BfWizard` extends the declarative approach of [BfFormBuilder](/guides/form-builder) with step-based navigation. Each step declares which fields it owns, and validation runs only on the current step's fields before advancing.
+
+## Core concepts
+
+- **BfWizardStep** -- an immutable config that declares a step's `title` and `fieldNames`.
+- **BfWizardController** -- a `ChangeNotifier` managing the current step index and navigation.
+- **BfWizardProgress** -- a visual stepper indicator that rebuilds automatically.
+
+## BfWizardStep
+
+Each step maps to a subset of the fields declared in the `fields` map:
+
+```dart
+BfWizardStep(
+  title: 'Personal Info',
+  fieldNames: ['firstName', 'lastName'],
+  subtitle: 'Enter your details',  // optional
+  icon: Icons.person,               // optional
+)
+```
+
+| Property | Type | Description |
+|---|---|---|
+| `title` | `String` | Label shown in progress indicators. |
+| `fieldNames` | `List<String>` | Keys of the fields that belong to this step. |
+| `subtitle` | `String?` | Optional extra context text. |
+| `icon` | `IconData?` | Optional icon for the step. |
+
+## BfWizardController
+
+The controller is a `ChangeNotifier` that widgets can listen to for rebuilds.
+
+### Properties
+
+| Property | Type | Description |
+|---|---|---|
+| `currentStep` | `int` | Index of the active step. |
+| `stepCount` | `int` | Total number of steps. |
+| `currentStepConfig` | `BfWizardStep` | Config object for the current step. |
+| `steps` | `List<BfWizardStep>` | All step configs. |
+| `canGoBack` | `bool` | `true` if not on the first step. |
+| `canGoNext` | `bool` | `true` if not on the last step. |
+| `isFirstStep` | `bool` | Whether the current step is first. |
+| `isLastStep` | `bool` | Whether the current step is last. |
+| `fieldNamesForCurrentStep` | `List<String>` | Field keys for the active step. |
+
+### Methods
+
+| Method | Return | Description |
+|---|---|---|
+| `goNext()` | `void` | Advance to the next step (no validation). |
+| `goBack()` | `void` | Return to the previous step. |
+| `goTo(int index)` | `void` | Jump to a specific step (clamped to valid range). |
+| `validateAndGoNext(BfFormController)` | `Future<bool>` | Validate current step's fields, advance only if all pass. Returns `true` on success. |
+
+## BfWizardProgress widget
+
+A visual progress bar that auto-rebuilds when the wizard step changes:
+
+```dart
+BfWizardProgress(
+  controller: wizard,
+  activeColor: Colors.blue,    // defaults to theme primary
+  inactiveColor: Colors.grey,  // defaults to grey
+  lineThickness: 2.0,
+  circleSize: 32.0,
+)
+```
+
+- Completed steps show a checkmark icon.
+- The active step shows a filled circle with the step number.
+- Future steps show an outlined circle.
+
+## BfWizard widget
+
+The top-level widget that wires everything together:
+
+```dart
+BfWizard(
+  fields: { /* BfFieldConfig map */ },
+  steps: [ /* BfWizardStep list */ ],
+  builder: (context, scope, wizard) => /* widget tree */,
+  onComplete: (values) async => /* handle submission */,
+  autovalidateMode: BfAutovalidateMode.onUserInteraction,
+  crossValidators: [],
+)
+```
+
+The `builder` callback receives three arguments:
+
+1. `BuildContext context` -- the widget's build context.
+2. `BfFormBuilderScope scope` -- the same fluent scope from `BfFormBuilder` for rendering fields.
+3. `BfWizardController wizard` -- for navigation and step queries.
+
+## Complete example: 3-step onboarding
+
+```dart
+class OnboardingWizard extends StatelessWidget {
+  const OnboardingWizard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Onboarding')),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: BfWizard(
+          fields: {
+            // Step 1: Account
+            'email': BfFieldConfig<String>.email(
+              label: 'Email',
+              validators: [Bf.required(), Bf.email()],
+            ),
+            'password': BfFieldConfig<String>.password(
+              label: 'Password',
+              validators: [Bf.required(), Bf.minLength(8)],
+            ),
+            // Step 2: Profile
+            'name': BfFieldConfig<String>.text(
+              label: 'Full Name',
+              validators: [Bf.required()],
+            ),
+            'birthday': BfFieldConfig<DateTime>.date(
+              label: 'Date of Birth',
+              validators: [Bf.required<DateTime>(), Bf.age(18)],
+            ),
+            // Step 3: Preferences
+            'country': BfFieldConfig<String>.dropdown(
+              label: 'Country',
+              options: ['US', 'UK', 'CA'],
+              optionLabels: {
+                'US': 'United States',
+                'UK': 'United Kingdom',
+                'CA': 'Canada',
+              },
+              validators: [Bf.required()],
+            ),
+            'newsletter': BfFieldConfig<bool>.checkbox(
+              initialValue: false,
+              label: 'Subscribe to newsletter',
+            ),
+          },
+          steps: [
+            BfWizardStep(
+              title: 'Account',
+              fieldNames: ['email', 'password'],
+              icon: Icons.lock,
+            ),
+            BfWizardStep(
+              title: 'Profile',
+              fieldNames: ['name', 'birthday'],
+              icon: Icons.person,
+            ),
+            BfWizardStep(
+              title: 'Preferences',
+              fieldNames: ['country', 'newsletter'],
+              icon: Icons.settings,
+            ),
+          ],
+          onComplete: (values) async {
+            await Future.delayed(const Duration(seconds: 2));
+            debugPrint('Onboarding complete: $values');
+          },
+          builder: (context, scope, wizard) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Progress indicator
+                BfWizardProgress(controller: wizard),
+                const SizedBox(height: 32),
+
+                // Step content
+                Expanded(
+                  child: _buildStepContent(scope, wizard),
+                ),
+
+                // Navigation buttons
+                const SizedBox(height: 24),
+                Row(
+                  children: [
+                    if (wizard.canGoBack)
+                      TextButton(
+                        onPressed: wizard.goBack,
+                        child: const Text('Back'),
+                      ),
+                    const Spacer(),
+                    if (!wizard.isLastStep)
+                      ElevatedButton(
+                        onPressed: () => wizard.validateAndGoNext(
+                          scope.formController,
+                        ),
+                        child: const Text('Next'),
+                      ),
+                    if (wizard.isLastStep)
+                      scope.submitButton('Finish'),
+                  ],
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStepContent(BfFormBuilderScope scope, BfWizardController wizard) {
+    switch (wizard.currentStep) {
+      case 0:
+        return Column(children: [
+          scope.email('email'),
+          const SizedBox(height: 16),
+          scope.password('password'),
+        ]);
+      case 1:
+        return Column(children: [
+          scope.text('name'),
+          const SizedBox(height: 16),
+          scope.date('birthday'),
+        ]);
+      case 2:
+        return Column(children: [
+          scope.dropdown<String>('country'),
+          const SizedBox(height: 16),
+          scope.checkbox('newsletter'),
+        ]);
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+}
+```
+
+## Related
+
+- [Form Builder](/guides/form-builder) -- the single-page equivalent
+- [Validation](/guides/validation) -- validators used in each step
+- [Indicators](/guides/indicators) -- BfFormProgress for overall completion tracking

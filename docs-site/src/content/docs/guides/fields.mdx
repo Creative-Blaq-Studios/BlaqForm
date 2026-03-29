@@ -1,0 +1,373 @@
+---
+title: Field Widgets
+description: A catalog of all 17+ BlaqForm field widgets, from text inputs to signature pads.
+tableOfContents:
+  maxDepth: 2
+---
+
+BlaqForm ships with a comprehensive set of field widgets. Every field binds to an `BfFieldController<T>`, auto-registers with the nearest `BfForm`, and displays validation errors automatically.
+
+## Field catalog
+
+| Widget | Value Type | Description |
+|---|---|---|
+| `BfTextField` | `String` | Standard text input with `.password()` and `.email()` convenience constructors. |
+| `BfDropdownField<T>` | `T` | Dropdown selector wrapping `DropdownButtonFormField`. |
+| `BfCheckboxField` | `bool` | Single checkbox toggle. |
+| `BfSwitchField` | `bool` | Material switch toggle. |
+| `BfCheckboxGroupField<T>` | `List<T>` | Multi-select checkbox group. |
+| `BfRadioGroupField<T>` | `T` | Single-select radio button group. |
+| `BfDateField` | `DateTime` | Date picker with formatted display. |
+| `BfDateRangeField` | `DateTimeRange` | Date range picker. |
+| `BfPhoneField` | `String` | Phone number input with country code selector. |
+| `BfCurrencyField` | `double` | Currency input with locale-aware formatting. |
+| `BfOtpField` | `String` | Multi-box OTP/PIN input with auto-advance. |
+| `BfAutocompleteField<T>` | `T` | Autocomplete with async suggestions and debounce. |
+| `BfRatingField` | `double` | Star rating with optional half-star support. |
+| `BfChipSelectField<T>` | `List<T>` | Multi-select using `FilterChip` widgets. |
+| `BfSignatureField` | `List<List<Offset>>` | Signature drawing pad with PNG/base64 export. |
+| `BfSliderField` | `double` | Slider for numeric values. |
+| `BfRangeSliderField` | `RangeValues` | Range slider for min/max selection. |
+
+## BfTextField
+
+The most commonly used field. Wraps a standard `TextField` and syncs with `BfFieldController<String>`.
+
+```dart
+BfTextField(
+  name: 'bio',
+  controller: bioController,
+  labelText: 'Bio',
+  hintText: 'Tell us about yourself',
+  maxLines: 4,
+  minLines: 2,
+)
+```
+
+### Convenience constructors
+
+**Password** -- sets `obscureText: true` and `maxLines: 1`:
+
+```dart
+BfTextField.password(
+  name: 'password',
+  controller: passwordController,
+  labelText: 'Password',
+)
+```
+
+**Email** -- sets `keyboardType: TextInputType.emailAddress`:
+
+```dart
+BfTextField.email(
+  name: 'email',
+  controller: emailController,
+  labelText: 'Email',
+)
+```
+
+## BfDropdownField
+
+Generic dropdown for selecting from a list of items:
+
+```dart
+BfDropdownField<String>(
+  name: 'country',
+  controller: countryController,
+  items: [
+    DropdownMenuItem(value: 'US', child: Text('United States')),
+    DropdownMenuItem(value: 'UK', child: Text('United Kingdom')),
+    DropdownMenuItem(value: 'CA', child: Text('Canada')),
+  ],
+  labelText: 'Country',
+  hintText: 'Select a country',
+)
+```
+
+## BfCheckboxField and BfSwitchField
+
+Boolean toggle fields:
+
+```dart
+BfCheckboxField(
+  name: 'terms',
+  controller: termsController,
+  label: Text('I agree to the Terms of Service'),
+)
+
+BfSwitchField(
+  name: 'notifications',
+  controller: notifyController,
+  label: Text('Enable notifications'),
+)
+```
+
+## BfCheckboxGroupField and BfRadioGroupField
+
+Multi-select and single-select groups:
+
+```dart
+// Multi-select
+BfCheckboxGroupField<String>(
+  name: 'toppings',
+  controller: toppingsController,  // BfFieldController<List<String>>
+  options: ['Cheese', 'Pepperoni', 'Mushrooms'],
+  labelBuilder: (t) => t,
+)
+
+// Single-select
+BfRadioGroupField<String>(
+  name: 'size',
+  controller: sizeController,  // BfFieldController<String>
+  options: ['Small', 'Medium', 'Large'],
+  labelBuilder: (s) => s,
+)
+```
+
+## BfDateField and BfDateRangeField
+
+Date pickers that open the native Material date dialog:
+
+```dart
+BfDateField(
+  name: 'birthDate',
+  controller: birthDateController,  // BfFieldController<DateTime>
+  firstDate: DateTime(1900),
+  lastDate: DateTime.now(),
+  dateFormat: 'MM/dd/yyyy',
+  labelText: 'Date of Birth',
+)
+
+BfDateRangeField(
+  name: 'vacation',
+  controller: vacationController,  // BfFieldController<DateTimeRange>
+  firstDate: DateTime.now(),
+  lastDate: DateTime.now().add(Duration(days: 365)),
+  labelText: 'Vacation Period',
+)
+```
+
+## BfPhoneField
+
+Phone input with a country code dropdown prefix. The controller stores the full string (e.g., `"+14155551234"`):
+
+```dart
+BfPhoneField(
+  name: 'phone',
+  controller: phoneController,  // BfFieldController<String>
+  defaultCountryCode: '+1',
+  labelText: 'Phone Number',
+)
+```
+
+Comes with a built-in list of common country codes (US, UK, AU, IN, etc.).
+
+## BfCurrencyField
+
+Locale-aware currency input bound to `double`:
+
+```dart
+BfCurrencyField(
+  name: 'price',
+  controller: priceController,  // BfFieldController<double>
+  symbol: '\$',
+  decimalPlaces: 2,
+  thousandSeparator: ',',
+  decimalSeparator: '.',
+  labelText: 'Price',
+)
+```
+
+Formatting is applied automatically as the user types.
+
+## BfOtpField
+
+Multi-box OTP/PIN input. Focus auto-advances on input and retreats on backspace:
+
+```dart
+BfOtpField(
+  name: 'otp',
+  controller: otpController,  // BfFieldController<String>
+  length: 6,
+  obscureText: false,
+  boxWidth: 48.0,
+  boxHeight: 56.0,
+  spacing: 8.0,
+  autofocus: true,
+)
+```
+
+The controller value is the concatenated digit string (e.g., `"123456"`).
+
+## BfAutocompleteField
+
+Async search with debounced suggestions:
+
+```dart
+BfAutocompleteField<City>(
+  name: 'city',
+  controller: cityController,  // BfFieldController<City>
+  optionsBuilder: (query) => cityService.search(query),
+  displayStringForOption: (city) => city.name,
+  debounce: Duration(milliseconds: 300),
+  labelText: 'City',
+)
+```
+
+## BfRatingField
+
+Tappable star rating:
+
+```dart
+BfRatingField(
+  name: 'rating',
+  controller: ratingController,  // BfFieldController<double>
+  maxRating: 5,
+  allowHalfRating: true,
+  size: 36.0,
+  color: Colors.amber,
+  labelText: 'Your Rating',
+)
+```
+
+## BfChipSelectField
+
+Multi-select using filter chips:
+
+```dart
+BfChipSelectField<String>(
+  name: 'tags',
+  controller: tagsController,  // BfFieldController<List<String>>
+  options: ['Flutter', 'Dart', 'Firebase', 'Supabase'],
+  labelBuilder: (tag) => tag,
+  spacing: 8.0,
+  runSpacing: 4.0,
+  labelText: 'Interests',
+)
+```
+
+## BfSignatureField
+
+Signature drawing pad using `CustomPainter` and `GestureDetector`:
+
+```dart
+BfSignatureField(
+  name: 'signature',
+  controller: signatureController,  // BfFieldController<List<List<Offset>>>
+  height: 250,
+  strokeColor: Colors.black,
+  strokeWidth: 2.0,
+  backgroundColor: Colors.white,
+  showClearButton: true,
+  labelText: 'Sign Here',
+)
+```
+
+### Exporting signatures
+
+Use the extensions on `BfFieldController<List<List<Offset>>>` to export:
+
+```dart
+// Export as PNG bytes
+final pngBytes = await signatureController.toPng(
+  width: 600,
+  height: 300,
+  strokeColor: Colors.black,
+  strokeWidth: 2.0,
+  backgroundColor: Colors.white,
+);
+
+// Export as base64 string
+final base64 = await signatureController.toBase64(
+  width: 600,
+  height: 300,
+);
+```
+
+## BfSliderField and BfRangeSliderField
+
+Numeric sliders:
+
+```dart
+BfSliderField(
+  name: 'volume',
+  controller: volumeController,  // BfFieldController<double>
+  min: 0,
+  max: 100,
+  divisions: 100,
+  showValue: true,
+  labelText: 'Volume',
+)
+
+BfRangeSliderField(
+  name: 'priceRange',
+  controller: priceRangeController,  // BfFieldController<RangeValues>
+  min: 0,
+  max: 1000,
+  divisions: 100,
+  showValues: true,
+  labelText: 'Price Range',
+)
+```
+
+## Auto-registration with BfForm
+
+Every field auto-registers its controller with the nearest `BfForm` ancestor when it mounts, and unregisters when it disposes. You never need to call `formController.register()` manually when using field widgets.
+
+## Layout widgets
+
+### BfFormSection
+
+Groups fields with an optional title, description, and collapsible behavior:
+
+```dart
+BfFormSection(
+  title: 'Personal Information',
+  description: 'Enter your name and contact details.',
+  collapsible: true,
+  initiallyExpanded: true,
+  children: [
+    BfTextField(name: 'firstName', controller: firstNameCtrl),
+    BfTextField(name: 'lastName', controller: lastNameCtrl),
+  ],
+)
+```
+
+Spacing between children uses `BfFormTheme.fieldSpacing`.
+
+### BfFormRow
+
+Arranges fields horizontally with configurable flex ratios:
+
+```dart
+BfFormRow(
+  flexes: [2, 1],
+  spacing: 16.0,
+  children: [
+    BfTextField(name: 'street', controller: streetCtrl),
+    BfTextField(name: 'zipCode', controller: zipCtrl),
+  ],
+)
+```
+
+When `flexes` is `null`, all children get equal flex.
+
+## Controller extensions
+
+BlaqForm provides extensions on `BfFieldController` for convenience:
+
+```dart
+// String controllers
+emailController.trimmed       // value?.trim()
+bioController.wordCount        // split by whitespace and count
+
+// Any controller -- reactive widget builder
+emailController.watch((ctrl) => Text(ctrl.value ?? ''))
+```
+
+## Related
+
+- [Fields reference](/reference/fields) -- full table of all field props
+- [Form Builder](/guides/form-builder) -- use fields without manual controller setup
+- [Validation](/guides/validation) -- attach validators to any field
+- [Theming](/guides/theming) -- style all fields globally

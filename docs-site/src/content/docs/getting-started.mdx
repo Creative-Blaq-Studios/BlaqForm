@@ -1,0 +1,75 @@
+---
+title: Introduction
+description: What BlaqForm is and why you'd use it.
+---
+
+BlaqForm is a composable, extensible Flutter forms package. It provides:
+
+- **20+ field widgets** — text, password, dropdown, date, phone, currency, OTP, signature, rating, chips, sliders, and more
+- **Composable validators** — chain with `.and()`, `.or()`, `.when()`. Async support with debounce.
+- **Zero-boilerplate mode** — `BfFormBuilder` auto-manages controllers. No `initState`, no `dispose`.
+- **Multi-step wizard** — `BfWizard` with per-step validation and progress indicator
+- **State-management agnostic** — `ChangeNotifier`-based. Works with setState, Riverpod, Bloc, or anything.
+- **Zero external dependencies** — only Flutter SDK
+
+## Architecture
+
+BlaqForm is organized into 5 layers:
+
+| Layer | What it does | Key types |
+|-------|-------------|-----------|
+| **State** | Per-field and per-form state management | `BfFieldController<T>`, `BfFormController` |
+| **Validation** | Composable sync + async validators | `BfValidator<T>`, `Bf.required()`, `Bf.email()` |
+| **Field** | Pre-built field widgets with auto-registration | `BfTextField`, `BfDropdownField<T>`, `BfDateField`, ... |
+| **Consumer** | Form shell, layout, submit button | `BfForm`, `BfFormSection`, `BfSubmitButton` |
+| **Theme** | ThemeExtension for consistent styling | `BfFormTheme` |
+
+Plus **Builder** (`BfFormBuilder`), **Wizard** (`BfWizard`), **Indicators** (`BfFormProgress`, `BfFieldStatus`), **Persistence** (`BfFormPersistence`), and **Extensions** (`toJson()`, `dirtyValues()`, `toPng()`).
+
+## Two Ways to Build Forms
+
+### 1. Declarative (recommended)
+
+```dart
+BfFormBuilder(
+  fields: {
+    'email': BfFieldConfig.email(validators: [Bf.required(), Bf.email()]),
+    'password': BfFieldConfig.password(validators: [Bf.required(), Bf.minLength(8)]),
+  },
+  onSubmit: (values) async => await api.login(values),
+  builder: (context, form) => Column(children: [
+    form.email('email'),
+    form.password('password'),
+    form.submitButton('Log In'),
+  ]),
+)
+```
+
+### 2. Manual (full control)
+
+```dart
+class _MyFormState extends State<MyForm> {
+  final form = BfFormController();
+  final email = BfFieldController<String>(validators: [Bf.required(), Bf.email()]);
+
+  @override
+  void dispose() {
+    form.dispose();
+    email.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BfForm(
+      controller: form,
+      child: Column(children: [
+        BfTextField(name: 'email', controller: email),
+        BfSubmitButton(onSubmit: (ctrl) => ctrl.submit((v) async => ...)),
+      ]),
+    );
+  }
+}
+```
+
+Both approaches use the same validators, the same field widgets, and the same form controller under the hood.

@@ -1,0 +1,317 @@
+---
+title: Field Key Constants
+description: Predefined field name constants for common form patterns.
+tableOfContents:
+  maxDepth: 2
+---
+
+BlaqForm provides predefined string constants for common field names, giving you IDE autocomplete and eliminating typos. They're purely optional — plain strings still work everywhere.
+
+## Usage
+
+```dart
+import 'package:blaq_form/blaq_form.dart';
+
+BfFormBuilder(
+  fields: {
+    BfUserKeys.email: BfFieldConfig.email(
+      label: 'Email',
+      validators: [Bf.required(), Bf.email()],
+    ),
+    BfUserKeys.password: BfFieldConfig.password(
+      label: 'Password',
+      validators: [Bf.required(), Bf.minLength(8)],
+    ),
+    BfUserKeys.firstName: BfFieldConfig.text(
+      label: 'First Name',
+      validators: [Bf.required()],
+    ),
+  },
+  builder: (context, form) => Column(children: [
+    form.email(BfUserKeys.email),
+    form.password(BfUserKeys.password),
+    form.text(BfUserKeys.firstName),
+    form.submitButton('Sign Up'),
+  ]),
+)
+```
+
+Constants are just `static const String` values — they're fully interchangeable with plain strings:
+
+```dart
+// These are identical:
+BfUserKeys.email      // 'email'
+'email'               // 'email'
+```
+
+---
+
+## BfUserKeys
+
+User identity and account fields.
+
+| Constant | Value |
+|----------|-------|
+| `username` | `'username'` |
+| `email` | `'email'` |
+| `password` | `'password'` |
+| `confirmPassword` | `'confirmPassword'` |
+| `currentPassword` | `'currentPassword'` |
+| `newPassword` | `'newPassword'` |
+| `pin` | `'pin'` |
+| `otp` | `'otp'` |
+| `firstName` | `'firstName'` |
+| `lastName` | `'lastName'` |
+| `middleName` | `'middleName'` |
+| `fullName` | `'fullName'` |
+| `displayName` | `'displayName'` |
+| `nickname` | `'nickname'` |
+| `suffix` | `'suffix'` |
+| `prefix` | `'prefix'` |
+| `title` | `'title'` |
+| `dateOfBirth` | `'dateOfBirth'` |
+| `age` | `'age'` |
+| `gender` | `'gender'` |
+| `pronouns` | `'pronouns'` |
+| `avatar` | `'avatar'` |
+| `profilePhoto` | `'profilePhoto'` |
+| `bio` | `'bio'` |
+| `about` | `'about'` |
+| `website` | `'website'` |
+| `language` | `'language'` |
+| `timezone` | `'timezone'` |
+
+## BfContactKeys
+
+Contact information.
+
+| Constant | Value |
+|----------|-------|
+| `phone` | `'phone'` |
+| `phoneNumber` | `'phoneNumber'` |
+| `mobilePhone` | `'mobilePhone'` |
+| `homePhone` | `'homePhone'` |
+| `workPhone` | `'workPhone'` |
+| `fax` | `'fax'` |
+| `email` | `'email'` |
+| `personalEmail` | `'personalEmail'` |
+| `workEmail` | `'workEmail'` |
+| `emergencyContactName` | `'emergencyContactName'` |
+| `emergencyContactPhone` | `'emergencyContactPhone'` |
+| `emergencyContactRelation` | `'emergencyContactRelation'` |
+
+## BfAddressKeys
+
+Address and location fields.
+
+| Constant | Value |
+|----------|-------|
+| `fullAddress` | `'fullAddress'` |
+| `addressLine1` | `'addressLine1'` |
+| `addressLine2` | `'addressLine2'` |
+| `street` | `'street'` |
+| `streetNumber` | `'streetNumber'` |
+| `apartment` | `'apartment'` |
+| `unit` | `'unit'` |
+| `suite` | `'suite'` |
+| `floor` | `'floor'` |
+| `building` | `'building'` |
+| `city` | `'city'` |
+| `state` | `'state'` |
+| `province` | `'province'` |
+| `region` | `'region'` |
+| `county` | `'county'` |
+| `district` | `'district'` |
+| `zipCode` | `'zipCode'` |
+| `postalCode` | `'postalCode'` |
+| `postcode` | `'postcode'` |
+| `country` | `'country'` |
+| `countryCode` | `'countryCode'` |
+| `latitude` | `'latitude'` |
+| `longitude` | `'longitude'` |
+
+## BfPaymentKeys
+
+Payment, billing, and financial fields.
+
+| Constant | Value |
+|----------|-------|
+| `cardNumber` | `'cardNumber'` |
+| `cardholderName` | `'cardholderName'` |
+| `expiryDate` | `'expiryDate'` |
+| `expiryMonth` | `'expiryMonth'` |
+| `expiryYear` | `'expiryYear'` |
+| `cvv` | `'cvv'` |
+| `cvc` | `'cvc'` |
+| `bankName` | `'bankName'` |
+| `accountNumber` | `'accountNumber'` |
+| `routingNumber` | `'routingNumber'` |
+| `iban` | `'iban'` |
+| `swiftCode` | `'swiftCode'` |
+| `sortCode` | `'sortCode'` |
+| `amount` | `'amount'` |
+| `currency` | `'currency'` |
+| `price` | `'price'` |
+| `discount` | `'discount'` |
+| `discountCode` | `'discountCode'` |
+| `couponCode` | `'couponCode'` |
+| `promoCode` | `'promoCode'` |
+| `taxId` | `'taxId'` |
+| `vatNumber` | `'vatNumber'` |
+| `billingAddress` | `'billingAddress'` |
+| `billingCity` | `'billingCity'` |
+| `billingState` | `'billingState'` |
+| `billingZip` | `'billingZip'` |
+| `billingCountry` | `'billingCountry'` |
+
+## BfShippingKeys
+
+Shipping and delivery fields.
+
+| Constant | Value |
+|----------|-------|
+| `shippingMethod` | `'shippingMethod'` |
+| `shippingAddress` | `'shippingAddress'` |
+| `shippingCity` | `'shippingCity'` |
+| `shippingState` | `'shippingState'` |
+| `shippingZip` | `'shippingZip'` |
+| `shippingCountry` | `'shippingCountry'` |
+| `recipientName` | `'recipientName'` |
+| `recipientPhone` | `'recipientPhone'` |
+| `deliveryInstructions` | `'deliveryInstructions'` |
+| `deliveryDate` | `'deliveryDate'` |
+| `deliveryTime` | `'deliveryTime'` |
+| `trackingNumber` | `'trackingNumber'` |
+| `orderNotes` | `'orderNotes'` |
+
+## BfCompanyKeys
+
+Company and business fields.
+
+| Constant | Value |
+|----------|-------|
+| `companyName` | `'companyName'` |
+| `legalName` | `'legalName'` |
+| `tradingName` | `'tradingName'` |
+| `registrationNumber` | `'registrationNumber'` |
+| `industry` | `'industry'` |
+| `department` | `'department'` |
+| `jobTitle` | `'jobTitle'` |
+| `role` | `'role'` |
+| `employeeId` | `'employeeId'` |
+| `companySize` | `'companySize'` |
+| `companyWebsite` | `'companyWebsite'` |
+| `companyEmail` | `'companyEmail'` |
+| `companyPhone` | `'companyPhone'` |
+
+## BfSocialKeys
+
+Social media and online presence.
+
+| Constant | Value |
+|----------|-------|
+| `twitter` | `'twitter'` |
+| `facebook` | `'facebook'` |
+| `instagram` | `'instagram'` |
+| `linkedin` | `'linkedin'` |
+| `github` | `'github'` |
+| `youtube` | `'youtube'` |
+| `tiktok` | `'tiktok'` |
+| `discord` | `'discord'` |
+| `slack` | `'slack'` |
+| `telegram` | `'telegram'` |
+| `whatsapp` | `'whatsapp'` |
+| `skype` | `'skype'` |
+
+## BfPreferenceKeys
+
+User preferences, settings, and consent.
+
+| Constant | Value |
+|----------|-------|
+| `theme` | `'theme'` |
+| `darkMode` | `'darkMode'` |
+| `notifications` | `'notifications'` |
+| `emailNotifications` | `'emailNotifications'` |
+| `pushNotifications` | `'pushNotifications'` |
+| `smsNotifications` | `'smsNotifications'` |
+| `newsletter` | `'newsletter'` |
+| `termsAccepted` | `'termsAccepted'` |
+| `privacyAccepted` | `'privacyAccepted'` |
+| `marketingConsent` | `'marketingConsent'` |
+| `cookieConsent` | `'cookieConsent'` |
+| `ageVerification` | `'ageVerification'` |
+| `rememberMe` | `'rememberMe'` |
+| `twoFactorEnabled` | `'twoFactorEnabled'` |
+
+## BfContentKeys
+
+Content creation, feedback, and reviews.
+
+| Constant | Value |
+|----------|-------|
+| `subject` | `'subject'` |
+| `message` | `'message'` |
+| `body` | `'body'` |
+| `description` | `'description'` |
+| `comment` | `'comment'` |
+| `note` | `'note'` |
+| `notes` | `'notes'` |
+| `rating` | `'rating'` |
+| `review` | `'review'` |
+| `feedback` | `'feedback'` |
+| `suggestion` | `'suggestion'` |
+| `category` | `'category'` |
+| `tags` | `'tags'` |
+| `priority` | `'priority'` |
+| `status` | `'status'` |
+| `type` | `'type'` |
+| `attachment` | `'attachment'` |
+| `attachments` | `'attachments'` |
+| `file` | `'file'` |
+| `files` | `'files'` |
+| `image` | `'image'` |
+| `images` | `'images'` |
+| `document` | `'document'` |
+| `signature` | `'signature'` |
+
+## BfDateTimeKeys
+
+Date, time, and scheduling fields.
+
+| Constant | Value |
+|----------|-------|
+| `date` | `'date'` |
+| `time` | `'time'` |
+| `dateTime` | `'dateTime'` |
+| `startDate` | `'startDate'` |
+| `endDate` | `'endDate'` |
+| `startTime` | `'startTime'` |
+| `endTime` | `'endTime'` |
+| `dateRange` | `'dateRange'` |
+| `duration` | `'duration'` |
+| `frequency` | `'frequency'` |
+| `deadline` | `'deadline'` |
+| `reminder` | `'reminder'` |
+| `appointmentDate` | `'appointmentDate'` |
+| `appointmentTime` | `'appointmentTime'` |
+| `checkIn` | `'checkIn'` |
+| `checkOut` | `'checkOut'` |
+
+## BfSearchKeys
+
+Search, filter, and query fields.
+
+| Constant | Value |
+|----------|-------|
+| `query` | `'query'` |
+| `search` | `'search'` |
+| `keyword` | `'keyword'` |
+| `filter` | `'filter'` |
+| `sortBy` | `'sortBy'` |
+| `sortOrder` | `'sortOrder'` |
+| `minPrice` | `'minPrice'` |
+| `maxPrice` | `'maxPrice'` |
+| `minDate` | `'minDate'` |
+| `maxDate` | `'maxDate'` |
+| `pageSize` | `'pageSize'` |
