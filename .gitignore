@@ -1,0 +1,39 @@
+# ── Flutter / Dart ────────────────────────────────────────────────
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+pubspec.lock
+**/doc/api/
+build/
+coverage/
+flutter_*.log
+
+# ── IDE ───────────────────────────────────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.code-workspace
+
+# ── macOS ─────────────────────────────────────────────────────────
+.DS_Store
+**/.DS_Store
+.AppleDouble
+.LSOverride
+
+# ── Node (docs-site) ──────────────────────────────────────────────
+node_modules/
+docs-site/node_modules/
+docs-site/dist/
+docs-site/.astro/
+
+# ── Misc ──────────────────────────────────────────────────────────
+*.log
+*.swp
+*.class
+*.pyc
+.history
+.svn/
+migrate_working_dir/
+/blaq_form/docs
