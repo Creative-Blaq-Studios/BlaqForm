@@ -6,8 +6,8 @@ import '../theme/dev_theme.dart';
 import '../theme/studio_theme.dart';
 import '../widgets/brand_scaffold.dart';
 
-/// Side-by-side (tablet) or tabbed (phone) display of the exact same form
-/// rendered under Dev and Studio themes simultaneously.
+/// Displays the exact same form rendered under both Dev and Studio themes
+/// stacked vertically so both are always visible by scrolling.
 class ThemeShowcaseExample extends StatelessWidget {
   const ThemeShowcaseExample({required this.notifier, super.key});
 
@@ -15,72 +15,22 @@ class ThemeShowcaseExample extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isWide = MediaQuery.sizeOf(context).width >= 700;
     return BrandScaffold(
       notifier: notifier,
       title: 'Theme Showcase',
-      body: isWide ? const _WideLayout() : const _TabbedLayout(),
-    );
-  }
-}
-
-class _WideLayout extends StatelessWidget {
-  const _WideLayout();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Row(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Expanded(child: _ThemePane(mode: BfAppTheme.dev)),
-        VerticalDivider(width: 1),
-        Expanded(child: _ThemePane(mode: BfAppTheme.studio)),
-      ],
-    );
-  }
-}
-
-class _TabbedLayout extends StatelessWidget {
-  const _TabbedLayout();
-
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Column(
-        children: [
-          TabBar(
-            indicatorColor: const Color(0xFFFF6B00),
-            labelColor: const Color(0xFFFF6B00),
-            unselectedLabelColor: Theme.of(
-              context,
-            ).colorScheme.onSurface.withValues(alpha: 0.4),
-            tabs: const [
-              Tab(text: '// dev'),
-              Tab(text: '// studio'),
-            ],
-            labelStyle: const TextStyle(
-              fontFamily: 'Courier',
-              fontSize: 11,
-              letterSpacing: 0.1,
-            ),
-          ),
-          const Expanded(
-            child: TabBarView(
-              children: [
-                _ThemePane(mode: BfAppTheme.dev),
-                _ThemePane(mode: BfAppTheme.studio),
-              ],
-            ),
-          ),
+      body: ListView(
+        children: const [
+          _ThemePane(mode: BfAppTheme.dev),
+          SizedBox(height: 2),
+          _ThemePane(mode: BfAppTheme.studio),
+          SizedBox(height: 40),
         ],
       ),
     );
   }
 }
 
-/// Each pane gets its own [Theme], [MaterialApp]-less, so both themes
-/// coexist on screen regardless of the global toggle.
+/// Each pane gets its own [Theme] + [Material] so both coexist on screen.
 class _ThemePane extends StatefulWidget {
   const _ThemePane({required this.mode});
 
@@ -90,19 +40,14 @@ class _ThemePane extends StatefulWidget {
   State<_ThemePane> createState() => _ThemePaneState();
 }
 
-class _ThemePaneState extends State<_ThemePane>
-    with AutomaticKeepAliveClientMixin {
+class _ThemePaneState extends State<_ThemePane> {
   late final BfFormController _formController;
   late final BfFieldController<String> _nameController;
   late final BfFieldController<String> _emailController;
   late final BfFieldController<String> _roleController;
   late final BfFieldController<bool> _agreeController;
-  late final BfFieldController<double> _experienceController;
 
   static const _roles = ['Engineer', 'Designer', 'Product', 'Other'];
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -116,7 +61,6 @@ class _ThemePaneState extends State<_ThemePane>
       validators: [Bf.required(message: 'Select a role')],
     );
     _agreeController = BfFieldController<bool>(initialValue: false);
-    _experienceController = BfFieldController<double>(initialValue: 1.0);
   }
 
   @override
@@ -125,40 +69,27 @@ class _ThemePaneState extends State<_ThemePane>
     _emailController.dispose();
     _roleController.dispose();
     _agreeController.dispose();
-    _experienceController.dispose();
     _formController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final isDev = widget.mode == BfAppTheme.dev;
     final themeData = isDev ? DevTheme.themeData : StudioTheme.themeData;
 
-    // Wrap in Theme + Material so all descendants (text, icons, fields)
-    // inherit the correct colors and input decoration theme.
     return Theme(
       data: themeData,
       child: Material(
         color: themeData.scaffoldBackgroundColor,
-        child: SingleChildScrollView(
+        child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              _PaneLabel(mode: widget.mode),
-              const SizedBox(height: 20),
-              BfFormProgress(
-                controller: _formController,
-                color: const Color(0xFFFF6B00),
-                backgroundColor: isDev
-                    ? const Color(0xFF1A1A1A)
-                    : const Color(0xFFEBEBEB),
-                height: 3,
-                labelBuilder: (v, t) => '$v / $t',
-              ),
-              const SizedBox(height: 20),
+              _PaneHeader(mode: widget.mode),
+              const SizedBox(height: 16),
               BfForm(
                 controller: _formController,
                 autovalidateMode: BfAutovalidateMode.onUserInteraction,
@@ -172,7 +103,7 @@ class _ThemePaneState extends State<_ThemePane>
                       hintText: 'Your name',
                       textInputAction: TextInputAction.next,
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 12),
                     BfTextField.email(
                       name: 'email',
                       controller: _emailController,
@@ -180,7 +111,7 @@ class _ThemePaneState extends State<_ThemePane>
                       hintText: 'you@example.com',
                       textInputAction: TextInputAction.next,
                     ),
-                    const SizedBox(height: 14),
+                    const SizedBox(height: 12),
                     BfDropdownField<String>(
                       name: 'role',
                       controller: _roleController,
@@ -192,23 +123,13 @@ class _ThemePaneState extends State<_ThemePane>
                           )
                           .toList(),
                     ),
-                    const SizedBox(height: 14),
-                    BfSliderField(
-                      name: 'experience',
-                      controller: _experienceController,
-                      min: 0,
-                      max: 10,
-                      divisions: 10,
-                      labelText: 'Years of experience',
-                      activeColor: const Color(0xFFFF6B00),
-                    ),
                     const SizedBox(height: 8),
                     BfCheckboxField(
                       name: 'agree',
                       controller: _agreeController,
                       label: const Text('I agree to the terms'),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {},
                       child: const Text('Submit'),
@@ -224,24 +145,36 @@ class _ThemePaneState extends State<_ThemePane>
   }
 }
 
-class _PaneLabel extends StatelessWidget {
-  const _PaneLabel({required this.mode});
+class _PaneHeader extends StatelessWidget {
+  const _PaneHeader({required this.mode});
 
   final BfAppTheme mode;
 
   @override
   Widget build(BuildContext context) {
+    final isDev = mode == BfAppTheme.dev;
+    final cs = Theme.of(context).colorScheme;
     return Row(
       children: [
         Container(width: 8, height: 8, color: const Color(0xFFFF6B00)),
         const SizedBox(width: 8),
         Text(
-          mode == BfAppTheme.dev ? '// dev theme' : '// studio theme',
+          isDev ? '// dev theme' : '// studio theme',
           style: const TextStyle(
             fontFamily: 'Courier',
             fontSize: 11,
             color: Color(0xFFFF6B00),
             letterSpacing: 0.1,
+          ),
+        ),
+        const Spacer(),
+        Text(
+          isDev ? 'Sharp · Dark · Monospace' : 'Rounded · Light · Clean',
+          style: TextStyle(
+            fontFamily: 'Courier',
+            fontSize: 9,
+            color: cs.onSurface.withValues(alpha: 0.35),
+            letterSpacing: 0.05,
           ),
         ),
       ],
