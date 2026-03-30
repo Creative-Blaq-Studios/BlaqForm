@@ -30,6 +30,7 @@ class _WideLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Row(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Expanded(child: _ThemePane(mode: BfAppTheme.dev)),
         VerticalDivider(width: 1),
@@ -48,12 +49,17 @@ class _TabbedLayout extends StatelessWidget {
       length: 2,
       child: Column(
         children: [
-          const TabBar(
-            tabs: [
+          TabBar(
+            indicatorColor: const Color(0xFFFF6B00),
+            labelColor: const Color(0xFFFF6B00),
+            unselectedLabelColor: Theme.of(
+              context,
+            ).colorScheme.onSurface.withValues(alpha: 0.4),
+            tabs: const [
               Tab(text: '// dev'),
               Tab(text: '// studio'),
             ],
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontFamily: 'Courier',
               fontSize: 11,
               letterSpacing: 0.1,
@@ -73,8 +79,8 @@ class _TabbedLayout extends StatelessWidget {
   }
 }
 
-/// Renders the showcase form wrapped in its own [Theme] so both panes
-/// can coexist on screen regardless of the global toggle.
+/// Each pane gets its own [Theme], [MaterialApp]-less, so both themes
+/// coexist on screen regardless of the global toggle.
 class _ThemePane extends StatefulWidget {
   const _ThemePane({required this.mode});
 
@@ -127,96 +133,92 @@ class _ThemePaneState extends State<_ThemePane>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final themeData = widget.mode == BfAppTheme.dev
-        ? DevTheme.themeData
-        : StudioTheme.themeData;
+    final isDev = widget.mode == BfAppTheme.dev;
+    final themeData = isDev ? DevTheme.themeData : StudioTheme.themeData;
 
+    // Wrap in Theme + Material so all descendants (text, icons, fields)
+    // inherit the correct colors and input decoration theme.
     return Theme(
       data: themeData,
-      child: Builder(
-        builder: (context) {
-          return Container(
-            color: themeData.scaffoldBackgroundColor,
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _PaneLabel(mode: widget.mode),
-                  const SizedBox(height: 20),
-                  BfFormProgress(
-                    controller: _formController,
-                    color: const Color(0xFFFF6B00),
-                    backgroundColor: widget.mode == BfAppTheme.dev
-                        ? const Color(0xFF1A1A1A)
-                        : const Color(0xFFEBEBEB),
-                    height: 3,
-                    labelBuilder: (v, t) => '$v / $t',
-                  ),
-                  const SizedBox(height: 20),
-                  BfForm(
-                    controller: _formController,
-                    autovalidateMode: BfAutovalidateMode.onUserInteraction,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        BfTextField(
-                          name: 'name',
-                          controller: _nameController,
-                          labelText: 'Name',
-                          hintText: 'Your name',
-                          textInputAction: TextInputAction.next,
-                        ),
-                        const SizedBox(height: 14),
-                        BfTextField.email(
-                          name: 'email',
-                          controller: _emailController,
-                          labelText: 'Email',
-                          hintText: 'you@example.com',
-                          textInputAction: TextInputAction.next,
-                        ),
-                        const SizedBox(height: 14),
-                        BfDropdownField<String>(
-                          name: 'role',
-                          controller: _roleController,
-                          labelText: 'Role',
-                          hintText: 'Select role',
-                          items: _roles
-                              .map(
-                                (r) =>
-                                    DropdownMenuItem(value: r, child: Text(r)),
-                              )
-                              .toList(),
-                        ),
-                        const SizedBox(height: 14),
-                        BfSliderField(
-                          name: 'experience',
-                          controller: _experienceController,
-                          min: 0,
-                          max: 10,
-                          divisions: 10,
-                          labelText: 'Years of experience',
-                          activeColor: const Color(0xFFFF6B00),
-                        ),
-                        const SizedBox(height: 8),
-                        BfCheckboxField(
-                          name: 'agree',
-                          controller: _agreeController,
-                          label: const Text('I agree to the terms'),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () {},
-                          child: const Text('Submit'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      child: Material(
+        color: themeData.scaffoldBackgroundColor,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _PaneLabel(mode: widget.mode),
+              const SizedBox(height: 20),
+              BfFormProgress(
+                controller: _formController,
+                color: const Color(0xFFFF6B00),
+                backgroundColor: isDev
+                    ? const Color(0xFF1A1A1A)
+                    : const Color(0xFFEBEBEB),
+                height: 3,
+                labelBuilder: (v, t) => '$v / $t',
               ),
-            ),
-          );
-        },
+              const SizedBox(height: 20),
+              BfForm(
+                controller: _formController,
+                autovalidateMode: BfAutovalidateMode.onUserInteraction,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    BfTextField(
+                      name: 'name',
+                      controller: _nameController,
+                      labelText: 'Name',
+                      hintText: 'Your name',
+                      textInputAction: TextInputAction.next,
+                    ),
+                    const SizedBox(height: 14),
+                    BfTextField.email(
+                      name: 'email',
+                      controller: _emailController,
+                      labelText: 'Email',
+                      hintText: 'you@example.com',
+                      textInputAction: TextInputAction.next,
+                    ),
+                    const SizedBox(height: 14),
+                    BfDropdownField<String>(
+                      name: 'role',
+                      controller: _roleController,
+                      labelText: 'Role',
+                      hintText: 'Select role',
+                      items: _roles
+                          .map(
+                            (r) => DropdownMenuItem(value: r, child: Text(r)),
+                          )
+                          .toList(),
+                    ),
+                    const SizedBox(height: 14),
+                    BfSliderField(
+                      name: 'experience',
+                      controller: _experienceController,
+                      min: 0,
+                      max: 10,
+                      divisions: 10,
+                      labelText: 'Years of experience',
+                      activeColor: const Color(0xFFFF6B00),
+                    ),
+                    const SizedBox(height: 8),
+                    BfCheckboxField(
+                      name: 'agree',
+                      controller: _agreeController,
+                      label: const Text('I agree to the terms'),
+                    ),
+                    const SizedBox(height: 20),
+                    ElevatedButton(
+                      onPressed: () {},
+                      child: const Text('Submit'),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -229,13 +231,12 @@ class _PaneLabel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDev = mode == BfAppTheme.dev;
     return Row(
       children: [
         Container(width: 8, height: 8, color: const Color(0xFFFF6B00)),
         const SizedBox(width: 8),
         Text(
-          isDev ? '// dev theme' : '// studio theme',
+          mode == BfAppTheme.dev ? '// dev theme' : '// studio theme',
           style: const TextStyle(
             fontFamily: 'Courier',
             fontSize: 11,

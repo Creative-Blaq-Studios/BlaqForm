@@ -100,19 +100,18 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Home shell is always dark — acts as neutral stage.
+    final cs = Theme.of(context).colorScheme;
+    final isDev = notifier.isDev;
     return Scaffold(
-      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
-        backgroundColor: const Color(0xFF0A0A0A),
-        title: const Text(
+        title: Text(
           'BLAQFORM',
           style: TextStyle(
             fontFamily: 'Outfit',
             fontWeight: FontWeight.w900,
             fontSize: 16,
             letterSpacing: 0.12,
-            color: Color(0xFFF5F5F5),
+            color: cs.onSurface,
           ),
         ),
         actions: [
@@ -121,18 +120,19 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
       body: CustomPaint(
-        painter: _HomePainter(),
+        painter: isDev ? _GridPainter(color: const Color(0x07FFFFFF)) : null,
         child: ListView(
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
           children: [
-            const _HomeHeader(),
+            _HomeHeader(isDev: isDev),
             const SizedBox(height: 32),
             ...List.generate(
               _examples.length,
               (i) => Padding(
-                padding: const EdgeInsets.only(bottom: 2),
+                padding: EdgeInsets.only(bottom: isDev ? 2 : 8),
                 child: _ExampleTile(
                   meta: _examples[i],
+                  isDev: isDev,
                   onTap: () => _navigate(context, i),
                 ),
               ),
@@ -144,11 +144,15 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class _HomePainter extends CustomPainter {
+class _GridPainter extends CustomPainter {
+  _GridPainter({required this.color});
+
+  final Color color;
+
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0x07FFFFFF)
+      ..color = color
       ..strokeWidth = 0.5;
     const step = 40.0;
     for (double x = 0; x <= size.width; x += step) {
@@ -160,14 +164,17 @@ class _HomePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_HomePainter old) => false;
+  bool shouldRepaint(_GridPainter old) => old.color != color;
 }
 
 class _HomeHeader extends StatelessWidget {
-  const _HomeHeader();
+  const _HomeHeader({required this.isDev});
+
+  final bool isDev;
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -181,7 +188,7 @@ class _HomeHeader extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        const Text(
+        Text(
           'Composable\nFlutter forms.',
           style: TextStyle(
             fontFamily: 'Outfit',
@@ -189,7 +196,7 @@ class _HomeHeader extends StatelessWidget {
             fontSize: 32,
             height: 1.0,
             letterSpacing: -0.03,
-            color: Color(0xFFF5F5F5),
+            color: cs.onSurface,
           ),
         ),
         const SizedBox(height: 10),
@@ -197,7 +204,7 @@ class _HomeHeader extends StatelessWidget {
           'Prebuilt validations · adaptive fields · developer-first API.',
           style: TextStyle(
             fontSize: 13,
-            color: const Color(0xFFF5F5F5).withValues(alpha: 0.45),
+            color: cs.onSurface.withValues(alpha: 0.45),
           ),
         ),
       ],
@@ -206,17 +213,24 @@ class _HomeHeader extends StatelessWidget {
 }
 
 class _ExampleTile extends StatelessWidget {
-  const _ExampleTile({required this.meta, required this.onTap});
+  const _ExampleTile({
+    required this.meta,
+    required this.isDev,
+    required this.onTap,
+  });
 
   final _ExampleMeta meta;
+  final bool isDev;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Material(
-      color: const Color(0xFF0D0D0D),
-      shape: const RoundedRectangleBorder(
-        side: BorderSide(color: Color(0xFF1A1A1A)),
+      color: cs.surface,
+      shape: RoundedRectangleBorder(
+        borderRadius: isDev ? BorderRadius.zero : BorderRadius.circular(10),
+        side: BorderSide(color: cs.outline),
       ),
       child: InkWell(
         onTap: onTap,
@@ -236,7 +250,11 @@ class _ExampleTile extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-              Icon(meta.icon, size: 20, color: const Color(0xFF555555)),
+              Icon(
+                meta.icon,
+                size: 20,
+                color: cs.onSurface.withValues(alpha: 0.3),
+              ),
               const SizedBox(width: 14),
               Expanded(
                 child: Column(
@@ -244,30 +262,30 @@ class _ExampleTile extends StatelessWidget {
                   children: [
                     Text(
                       meta.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Outfit',
                         fontWeight: FontWeight.w700,
                         fontSize: 14,
-                        color: Color(0xFFF5F5F5),
+                        color: cs.onSurface,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       meta.description,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontFamily: 'Courier',
                         fontSize: 10,
-                        color: Color(0xFF555555),
+                        color: cs.onSurface.withValues(alpha: 0.35),
                         letterSpacing: 0.05,
                       ),
                     ),
                   ],
                 ),
               ),
-              const Icon(
+              Icon(
                 Icons.arrow_forward,
                 size: 14,
-                color: Color(0xFF333333),
+                color: cs.onSurface.withValues(alpha: 0.2),
               ),
             ],
           ),
