@@ -36,4 +36,4 @@ docs-site/.astro/
 .history
 .svn/
 migrate_working_dir/
-/blaq_form/docs
+/blaq_form/docs/api
