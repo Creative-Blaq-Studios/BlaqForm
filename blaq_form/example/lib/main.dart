@@ -1,168 +1,292 @@
 import 'package:flutter/material.dart';
 import 'package:blaq_form/blaq_form.dart';
 
-import 'examples/builder_signup_form.dart';
-import 'examples/checkout_form.dart';
+import 'theme/app_theme.dart';
+import 'widgets/theme_toggle_button.dart';
 import 'examples/signup_form.dart';
+import 'examples/checkout_form.dart';
+import 'examples/builder_signup_form.dart';
 import 'examples/wizard_onboarding.dart';
+import 'examples/kitchen_sink.dart';
+import 'examples/theme_showcase.dart';
 
 void main() {
-  // Enable BlaqForm logging so you can see lifecycle events in the console.
   BfLogger.instance
     ..level = BfLogLevel.debug
     ..useColors = true;
 
-  runApp(const BlaqFormExampleApp());
+  runApp(BlaqFormExampleApp());
 }
 
-/// Root widget for the BlaqForm example application.
-///
-/// Provides a Material 3 theme and a home screen that navigates to individual
-/// form examples.
 class BlaqFormExampleApp extends StatelessWidget {
-  const BlaqFormExampleApp({super.key});
+  BlaqFormExampleApp({super.key});
+
+  final _themeNotifier = AppThemeNotifier();
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'BlaqForm Examples',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorSchemeSeed: Colors.indigo,
-        useMaterial3: true,
-      ),
-      home: const ExampleListScreen(),
+    return ValueListenableBuilder<BfAppTheme>(
+      valueListenable: _themeNotifier,
+      builder: (context, theme, _) {
+        return MaterialApp(
+          title: 'BlaqForm',
+          debugShowCheckedModeBanner: false,
+          theme: _themeNotifier.themeData,
+          home: HomeScreen(notifier: _themeNotifier),
+        );
+      },
     );
   }
 }
 
-/// Home screen that lists the available form examples.
-class ExampleListScreen extends StatelessWidget {
-  const ExampleListScreen({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({required this.notifier, super.key});
+
+  final AppThemeNotifier notifier;
+
+  static const _examples = [
+    _ExampleMeta(
+      tag: '01',
+      title: 'Signup Form',
+      description: 'BfFieldStatus · BfFormProgress · BfDirtyGuard',
+      icon: Icons.person_add_outlined,
+    ),
+    _ExampleMeta(
+      tag: '02',
+      title: 'Checkout',
+      description: 'BfFormSection · BfFormRow · BfDropdownField · BfDateField',
+      icon: Icons.shopping_bag_outlined,
+    ),
+    _ExampleMeta(
+      tag: '03',
+      title: 'BfFormBuilder',
+      description: 'Zero controllers · declarative config · ~50 lines',
+      icon: Icons.bolt_outlined,
+    ),
+    _ExampleMeta(
+      tag: '04',
+      title: 'BfWizard',
+      description: 'Multi-step · per-step validation · progress indicator',
+      icon: Icons.linear_scale_outlined,
+    ),
+    _ExampleMeta(
+      tag: '05',
+      title: 'Kitchen Sink',
+      description: 'Every field type in one scrollable form',
+      icon: Icons.widgets_outlined,
+    ),
+    _ExampleMeta(
+      tag: '06',
+      title: 'Theme Showcase',
+      description: 'Dev ↔ Studio side-by-side on the same form',
+      icon: Icons.palette_outlined,
+    ),
+  ];
+
+  void _navigate(BuildContext context, int index) {
+    final destinations = [
+      SignupFormExample(notifier: notifier),
+      CheckoutFormExample(notifier: notifier),
+      BuilderSignupFormExample(notifier: notifier),
+      WizardOnboardingExample(notifier: notifier),
+      KitchenSinkExample(notifier: notifier),
+      ThemeShowcaseExample(notifier: notifier),
+    ];
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => destinations[index]),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
+    // Home shell is always dark — acts as neutral stage.
     return Scaffold(
+      backgroundColor: const Color(0xFF0A0A0A),
       appBar: AppBar(
-        title: const Text('BlaqForm Examples'),
-        backgroundColor: colorScheme.inversePrimary,
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // -- Signup form example card --
-          _ExampleCard(
-            icon: Icons.person_add_outlined,
-            title: 'Signup Form',
-            description:
-                'Demonstrates text fields, email/password validation, '
-                'cross-field matching, checkbox agreement, and submit.',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const SignupFormExample()),
-            ),
+        backgroundColor: const Color(0xFF0A0A0A),
+        title: const Text(
+          'BLAQFORM',
+          style: TextStyle(
+            fontFamily: 'Outfit',
+            fontWeight: FontWeight.w900,
+            fontSize: 16,
+            letterSpacing: 0.12,
+            color: Color(0xFFF5F5F5),
           ),
-          const SizedBox(height: 12),
-
-          // -- Checkout form example card --
-          _ExampleCard(
-            icon: Icons.shopping_cart_outlined,
-            title: 'Checkout Form',
-            description:
-                'Demonstrates form sections, side-by-side rows, dropdown, '
-                'date picker, credit card validation, and layout widgets.',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const CheckoutFormExample()),
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // -- Builder signup form example card --
-          _ExampleCard(
-            icon: Icons.bolt_outlined,
-            title: 'Signup (BfFormBuilder)',
-            description:
-                'The same signup form rewritten with BfFormBuilder — zero '
-                'StatefulWidget, zero dispose, ~50 lines of declarative config.',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => const BuilderSignupFormExample()),
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // -- Wizard onboarding example card --
-          _ExampleCard(
-            icon: Icons.linear_scale_outlined,
-            title: 'Onboarding (BfWizard)',
-            description:
-                'A three-step onboarding wizard with per-step validation, '
-                'progress indicator, and a review/confirm screen.',
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (_) => const WizardOnboardingExample()),
-            ),
-          ),
+        ),
+        actions: [
+          ThemeToggleButton(notifier: notifier),
+          const SizedBox(width: 4),
         ],
       ),
+      body: CustomPaint(
+        painter: _HomePainter(),
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 40),
+          children: [
+            const _HomeHeader(),
+            const SizedBox(height: 32),
+            ...List.generate(
+              _examples.length,
+              (i) => Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: _ExampleTile(
+                  meta: _examples[i],
+                  onTap: () => _navigate(context, i),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
 
-/// A tappable card that describes a form example.
-class _ExampleCard extends StatelessWidget {
-  const _ExampleCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.onTap,
-  });
+class _HomePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0x07FFFFFF)
+      ..strokeWidth = 0.5;
+    const step = 40.0;
+    for (double x = 0; x <= size.width; x += step) {
+      canvas.drawLine(Offset(x, 0), Offset(x, size.height), paint);
+    }
+    for (double y = 0; y <= size.height; y += step) {
+      canvas.drawLine(Offset(0, y), Offset(size.width, y), paint);
+    }
+  }
 
-  final IconData icon;
-  final String title;
-  final String description;
+  @override
+  bool shouldRepaint(_HomePainter old) => false;
+}
+
+class _HomeHeader extends StatelessWidget {
+  const _HomeHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          '// examples',
+          style: TextStyle(
+            fontFamily: 'Courier',
+            fontSize: 11,
+            letterSpacing: 0.2,
+            color: Color(0xFFFF6B00),
+          ),
+        ),
+        const SizedBox(height: 8),
+        const Text(
+          'Composable\nFlutter forms.',
+          style: TextStyle(
+            fontFamily: 'Outfit',
+            fontWeight: FontWeight.w900,
+            fontSize: 32,
+            height: 1.0,
+            letterSpacing: -0.03,
+            color: Color(0xFFF5F5F5),
+          ),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          'Prebuilt validations · adaptive fields · developer-first API.',
+          style: TextStyle(
+            fontSize: 13,
+            color: const Color(0xFFF5F5F5).withValues(alpha: 0.45),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ExampleTile extends StatelessWidget {
+  const _ExampleTile({required this.meta, required this.onTap});
+
+  final _ExampleMeta meta;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-
-    return Card(
-      clipBehavior: Clip.antiAlias,
+    return Material(
+      color: const Color(0xFF0D0D0D),
+      shape: const RoundedRectangleBorder(
+        side: BorderSide(color: Color(0xFF1A1A1A)),
+      ),
       child: InkWell(
         onTap: onTap,
+        splashColor: const Color(0x14FF6B00),
+        highlightColor: const Color(0x0AFF6B00),
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
           child: Row(
             children: [
-              Icon(icon, size: 40, color: colorScheme.primary),
+              Text(
+                '// ${meta.tag}',
+                style: const TextStyle(
+                  fontFamily: 'Courier',
+                  fontSize: 10,
+                  color: Color(0xFFFF6B00),
+                  letterSpacing: 0.1,
+                ),
+              ),
               const SizedBox(width: 16),
+              Icon(meta.icon, size: 20, color: const Color(0xFF555555)),
+              const SizedBox(width: 14),
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                      meta.title,
+                      style: const TextStyle(
+                        fontFamily: 'Outfit',
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14,
+                        color: Color(0xFFF5F5F5),
+                      ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 2),
                     Text(
-                      description,
-                      style: Theme.of(context).textTheme.bodySmall,
+                      meta.description,
+                      style: const TextStyle(
+                        fontFamily: 'Courier',
+                        fontSize: 10,
+                        color: Color(0xFF555555),
+                        letterSpacing: 0.05,
+                      ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right),
+              const Icon(
+                Icons.arrow_forward,
+                size: 14,
+                color: Color(0xFF333333),
+              ),
             ],
           ),
         ),
       ),
     );
   }
+}
+
+class _ExampleMeta {
+  const _ExampleMeta({
+    required this.tag,
+    required this.title,
+    required this.description,
+    required this.icon,
+  });
+
+  final String tag;
+  final String title;
+  final String description;
+  final IconData icon;
 }

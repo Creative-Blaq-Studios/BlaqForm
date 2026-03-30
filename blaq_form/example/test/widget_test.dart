@@ -4,10 +4,10 @@ import 'package:example/main.dart';
 
 void main() {
   testWidgets('Example app renders home screen', (WidgetTester tester) async {
-    await tester.pumpWidget(const BlaqFormExampleApp());
+    await tester.pumpWidget(BlaqFormExampleApp());
 
-    expect(find.text('BlaqForm Examples'), findsOneWidget);
+    expect(find.text('BLAQFORM'), findsOneWidget);
     expect(find.text('Signup Form'), findsOneWidget);
-    expect(find.text('Checkout Form'), findsOneWidget);
+    expect(find.text('Checkout'), findsOneWidget);
   });
 }

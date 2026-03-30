@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:blaq_form/blaq_form.dart';
 
-/// A three-step onboarding wizard demonstrating [BfWizard],
-/// [BfWizardProgress], and per-step validation.
-///
-/// Steps:
-/// 1. **Account** — email and password
-/// 2. **Profile** — name and bio
-/// 3. **Confirm** — review summary with a submit button
+import '../theme/app_theme.dart';
+import '../widgets/brand_scaffold.dart';
+
 class WizardOnboardingExample extends StatelessWidget {
-  const WizardOnboardingExample({super.key});
+  const WizardOnboardingExample({required this.notifier, super.key});
+
+  final AppThemeNotifier notifier;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Onboarding (BfWizard)'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
+    return BrandScaffold(
+      notifier: notifier,
+      title: 'BfWizard',
       body: BfWizard(
         fields: {
           'email': BfFieldConfig<String>.email(
@@ -44,43 +40,28 @@ class WizardOnboardingExample extends StatelessWidget {
             prefixIcon: Icons.edit_outlined,
           ),
         },
-        steps: [
-          const BfWizardStep(
-            title: 'Account',
-            fieldNames: ['email', 'password'],
-          ),
-          const BfWizardStep(
-            title: 'Profile',
-            fieldNames: ['name', 'bio'],
-          ),
-          const BfWizardStep(
-            title: 'Confirm',
-            fieldNames: [],
-          ),
+        steps: const [
+          BfWizardStep(title: 'Account', fieldNames: ['email', 'password']),
+          BfWizardStep(title: 'Profile', fieldNames: ['name', 'bio']),
+          BfWizardStep(title: 'Confirm', fieldNames: []),
         ],
         onComplete: (values) async {
           await Future.delayed(const Duration(seconds: 2));
-          debugPrint('Onboarding values: $values');
         },
         builder: (context, scope, wizard) {
           return Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               children: [
-                // -- Progress indicator --
-                BfWizardProgress(controller: wizard),
+                _BrandStepProgress(wizard: wizard),
                 const SizedBox(height: 32),
-
-                // -- Step content --
                 Expanded(
                   child: SingleChildScrollView(
-                    child: _buildStepContent(context, scope, wizard),
+                    child: _WizardStepContent(scope: scope, wizard: wizard),
                   ),
                 ),
-
-                // -- Navigation buttons --
                 const SizedBox(height: 16),
-                _buildNavigation(context, scope, wizard),
+                _WizardNavigation(scope: scope, wizard: wizard),
               ],
             ),
           );
@@ -88,135 +69,249 @@ class WizardOnboardingExample extends StatelessWidget {
       ),
     );
   }
+}
 
-  static Widget _buildStepContent(
-    BuildContext context,
-    BfFormBuilderScope scope,
-    BfWizardController wizard,
-  ) {
-    switch (wizard.currentStep) {
-      case 0:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Create your account',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 24),
-            scope.email('email'),
-            const SizedBox(height: 16),
-            scope.password('password'),
-          ],
-        );
-      case 1:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Set up your profile',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 24),
-            scope.text('name'),
-            const SizedBox(height: 16),
-            scope.text('bio', maxLines: 3),
-          ],
-        );
-      case 2:
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'You\'re all set!',
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const SizedBox(height: 16),
-            Text(
-              'Review your information and tap Complete to finish.',
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 24),
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _reviewRow('Email', scope.controller<String>('email').value),
-                    const Divider(),
-                    _reviewRow('Name', scope.controller<String>('name').value),
-                    const Divider(),
-                    _reviewRow('Bio', scope.controller<String>('bio').value),
-                  ],
-                ),
+class _BrandStepProgress extends StatelessWidget {
+  const _BrandStepProgress({required this.wizard});
+
+  final BfWizardController wizard;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: wizard,
+      builder: (context, _) {
+        return Row(
+          children: List.generate(wizard.stepCount, (i) {
+            final isActive = i == wizard.currentStep;
+            final isDone = i < wizard.currentStep;
+            return Expanded(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 3,
+                      color: isDone || isActive
+                          ? const Color(0xFFFF6B00)
+                          : const Color(0xFF1A1A1A),
+                    ),
+                  ),
+                  if (i < wizard.stepCount - 1) const SizedBox(width: 2),
+                ],
               ),
-            ),
-          ],
+            );
+          }),
         );
-      default:
-        return const SizedBox.shrink();
-    }
+      },
+    );
   }
+}
 
-  static Widget _reviewRow(String label, dynamic value) {
-    final display = (value == null || value.toString().isEmpty)
-        ? '(not provided)'
-        : value.toString();
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 80,
-            child: Text(label, style: const TextStyle(fontWeight: FontWeight.w600)),
+class _WizardStepContent extends StatelessWidget {
+  const _WizardStepContent({required this.scope, required this.wizard});
+
+  final BfFormBuilderScope scope;
+  final BfWizardController wizard;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: wizard,
+      builder: (context, _) {
+        switch (wizard.currentStep) {
+          case 0:
+            return _StepBody(
+              step: '01',
+              title: 'Create your account',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  scope.email('email'),
+                  const SizedBox(height: 16),
+                  scope.password('password'),
+                ],
+              ),
+            );
+          case 1:
+            return _StepBody(
+              step: '02',
+              title: 'Set up your profile',
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  scope.text('name'),
+                  const SizedBox(height: 16),
+                  scope.text('bio', maxLines: 3),
+                ],
+              ),
+            );
+          case 2:
+            return _StepBody(
+              step: '03',
+              title: 'You\'re all set',
+              child: _ReviewCard(scope: scope),
+            );
+          default:
+            return const SizedBox.shrink();
+        }
+      },
+    );
+  }
+}
+
+class _StepBody extends StatelessWidget {
+  const _StepBody({
+    required this.step,
+    required this.title,
+    required this.child,
+  });
+
+  final String step;
+  final String title;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '// step $step',
+          style: const TextStyle(
+            fontFamily: 'Courier',
+            fontSize: 10,
+            color: Color(0xFFFF6B00),
           ),
-          Expanded(child: Text(display)),
+        ),
+        const SizedBox(height: 6),
+        Text(
+          title,
+          style: TextStyle(
+            fontFamily: 'Outfit',
+            fontWeight: FontWeight.w900,
+            fontSize: 22,
+            letterSpacing: -0.02,
+            color: cs.onSurface,
+          ),
+        ),
+        const SizedBox(height: 24),
+        child,
+      ],
+    );
+  }
+}
+
+class _ReviewCard extends StatelessWidget {
+  const _ReviewCard({required this.scope});
+
+  final BfFormBuilderScope scope;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final email = scope.controller<String>('email').value ?? '(not provided)';
+    final name = scope.controller<String>('name').value ?? '(not provided)';
+    final bio = scope.controller<String>('bio').value;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        border: Border.all(color: cs.outline),
+      ),
+      child: Column(
+        children: [
+          _ReviewRow(label: 'Email', value: email),
+          Divider(color: cs.outline, height: 24),
+          _ReviewRow(label: 'Name', value: name),
+          if (bio != null && bio.isNotEmpty) ...[
+            Divider(color: cs.outline, height: 24),
+            _ReviewRow(label: 'Bio', value: bio),
+          ],
         ],
       ),
     );
   }
+}
 
-  static Widget _buildNavigation(
-    BuildContext context,
-    BfFormBuilderScope scope,
-    BfWizardController wizard,
-  ) {
+class _ReviewRow extends StatelessWidget {
+  const _ReviewRow({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // Back button (hidden on first step)
-        if (wizard.canGoBack)
-          OutlinedButton(
-            onPressed: wizard.goBack,
-            child: const Text('Back'),
+        SizedBox(
+          width: 64,
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: cs.onSurface.withValues(alpha: 0.45),
+            ),
           ),
-        const Spacer(),
-
-        // Next or Complete
-        if (wizard.isLastStep)
-          scope.submitButton(
-            'Complete',
-            onSubmit: (values) async {
-              await scope.onSubmit?.call(values);
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Onboarding complete!'),
-                    behavior: SnackBarBehavior.floating,
-                  ),
-                );
-                Navigator.of(context).pop();
-              }
-            },
-          )
-        else
-          FilledButton(
-            onPressed: () =>
-                wizard.validateAndGoNext(scope.formController),
-            child: const Text('Next'),
+        ),
+        Expanded(
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: cs.onSurface,
+            ),
           ),
+        ),
       ],
+    );
+  }
+}
+
+class _WizardNavigation extends StatelessWidget {
+  const _WizardNavigation({required this.scope, required this.wizard});
+
+  final BfFormBuilderScope scope;
+  final BfWizardController wizard;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListenableBuilder(
+      listenable: wizard,
+      builder: (context, _) {
+        return Row(
+          children: [
+            if (wizard.canGoBack)
+              OutlinedButton(
+                onPressed: wizard.goBack,
+                child: const Text('Back'),
+              ),
+            const Spacer(),
+            if (wizard.isLastStep)
+              scope.submitButton(
+                'Complete',
+                onSubmit: (values) async {
+                  await scope.onSubmit?.call(values);
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Onboarding complete!')),
+                    );
+                    Navigator.of(context).pop();
+                  }
+                },
+              )
+            else
+              ElevatedButton(
+                onPressed: () => wizard.validateAndGoNext(scope.formController),
+                child: const Text('Next'),
+              ),
+          ],
+        );
+      },
     );
   }
 }
