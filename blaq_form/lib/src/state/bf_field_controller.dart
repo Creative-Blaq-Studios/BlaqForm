@@ -113,7 +113,8 @@ class BfFieldController<T> extends ChangeNotifier {
   /// Used by [BfFormController] to determine whether a pristine field
   /// should count as "unproven" (has validators but hasn't been touched)
   /// or "always valid" (no validators, nothing to fail).
-  bool get hasValidators => _validators.isNotEmpty || _asyncValidators.isNotEmpty;
+  bool get hasValidators =>
+      _validators.isNotEmpty || _asyncValidators.isNotEmpty;
 
   // ---------------------------------------------------------------------------
   // Actions
@@ -210,6 +211,32 @@ class BfFieldController<T> extends ChangeNotifier {
   void clearError() {
     if (_error == null) return;
     _error = null;
+    notifyListeners();
+  }
+
+  /// Marks the field as dirty and runs validation.
+  ///
+  /// Use this for **edit screens** where fields are pre-populated with
+  /// existing data via [initialValue]. Without this, a pre-filled field
+  /// with validators is considered "unproven" by [BfFormController.isValid],
+  /// which keeps [BfSubmitButton] disabled.
+  ///
+  /// ```dart
+  /// final email = BfFieldController<String>(
+  ///   initialValue: existingUser.email,
+  ///   validators: [Bf.required(), Bf.email()],
+  /// );
+  /// email.markDirty(); // now counts as validated for the submit button
+  /// ```
+  void markDirty() {
+    if (_isDirty) return;
+    _isDirty = true;
+    _runSyncValidation();
+    BfLogger.instance.verbose(
+      BfLogCategory.field,
+      'Marked dirty',
+      field: debugLabel,
+    );
     notifyListeners();
   }
 

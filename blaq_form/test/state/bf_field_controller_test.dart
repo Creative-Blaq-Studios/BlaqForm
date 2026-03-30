@@ -314,12 +314,84 @@ void main() {
 
       test('true when only async validators are provided', () {
         final controller = BfFieldController<String>(
-          asyncValidators: [
-            Bf.unique<String>((v) async => true),
-          ],
+          asyncValidators: [Bf.unique<String>((v) async => true)],
         );
         expect(controller.hasValidators, true);
         controller.dispose();
+      });
+
+      test('true when both sync and async validators are provided', () {
+        final controller = BfFieldController<String>(
+          validators: [Bf.required()],
+          asyncValidators: [Bf.unique<String>((v) async => true)],
+        );
+        expect(controller.hasValidators, true);
+        controller.dispose();
+      });
+    });
+
+    group('markDirty', () {
+      test('sets isDirty to true', () {
+        final controller = BfFieldController<String>(initialValue: 'hello');
+        expect(controller.isDirty, false);
+        controller.markDirty();
+        expect(controller.isDirty, true);
+        controller.dispose();
+      });
+
+      test('runs sync validators on the current value', () {
+        final controller = BfFieldController<String>(
+          initialValue: 'hello',
+          validators: [Bf.required()],
+        );
+        controller.markDirty();
+        expect(controller.isDirty, true);
+        expect(controller.isValid, true);
+        expect(controller.error, isNull);
+        controller.dispose();
+      });
+
+      test('produces error if initialValue fails validation', () {
+        final controller = BfFieldController<String>(
+          validators: [Bf.required()],
+        );
+        // initialValue is null → required fails
+        controller.markDirty();
+        expect(controller.isDirty, true);
+        expect(controller.isValid, false);
+        expect(controller.error, isNotNull);
+        controller.dispose();
+      });
+
+      test('is a no-op when already dirty', () {
+        final controller = BfFieldController<String>(initialValue: 'hello');
+        controller.value = 'changed';
+        expect(controller.isDirty, true);
+
+        var notifyCount = 0;
+        controller.addListener(() => notifyCount++);
+        controller.markDirty();
+        expect(notifyCount, 0); // no extra notification
+        controller.dispose();
+      });
+
+      test('makes pre-filled field count as valid in BfFormController', () {
+        final form = BfFormController();
+        final email = BfFieldController<String>(
+          initialValue: 'alice@example.com',
+          validators: [Bf.required()],
+        );
+        form.register('email', email);
+
+        // Pre-filled but pristine — form says not valid
+        expect(form.isValid, false);
+
+        // Mark dirty — now the form recognizes it as validated
+        email.markDirty();
+        expect(form.isValid, true);
+
+        form.dispose();
+        email.dispose();
       });
     });
   });

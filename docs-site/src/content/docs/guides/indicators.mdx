@@ -212,6 +212,25 @@ This timeline shows a form with three fields: **name** (required), **email** (re
 </svg>
 </div>
 
+### Pre-filled forms (edit screens)
+
+On edit screens where fields start with existing data, the button would stay disabled because the fields are pristine. Call `markDirty()` on pre-populated fields so they count as validated:
+
+```dart
+final email = BfFieldController<String>(
+  initialValue: existingUser.email, // pre-filled from API
+  validators: [Bf.required(), Bf.email()],
+);
+email.markDirty(); // runs validators and marks as proven
+
+final bio = BfFieldController<String>(
+  initialValue: existingUser.bio, // optional, no validators
+);
+// No markDirty() needed — fields without validators are always OK
+```
+
+`markDirty()` runs sync validators immediately on the current value, so the field either passes or shows an error — either way, it's no longer "unproven."
+
 ### Custom loading widget
 
 ```dart
