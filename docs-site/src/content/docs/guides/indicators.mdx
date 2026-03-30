@@ -125,9 +125,16 @@ class EditProfilePage extends StatelessWidget {
 
 A submit button that integrates with the nearest `BfForm` ancestor. It automatically:
 
-- Disables when the form is invalid (configurable).
+- **Starts disabled** on fresh forms — fields with validators must be touched and pass before the button enables.
+- Disables when any validated field has an error.
 - Disables during submission to prevent double-taps.
 - Shows a loading spinner while the `onSubmit` future is running.
+
+:::note[Default behavior]
+With `disableWhenInvalid: true` (the default), the button stays disabled until every field that has validators is **dirty** (user has entered a value) **and** passes validation. Fields without validators are always considered OK and don't block the button.
+
+Set `disableWhenInvalid: false` to make the button always tappable — `submit()` will still validate before calling your callback.
+:::
 
 ```dart
 BfSubmitButton(
@@ -147,8 +154,63 @@ BfSubmitButton(
 | `label` | `String?` | `'Submit'` | Button text (ignored if `child` is set). |
 | `child` | `Widget?` | `null` | Custom button content. |
 | `loadingWidget` | `Widget?` | small spinner | Custom widget shown during submission. |
-| `disableWhenInvalid` | `bool` | `true` | Disable when `!controller.isValid`. |
+| `disableWhenInvalid` | `bool` | `true` | Disable until all validated fields are dirty and passing. |
 | `style` | `ButtonStyle?` | `null` | Passed to the underlying `ElevatedButton`. |
+
+### How button state changes as the user fills a form
+
+This timeline shows a form with three fields: **name** (required), **email** (required), and **bio** (optional, no validators).
+
+<div style="background:var(--sl-color-gray-7);border:1px solid var(--sl-color-gray-5);padding:20px;border-radius:4px;margin:16px 0;overflow-x:auto;">
+<svg viewBox="0 0 820 420" style="width:100%;min-width:600px;font-family:monospace;">
+  <line x1="40" y1="20" x2="40" y2="400" stroke="var(--sl-color-gray-5)" stroke-width="2"/>
+  <circle cx="40" cy="45" r="4" fill="#ff6b00"/>
+  <text x="56" y="42" font-size="10" fill="var(--sl-color-white)" font-weight="bold">Form loads</text>
+  <text x="56" y="56" font-size="9" fill="var(--sl-color-gray-3)">3 fields registered. Nothing touched yet.</text>
+  <rect x="420" y="32" width="180" height="30" rx="4" fill="var(--sl-color-gray-6)" stroke="var(--sl-color-gray-5)" stroke-width="1"/>
+  <text x="430" y="46" font-size="8" fill="var(--sl-color-gray-3)">name: ⬜  email: ⬜  bio: ✅</text>
+  <text x="430" y="56" font-size="7" fill="var(--sl-color-gray-4)">⬜ = pristine+validators (unproven)</text>
+  <rect x="640" y="34" width="80" height="24" rx="4" fill="var(--sl-color-gray-6)" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="680" y="50" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="bold">DISABLED</text>
+  <circle cx="40" cy="115" r="4" fill="#ff6b00"/>
+  <text x="56" y="112" font-size="10" fill="var(--sl-color-white)" font-weight="bold">User types "John" in name</text>
+  <text x="56" y="126" font-size="9" fill="var(--sl-color-gray-3)">name dirty → validators pass ✓</text>
+  <rect x="420" y="102" width="180" height="30" rx="4" fill="var(--sl-color-gray-6)" stroke="var(--sl-color-gray-5)" stroke-width="1"/>
+  <text x="430" y="116" font-size="8" fill="var(--sl-color-gray-3)">name: <tspan fill="#22c55e">✅</tspan>  email: ⬜  bio: ✅</text>
+  <rect x="640" y="104" width="80" height="24" rx="4" fill="var(--sl-color-gray-6)" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="680" y="120" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="bold">DISABLED</text>
+  <text x="730" y="120" font-size="7" fill="var(--sl-color-gray-4)">email unproven</text>
+  <circle cx="40" cy="185" r="4" fill="#ff6b00"/>
+  <text x="56" y="182" font-size="10" fill="var(--sl-color-white)" font-weight="bold">User types "bad" in email</text>
+  <text x="56" y="196" font-size="9" fill="var(--sl-color-gray-3)">email dirty → validators fail ✗</text>
+  <rect x="420" y="172" width="180" height="30" rx="4" fill="var(--sl-color-gray-6)" stroke="var(--sl-color-gray-5)" stroke-width="1"/>
+  <text x="430" y="186" font-size="8" fill="var(--sl-color-gray-3)">name: <tspan fill="#22c55e">✅</tspan>  email: <tspan fill="#ef4444">❌</tspan>  bio: ✅</text>
+  <rect x="640" y="174" width="80" height="24" rx="4" fill="var(--sl-color-gray-6)" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="680" y="190" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="bold">DISABLED</text>
+  <text x="730" y="190" font-size="7" fill="var(--sl-color-gray-4)">email error</text>
+  <circle cx="40" cy="255" r="4" fill="#ff6b00"/>
+  <text x="56" y="252" font-size="10" fill="var(--sl-color-white)" font-weight="bold">User fixes to "john@test.com"</text>
+  <text x="56" y="266" font-size="9" fill="var(--sl-color-gray-3)">All validated fields dirty + passing.</text>
+  <rect x="420" y="242" width="180" height="30" rx="4" fill="var(--sl-color-gray-6)" stroke="var(--sl-color-gray-5)" stroke-width="1"/>
+  <text x="430" y="256" font-size="8" fill="var(--sl-color-gray-3)">name: <tspan fill="#22c55e">✅</tspan>  email: <tspan fill="#22c55e">✅</tspan>  bio: ✅</text>
+  <rect x="640" y="244" width="80" height="24" rx="4" fill="var(--sl-color-gray-6)" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="680" y="260" text-anchor="middle" font-size="9" fill="#22c55e" font-weight="bold">ENABLED ✓</text>
+  <circle cx="40" cy="325" r="4" fill="#ff6b00"/>
+  <text x="56" y="322" font-size="10" fill="var(--sl-color-white)" font-weight="bold">User clears name</text>
+  <text x="56" y="336" font-size="9" fill="var(--sl-color-gray-3)">name empty → required validator fails.</text>
+  <rect x="420" y="312" width="180" height="30" rx="4" fill="var(--sl-color-gray-6)" stroke="var(--sl-color-gray-5)" stroke-width="1"/>
+  <text x="430" y="326" font-size="8" fill="var(--sl-color-gray-3)">name: <tspan fill="#ef4444">❌</tspan>  email: <tspan fill="#22c55e">✅</tspan>  bio: ✅</text>
+  <rect x="640" y="314" width="80" height="24" rx="4" fill="var(--sl-color-gray-6)" stroke="#ef4444" stroke-width="1.5"/>
+  <text x="680" y="330" text-anchor="middle" font-size="9" fill="#ef4444" font-weight="bold">DISABLED</text>
+  <circle cx="40" cy="395" r="4" fill="#ff6b00"/>
+  <text x="56" y="392" font-size="10" fill="var(--sl-color-white)" font-weight="bold">User types "John" again</text>
+  <text x="56" y="406" font-size="9" fill="var(--sl-color-gray-3)">All fields valid again → button re-enables.</text>
+  <rect x="420" y="382" width="180" height="30" rx="4" fill="var(--sl-color-gray-6)" stroke="var(--sl-color-gray-5)" stroke-width="1"/>
+  <text x="430" y="396" font-size="8" fill="var(--sl-color-gray-3)">name: <tspan fill="#22c55e">✅</tspan>  email: <tspan fill="#22c55e">✅</tspan>  bio: ✅</text>
+  <rect x="640" y="384" width="80" height="24" rx="4" fill="var(--sl-color-gray-6)" stroke="#22c55e" stroke-width="1.5"/>
+  <text x="680" y="400" text-anchor="middle" font-size="9" fill="#22c55e" font-weight="bold">ENABLED ✓</text>
+</svg>
+</div>
 
 ### Custom loading widget
 
