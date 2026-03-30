@@ -134,14 +134,12 @@ class _BfDropdownFieldState<T> extends State<BfDropdownField<T>> {
   Widget build(BuildContext context) {
     final errorText =
         bfShouldShowError(controller: _controller, formState: _formState)
-            ? widget.controller.error?.message
-            : null;
+        ? widget.controller.error?.message
+        : null;
 
-    final effectiveDecoration = widget.decoration ??
-        InputDecoration(
-          hintText: widget.hintText,
-          labelText: widget.labelText,
-        );
+    final effectiveDecoration =
+        widget.decoration ??
+        InputDecoration(hintText: widget.hintText, labelText: widget.labelText);
 
     // Use a ValueKey so the DropdownButtonFormField is rebuilt when the
     // controller value changes externally (e.g. reset). This ensures

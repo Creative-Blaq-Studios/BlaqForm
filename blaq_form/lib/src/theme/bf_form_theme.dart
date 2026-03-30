@@ -151,15 +151,17 @@ class BfFormTheme extends ThemeExtension<BfFormTheme> {
       fieldSpacing: lerpDouble(fieldSpacing, other.fieldSpacing, t)!,
       sectionSpacing: lerpDouble(sectionSpacing, other.sectionSpacing, t)!,
       errorDisplay: t < 0.5 ? errorDisplay : other.errorDisplay,
-      fieldBorderRadius:
-          BorderRadius.lerp(fieldBorderRadius, other.fieldBorderRadius, t),
+      fieldBorderRadius: BorderRadius.lerp(
+        fieldBorderRadius,
+        other.fieldBorderRadius,
+        t,
+      ),
       animationDuration: Duration(
         milliseconds: lerpDouble(
           animationDuration.inMilliseconds.toDouble(),
           other.animationDuration.inMilliseconds.toDouble(),
           t,
-        )!
-            .round(),
+        )!.round(),
       ),
       animationCurve: t < 0.5 ? animationCurve : other.animationCurve,
     );

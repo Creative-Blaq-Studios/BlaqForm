@@ -13,10 +13,7 @@ void main() {
       // When: we render an BfTextField
       await tester.pumpWidget(
         buildTestForm(
-          child: BfTextField(
-            name: 'username',
-            controller: controller,
-          ),
+          child: BfTextField(name: 'username', controller: controller),
         ),
       );
 
@@ -32,10 +29,7 @@ void main() {
 
       await tester.pumpWidget(
         buildTestForm(
-          child: BfTextField(
-            name: 'username',
-            controller: controller,
-          ),
+          child: BfTextField(name: 'username', controller: controller),
         ),
       );
 
@@ -50,40 +44,39 @@ void main() {
     });
 
     testWidgets(
-        'shows error text when controller has error and field is touched',
-        (tester) async {
-      // Given: a text field with a validator that always fails
-      final controller = BfFieldController<String>(
-        initialValue: '',
-        validators: [const AlwaysInvalidValidator('Name is required')],
-      );
+      'shows error text when controller has error and field is touched',
+      (tester) async {
+        // Given: a text field with a validator that always fails
+        final controller = BfFieldController<String>(
+          initialValue: '',
+          validators: [const AlwaysInvalidValidator('Name is required')],
+        );
 
-      await tester.pumpWidget(
-        buildTestForm(
-          autovalidateMode: BfAutovalidateMode.onUserInteraction,
-          child: BfTextField(
-            name: 'name',
-            controller: controller,
+        await tester.pumpWidget(
+          buildTestForm(
+            autovalidateMode: BfAutovalidateMode.onUserInteraction,
+            child: BfTextField(name: 'name', controller: controller),
           ),
-        ),
-      );
+        );
 
-      // Error should not show before interaction
-      expect(find.text('Name is required'), findsNothing);
+        // Error should not show before interaction
+        expect(find.text('Name is required'), findsNothing);
 
-      // When: trigger a value change so sync validation runs, then mark touched
-      controller.value = 'a';
-      controller.markTouched();
-      await tester.pump();
+        // When: trigger a value change so sync validation runs, then mark touched
+        controller.value = 'a';
+        controller.markTouched();
+        await tester.pump();
 
-      // Then: the error text is displayed
-      expect(find.text('Name is required'), findsOneWidget);
+        // Then: the error text is displayed
+        expect(find.text('Name is required'), findsOneWidget);
 
-      addTearDown(controller.dispose);
-    });
+        addTearDown(controller.dispose);
+      },
+    );
 
-    testWidgets('does not show error when autovalidateMode is disabled',
-        (tester) async {
+    testWidgets('does not show error when autovalidateMode is disabled', (
+      tester,
+    ) async {
       // Given: a text field with a failing validator and disabled autovalidation
       final controller = BfFieldController<String>(
         initialValue: '',
@@ -93,10 +86,7 @@ void main() {
       await tester.pumpWidget(
         buildTestForm(
           autovalidateMode: BfAutovalidateMode.disabled,
-          child: BfTextField(
-            name: 'name',
-            controller: controller,
-          ),
+          child: BfTextField(name: 'name', controller: controller),
         ),
       );
 
@@ -112,17 +102,13 @@ void main() {
       addTearDown(controller.dispose);
     });
 
-    testWidgets('syncs with external controller value changes',
-        (tester) async {
+    testWidgets('syncs with external controller value changes', (tester) async {
       // Given: a text field with a controller
       final controller = BfFieldController<String>(initialValue: 'initial');
 
       await tester.pumpWidget(
         buildTestForm(
-          child: BfTextField(
-            name: 'field',
-            controller: controller,
-          ),
+          child: BfTextField(name: 'field', controller: controller),
         ),
       );
 
@@ -135,8 +121,7 @@ void main() {
       await tester.pump();
 
       // Then: the TextField reflects the new value
-      final updatedTextField =
-          tester.widget<TextField>(find.byType(TextField));
+      final updatedTextField = tester.widget<TextField>(find.byType(TextField));
       expect(updatedTextField.controller!.text, equals('updated externally'));
 
       addTearDown(controller.dispose);
@@ -150,10 +135,7 @@ void main() {
         buildTestForm(
           child: Column(
             children: [
-              BfTextField(
-                name: 'first',
-                controller: controller,
-              ),
+              BfTextField(name: 'first', controller: controller),
               const TextField(), // another field to take focus
             ],
           ),

@@ -41,8 +41,9 @@ void main() {
       expect(find.byType(BfTextField), findsOneWidget);
     });
 
-    testWidgets('next/back buttons navigate between steps',
-        (WidgetTester tester) async {
+    testWidgets('next/back buttons navigate between steps', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -88,8 +89,9 @@ void main() {
       expect(find.text('Step: 0'), findsOneWidget);
     });
 
-    testWidgets('validates current step before advancing',
-        (WidgetTester tester) async {
+    testWidgets('validates current step before advancing', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(

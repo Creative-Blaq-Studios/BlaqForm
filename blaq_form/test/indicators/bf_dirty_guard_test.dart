@@ -6,9 +6,7 @@ void main() {
   group('BfDirtyGuard', () {
     testWidgets('allows pop when form is not dirty', (tester) async {
       final form = BfFormController();
-      final field1 = BfFieldController<String>(
-        validators: [Bf.required()],
-      );
+      final field1 = BfFieldController<String>(validators: [Bf.required()]);
       form.register('name', field1);
 
       await tester.pumpWidget(
@@ -26,9 +24,9 @@ void main() {
       expect(find.text('Form Content'), findsOneWidget);
 
       // Form is not dirty, so PopScope should allow pop
-      final popScope = tester.widgetList<PopScope<Object?>>(
-        find.bySubtype<PopScope<Object?>>(),
-      ).last;
+      final popScope = tester
+          .widgetList<PopScope<Object?>>(find.bySubtype<PopScope<Object?>>())
+          .last;
       expect(popScope.canPop, isTrue);
 
       form.dispose();

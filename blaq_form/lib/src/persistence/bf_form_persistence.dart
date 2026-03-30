@@ -24,7 +24,8 @@ abstract class BfFormPersistence {
 
   /// Convenience: serializes all field values from [controller] via
   /// [BfFormController.toMap] and delegates to [save].
-  Future<void> saveForm(BfFormController controller) => save(controller.toMap());
+  Future<void> saveForm(BfFormController controller) =>
+      save(controller.toMap());
 
   /// Convenience: loads persisted values and populates registered fields on
   /// [controller].

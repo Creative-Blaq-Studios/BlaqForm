@@ -7,9 +7,7 @@ import 'package:blaq_form/blaq_form.dart';
 void main() {
   group('BfFieldStatus', () {
     testWidgets('shows check icon when valid and touched', (tester) async {
-      final controller = BfFieldController<String>(
-        validators: [Bf.required()],
-      );
+      final controller = BfFieldController<String>(validators: [Bf.required()]);
 
       // Set a valid value and mark as touched
       controller.value = 'hello';
@@ -17,9 +15,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: BfFieldStatus(controller: controller),
-          ),
+          home: Scaffold(body: BfFieldStatus(controller: controller)),
         ),
       );
 
@@ -29,9 +25,7 @@ void main() {
     });
 
     testWidgets('shows error icon when has error and touched', (tester) async {
-      final controller = BfFieldController<String>(
-        validators: [Bf.required()],
-      );
+      final controller = BfFieldController<String>(validators: [Bf.required()]);
 
       // Touch without setting a value (required validator will fail)
       controller.markTouched();
@@ -39,9 +33,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: BfFieldStatus(controller: controller),
-          ),
+          home: Scaffold(body: BfFieldStatus(controller: controller)),
         ),
       );
 
@@ -59,9 +51,7 @@ void main() {
       });
 
       final controller = BfFieldController<String>(
-        asyncValidators: [
-          Bf.unique<String>((value) => neverComplete.future),
-        ],
+        asyncValidators: [Bf.unique<String>((value) => neverComplete.future)],
       );
 
       controller.value = 'test';
@@ -72,9 +62,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: BfFieldStatus(controller: controller),
-          ),
+          home: Scaffold(body: BfFieldStatus(controller: controller)),
         ),
       );
 
@@ -90,15 +78,11 @@ void main() {
     });
 
     testWidgets('shows nothing when untouched', (tester) async {
-      final controller = BfFieldController<String>(
-        validators: [Bf.required()],
-      );
+      final controller = BfFieldController<String>(validators: [Bf.required()]);
 
       await tester.pumpWidget(
         MaterialApp(
-          home: Scaffold(
-            body: BfFieldStatus(controller: controller),
-          ),
+          home: Scaffold(body: BfFieldStatus(controller: controller)),
         ),
       );
 

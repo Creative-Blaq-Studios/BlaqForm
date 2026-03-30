@@ -26,9 +26,8 @@ import 'bf_wizard_step.dart';
 /// ```
 class BfWizardController extends ChangeNotifier {
   /// Creates a wizard controller for the given [steps].
-  BfWizardController({
-    required List<BfWizardStep> steps,
-  }) : _steps = List.unmodifiable(steps);
+  BfWizardController({required List<BfWizardStep> steps})
+    : _steps = List.unmodifiable(steps);
 
   final List<BfWizardStep> _steps;
   int _currentStep = 0;

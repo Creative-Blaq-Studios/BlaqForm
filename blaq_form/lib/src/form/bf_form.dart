@@ -56,13 +56,18 @@ class BfForm extends StatefulWidget {
     final state = maybeOf(context);
     if (state == null) {
       throw FlutterError.fromParts(<DiagnosticsNode>[
-        ErrorSummary('BfForm.of() called with a context that does not '
-            'contain an BfForm.'),
+        ErrorSummary(
+          'BfForm.of() called with a context that does not '
+          'contain an BfForm.',
+        ),
         ErrorDescription(
-            'No BfForm ancestor could be found starting from the context '
-            'that was passed to BfForm.of().'),
-        ErrorHint('This can happen if the context you used comes from a '
-            'widget above the BfForm in the widget tree.'),
+          'No BfForm ancestor could be found starting from the context '
+          'that was passed to BfForm.of().',
+        ),
+        ErrorHint(
+          'This can happen if the context you used comes from a '
+          'widget above the BfForm in the widget tree.',
+        ),
         context.describeElement('The context used was'),
       ]);
     }
@@ -136,19 +141,14 @@ class BfFormState extends State<BfForm> {
 
   @override
   Widget build(BuildContext context) {
-    return _BfFormScope(
-      formState: this,
-      child: widget.child,
-    );
+    return _BfFormScope(formState: this, child: widget.child);
   }
 }
 
 /// An [InheritedWidget] that propagates the [BfFormState] down the tree.
 class _BfFormScope extends InheritedWidget {
-  const _BfFormScope({
-    required BfFormState formState,
-    required super.child,
-  }) : _formState = formState;
+  const _BfFormScope({required BfFormState formState, required super.child})
+    : _formState = formState;
 
   final BfFormState _formState;
 

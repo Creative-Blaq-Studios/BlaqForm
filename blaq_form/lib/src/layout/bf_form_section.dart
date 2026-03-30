@@ -114,7 +114,8 @@ class _BfFormSectionState extends State<BfFormSection>
     final fkTheme = BfFormTheme.of(context);
 
     final content = Padding(
-      padding: widget.padding ??
+      padding:
+          widget.padding ??
           EdgeInsets.symmetric(vertical: fkTheme.sectionSpacing),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -151,10 +152,7 @@ class _BfFormSectionState extends State<BfFormSection>
     final headerContent = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
-      children: [
-        ?titleWidget,
-        ?descriptionWidget,
-      ],
+      children: [?titleWidget, ?descriptionWidget],
     );
 
     if (widget.collapsible) {

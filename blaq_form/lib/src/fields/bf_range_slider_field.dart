@@ -152,7 +152,9 @@ class _BfRangeSliderFieldState extends State<BfRangeSliderField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
     final currentValues =
         widget.controller.value ?? RangeValues(widget.min, widget.max);
 
@@ -167,10 +169,7 @@ class _BfRangeSliderFieldState extends State<BfRangeSliderField> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (widget.labelText != null)
-                  Text(
-                    widget.labelText!,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(widget.labelText!, style: theme.textTheme.bodyMedium),
                 if (widget.showValues)
                   Text(
                     '${_formatValue(currentValues.start)} – ${_formatValue(currentValues.end)}',

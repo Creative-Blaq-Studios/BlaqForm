@@ -38,19 +38,21 @@ void main() {
       expect(updated.errorDisplay, equals(BfErrorDisplay.floating));
     });
 
-    test('lerp() interpolates numeric values (fieldSpacing, sectionSpacing)',
-        () {
-      // Given: two themes with different numeric values
-      const themeA = BfFormTheme(fieldSpacing: 10.0, sectionSpacing: 20.0);
-      const themeB = BfFormTheme(fieldSpacing: 30.0, sectionSpacing: 40.0);
+    test(
+      'lerp() interpolates numeric values (fieldSpacing, sectionSpacing)',
+      () {
+        // Given: two themes with different numeric values
+        const themeA = BfFormTheme(fieldSpacing: 10.0, sectionSpacing: 20.0);
+        const themeB = BfFormTheme(fieldSpacing: 30.0, sectionSpacing: 40.0);
 
-      // When: we lerp at t=0.5
-      final result = themeA.lerp(themeB, 0.5);
+        // When: we lerp at t=0.5
+        final result = themeA.lerp(themeB, 0.5);
 
-      // Then: numeric values are interpolated
-      expect(result.fieldSpacing, equals(20.0));
-      expect(result.sectionSpacing, equals(30.0));
-    });
+        // Then: numeric values are interpolated
+        expect(result.fieldSpacing, equals(20.0));
+        expect(result.sectionSpacing, equals(30.0));
+      },
+    );
 
     test('lerp() uses t < 0.5 threshold for enums', () {
       // Given: two themes with different errorDisplay enums
@@ -70,8 +72,9 @@ void main() {
       expect(resultB.errorDisplay, equals(BfErrorDisplay.tooltip));
     });
 
-    testWidgets('of() returns default instance when no theme in tree',
-        (tester) async {
+    testWidgets('of() returns default instance when no theme in tree', (
+      tester,
+    ) async {
       // Given: a widget tree with no BfFormTheme in ThemeData
       late BfFormTheme capturedTheme;
 

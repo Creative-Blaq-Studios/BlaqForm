@@ -33,8 +33,8 @@ class BfFormBuilderScope {
     required this.formController,
     required Map<String, BfFieldController> controllers,
     required Map<String, BfFieldConfig> configs,
-  })  : _controllers = controllers,
-        _configs = configs;
+  }) : _controllers = controllers,
+       _configs = configs;
 
   /// The form controller managing all registered fields.
   final BfFormController formController;
@@ -169,7 +169,9 @@ class BfFormBuilderScope {
       key: key,
       name: name,
       controller: controller<bool>(name),
-      label: label != null ? Text(label) : (config?.label != null ? Text(config!.label!) : null),
+      label: label != null
+          ? Text(label)
+          : (config?.label != null ? Text(config!.label!) : null),
       subtitle: subtitle,
       enabled: enabled ?? config?.enabled ?? true,
       tristate: tristate,
@@ -189,7 +191,9 @@ class BfFormBuilderScope {
       key: key,
       name: name,
       controller: controller<bool>(name),
-      label: label != null ? Text(label) : (config?.label != null ? Text(config!.label!) : null),
+      label: label != null
+          ? Text(label)
+          : (config?.label != null ? Text(config!.label!) : null),
       subtitle: subtitle,
       enabled: enabled ?? config?.enabled ?? true,
     );
@@ -212,16 +216,17 @@ class BfFormBuilderScope {
     final config = _configs[name] as BfFieldConfig<T>?;
 
     // Build items from config options if not provided explicitly.
-    final effectiveItems = items ??
+    final effectiveItems =
+        items ??
         (config?.options?.map((option) {
-          final displayText =
-              config.optionLabels?[option] ?? option.toString();
-          return DropdownMenuItem<T>(
-            value: option,
-            child: Text(displayText),
-          );
-        }).toList() ??
-        <DropdownMenuItem<T>>[]);
+              final displayText =
+                  config.optionLabels?[option] ?? option.toString();
+              return DropdownMenuItem<T>(
+                value: option,
+                child: Text(displayText),
+              );
+            }).toList() ??
+            <DropdownMenuItem<T>>[]);
 
     return BfDropdownField<T>(
       key: key,

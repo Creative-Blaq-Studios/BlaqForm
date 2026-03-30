@@ -25,9 +25,9 @@ class BfFormRow extends StatelessWidget {
     this.flexes,
     this.spacing = 16.0,
   }) : assert(
-          flexes == null || flexes.length == children.length,
-          'flexes length must match children length',
-        );
+         flexes == null || flexes.length == children.length,
+         'flexes length must match children length',
+       );
 
   /// The widgets to arrange horizontally.
   final List<Widget> children;
@@ -50,10 +50,7 @@ class BfFormRow extends StatelessWidget {
         rowChildren.add(SizedBox(width: spacing));
       }
       rowChildren.add(
-        Expanded(
-          flex: flexes != null ? flexes![i] : 1,
-          child: children[i],
-        ),
+        Expanded(flex: flexes != null ? flexes![i] : 1, child: children[i]),
       );
     }
 

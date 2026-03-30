@@ -59,8 +59,8 @@ class BfTextField extends StatefulWidget {
     this.readOnly = false,
     this.onChanged,
     this.focusNode,
-  })  : obscureText = true,
-        maxLines = 1;
+  }) : obscureText = true,
+       maxLines = 1;
 
   /// Convenience constructor for email fields.
   ///
@@ -268,11 +268,11 @@ class _BfTextFieldState extends State<BfTextField>
   @override
   Widget build(BuildContext context) {
     final fkTheme = BfFormTheme.of(context);
-    final errorText =
-        shouldShowError ? widget.controller.error?.message : null;
+    final errorText = shouldShowError ? widget.controller.error?.message : null;
 
     final baseDecoration = fkTheme.inputDecoration ?? const InputDecoration();
-    final effectiveDecoration = widget.decoration ??
+    final effectiveDecoration =
+        widget.decoration ??
         baseDecoration.copyWith(
           prefixIcon: widget.prefixIcon,
           suffixIcon: widget.suffixIcon,

@@ -67,8 +67,7 @@ class BfAutocompleteField<T extends Object> extends StatefulWidget {
   final Widget Function(BuildContext, T)? optionBuilder;
 
   @override
-  State<BfAutocompleteField<T>> createState() =>
-      _BfAutocompleteFieldState<T>();
+  State<BfAutocompleteField<T>> createState() => _BfAutocompleteFieldState<T>();
 }
 
 class _BfAutocompleteFieldState<T extends Object>
@@ -162,13 +161,13 @@ class _BfAutocompleteFieldState<T extends Object>
   @override
   Widget build(BuildContext context) {
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
-    final effectiveDecoration = widget.decoration ??
-        InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-        );
+    final effectiveDecoration =
+        widget.decoration ??
+        InputDecoration(labelText: widget.labelText, hintText: widget.hintText);
 
     return Autocomplete<T>(
       displayStringForOption: widget.displayStringForOption,
@@ -213,29 +212,27 @@ class _BfAutocompleteFieldState<T extends Object>
           : null,
       fieldViewBuilder:
           (context, textEditingController, focusNode, onFieldSubmitted) {
-        // Sync controller value to text field when it changes externally.
-        final currentValue = _controller.value;
-        final expectedText = currentValue != null
-            ? widget.displayStringForOption(currentValue)
-            : '';
-        if (textEditingController.text != expectedText &&
-            !focusNode.hasFocus) {
-          _isUpdatingText = true;
-          textEditingController.text = expectedText;
-          _isUpdatingText = false;
-        }
+            // Sync controller value to text field when it changes externally.
+            final currentValue = _controller.value;
+            final expectedText = currentValue != null
+                ? widget.displayStringForOption(currentValue)
+                : '';
+            if (textEditingController.text != expectedText &&
+                !focusNode.hasFocus) {
+              _isUpdatingText = true;
+              textEditingController.text = expectedText;
+              _isUpdatingText = false;
+            }
 
-        return TextField(
-          controller: textEditingController,
-          focusNode: focusNode,
-          enabled: widget.enabled,
-          decoration: effectiveDecoration.copyWith(
-            errorText: errorText,
-          ),
-          onSubmitted: (_) => onFieldSubmitted(),
-          onTap: () => _controller.markTouched(),
-        );
-      },
+            return TextField(
+              controller: textEditingController,
+              focusNode: focusNode,
+              enabled: widget.enabled,
+              decoration: effectiveDecoration.copyWith(errorText: errorText),
+              onSubmitted: (_) => onFieldSubmitted(),
+              onTap: () => _controller.markTouched(),
+            );
+          },
     );
   }
 }

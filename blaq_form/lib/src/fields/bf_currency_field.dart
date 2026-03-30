@@ -166,8 +166,9 @@ class _BfCurrencyFieldState extends State<BfCurrencyField> {
     _isSyncing = true;
 
     final controllerValue = widget.controller.value;
-    final formatted =
-        controllerValue != null ? _formatCurrency(controllerValue) : '';
+    final formatted = controllerValue != null
+        ? _formatCurrency(controllerValue)
+        : '';
     if (_textController.text != formatted) {
       _textController.text = formatted;
     }
@@ -240,13 +241,13 @@ class _BfCurrencyFieldState extends State<BfCurrencyField> {
   @override
   Widget build(BuildContext context) {
     final errorText =
-        bfShouldShowError(controller: widget.controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: widget.controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
-    final effectiveDecoration = widget.decoration ??
-        InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-        );
+    final effectiveDecoration =
+        widget.decoration ??
+        InputDecoration(labelText: widget.labelText, hintText: widget.hintText);
 
     return TextField(
       controller: _textController,
@@ -255,7 +256,9 @@ class _BfCurrencyFieldState extends State<BfCurrencyField> {
       keyboardType: const TextInputType.numberWithOptions(decimal: true),
       inputFormatters: [
         FilteringTextInputFormatter.allow(
-          RegExp('[0-9${RegExp.escape(widget.thousandSeparator)}${RegExp.escape(widget.decimalSeparator)}]'),
+          RegExp(
+            '[0-9${RegExp.escape(widget.thousandSeparator)}${RegExp.escape(widget.decimalSeparator)}]',
+          ),
         ),
       ],
       decoration: effectiveDecoration.copyWith(

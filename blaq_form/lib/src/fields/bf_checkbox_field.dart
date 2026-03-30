@@ -83,8 +83,7 @@ class _BfCheckboxFieldState extends State<BfCheckboxField>
 
   @override
   Widget build(BuildContext context) {
-    final errorText =
-        shouldShowError ? widget.controller.error?.message : null;
+    final errorText = shouldShowError ? widget.controller.error?.message : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

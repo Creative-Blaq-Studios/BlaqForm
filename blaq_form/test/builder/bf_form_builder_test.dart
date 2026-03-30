@@ -4,8 +4,9 @@ import 'package:blaq_form/blaq_form.dart';
 
 void main() {
   group('BfFormBuilder', () {
-    testWidgets('renders fields declared in the fields map',
-        (WidgetTester tester) async {
+    testWidgets('renders fields declared in the fields map', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -16,10 +17,7 @@ void main() {
               },
               builder: (scope) {
                 return Column(
-                  children: [
-                    scope.text('name'),
-                    scope.email('email'),
-                  ],
+                  children: [scope.text('name'), scope.email('email')],
                 );
               },
             ),
@@ -31,8 +29,9 @@ void main() {
       expect(find.byType(BfTextField), findsNWidgets(2));
     });
 
-    testWidgets('controllers are auto-created and fields are registered',
-        (WidgetTester tester) async {
+    testWidgets('controllers are auto-created and fields are registered', (
+      WidgetTester tester,
+    ) async {
       late BfFormBuilderScope capturedScope;
 
       await tester.pumpWidget(
@@ -65,8 +64,7 @@ void main() {
       expect(values['name'], 'Bob');
     });
 
-    testWidgets('onSubmit receives form values',
-        (WidgetTester tester) async {
+    testWidgets('onSubmit receives form values', (WidgetTester tester) async {
       Map<String, dynamic>? submittedValues;
 
       await tester.pumpWidget(
@@ -84,10 +82,7 @@ void main() {
               },
               builder: (scope) {
                 return Column(
-                  children: [
-                    scope.text('name'),
-                    scope.submitButton('Send'),
-                  ],
+                  children: [scope.text('name'), scope.submitButton('Send')],
                 );
               },
             ),
@@ -103,8 +98,9 @@ void main() {
       expect(submittedValues!['name'], 'Alice');
     });
 
-    testWidgets('controllers are disposed when widget is removed',
-        (WidgetTester tester) async {
+    testWidgets('controllers are disposed when widget is removed', (
+      WidgetTester tester,
+    ) async {
       late BfFieldController<String> capturedController;
 
       final showForm = ValueNotifier<bool>(true);
@@ -117,9 +113,7 @@ void main() {
               builder: (context, show, _) {
                 if (!show) return const SizedBox.shrink();
                 return BfFormBuilder(
-                  fields: {
-                    'name': BfFieldConfig<String>.text(label: 'Name'),
-                  },
+                  fields: {'name': BfFieldConfig<String>.text(label: 'Name')},
                   builder: (scope) {
                     capturedController = scope.controller<String>('name');
                     return scope.text('name');
@@ -145,15 +139,14 @@ void main() {
       );
     });
 
-    testWidgets('password field renders obscured text',
-        (WidgetTester tester) async {
+    testWidgets('password field renders obscured text', (
+      WidgetTester tester,
+    ) async {
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: BfFormBuilder(
-              fields: {
-                'pw': BfFieldConfig<String>.password(label: 'Password'),
-              },
+              fields: {'pw': BfFieldConfig<String>.password(label: 'Password')},
               builder: (scope) {
                 return scope.password('pw');
               },
@@ -167,8 +160,9 @@ void main() {
       expect(textField.obscureText, isTrue);
     });
 
-    testWidgets('checkbox field renders and toggles',
-        (WidgetTester tester) async {
+    testWidgets('checkbox field renders and toggles', (
+      WidgetTester tester,
+    ) async {
       late BfFormBuilderScope capturedScope;
 
       await tester.pumpWidget(

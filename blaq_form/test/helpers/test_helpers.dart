@@ -34,8 +34,9 @@ class AlwaysInvalidValidator extends BfValidator<String> {
 class AlwaysInvalidBoolValidator extends BfValidator<bool> {
   final String errorMessage;
 
-  const AlwaysInvalidBoolValidator(
-      [this.errorMessage = 'This field is invalid']);
+  const AlwaysInvalidBoolValidator([
+    this.errorMessage = 'This field is invalid',
+  ]);
 
   @override
   BfValidationResult? validate(bool? value, [BfValidationContext? context]) {

@@ -57,7 +57,8 @@ class BfWizard extends StatefulWidget {
     BuildContext context,
     BfFormBuilderScope scope,
     BfWizardController wizard,
-  ) builder;
+  )
+  builder;
 
   /// Optional callback invoked when the wizard is completed (all steps valid).
   final Future<void> Function(Map<String, dynamic> values)? onComplete;
@@ -82,9 +83,7 @@ class _BfWizardState extends State<BfWizard> {
   void initState() {
     super.initState();
 
-    _formController = BfFormController(
-      crossValidators: widget.crossValidators,
-    );
+    _formController = BfFormController(crossValidators: widget.crossValidators);
 
     _configs = Map.of(widget.fields);
     _controllers = {};

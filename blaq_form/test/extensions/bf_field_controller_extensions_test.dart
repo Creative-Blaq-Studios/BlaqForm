@@ -32,8 +32,9 @@ void main() {
 
     test('wordCount returns correct count for multi-word string', () {
       // Given: a string controller with a multi-word value
-      final controller =
-          BfFieldController<String>(initialValue: 'hello world foo');
+      final controller = BfFieldController<String>(
+        initialValue: 'hello world foo',
+      );
 
       // When: we access wordCount
       final result = controller.wordCount;
@@ -72,8 +73,9 @@ void main() {
 
     test('wordCount handles multiple spaces correctly', () {
       // Given: a string controller with multiple spaces between words
-      final controller =
-          BfFieldController<String>(initialValue: '  one   two   three  ');
+      final controller = BfFieldController<String>(
+        initialValue: '  one   two   three  ',
+      );
 
       // When: we access wordCount
       final result = controller.wordCount;
@@ -86,8 +88,9 @@ void main() {
   });
 
   group('BfFieldControllerWidgetX', () {
-    testWidgets('watch() returns a widget that rebuilds on controller change',
-        (tester) async {
+    testWidgets('watch() returns a widget that rebuilds on controller change', (
+      tester,
+    ) async {
       // Given: a string controller and a widget built via watch()
       final controller = BfFieldController<String>(initialValue: 'initial');
 

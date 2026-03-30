@@ -12,12 +12,11 @@ void main() {
     testWidgets('renders a canvas container', (tester) async {
       final controller = BfFieldController<List<List<Offset>>>();
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfSignatureField(
-          name: 'sig',
-          controller: controller,
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfSignatureField(name: 'sig', controller: controller),
         ),
-      ));
+      );
 
       expect(find.byType(CustomPaint), findsWidgets);
       expect(find.byType(GestureDetector), findsWidgets);
@@ -26,13 +25,15 @@ void main() {
     testWidgets('records a stroke on pan gesture', (tester) async {
       final controller = BfFieldController<List<List<Offset>>>();
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfSignatureField(
-          name: 'sig',
-          controller: controller,
-          height: 200,
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfSignatureField(
+            name: 'sig',
+            controller: controller,
+            height: 200,
+          ),
         ),
-      ));
+      );
 
       // Find the GestureDetector within the signature field's ClipRRect
       final gestureDetector = find.byType(GestureDetector).first;
@@ -57,13 +58,15 @@ void main() {
         ],
       );
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfSignatureField(
-          name: 'sig',
-          controller: controller,
-          showClearButton: true,
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfSignatureField(
+            name: 'sig',
+            controller: controller,
+            showClearButton: true,
+          ),
         ),
-      ));
+      );
 
       // Clear button should appear when strokes exist
       expect(find.byIcon(Icons.clear), findsOneWidget);
@@ -129,7 +132,7 @@ void main() {
       // Should be valid base64 that decodes to PNG bytes
       final decoded = base64Decode(b64);
       expect(decoded[0], 137); // PNG magic byte
-      expect(decoded[1], 80);  // 'P'
+      expect(decoded[1], 80); // 'P'
     });
 
     test('returns base64 of blank canvas for empty strokes', () async {

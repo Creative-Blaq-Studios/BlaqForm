@@ -25,8 +25,9 @@ void main() {
     test('toJson() converts DateTime to ISO 8601 string', () {
       // Given: a form with a DateTime field
       final form = BfFormController();
-      final dateCtrl =
-          BfFieldController<DateTime>(initialValue: DateTime(2025, 6, 15));
+      final dateCtrl = BfFieldController<DateTime>(
+        initialValue: DateTime(2025, 6, 15),
+      );
       form.register('dob', dateCtrl);
 
       // When: we call toJson()

@@ -82,9 +82,7 @@ class _BfFormBuilderState extends State<BfFormBuilder> {
   void initState() {
     super.initState();
 
-    _formController = BfFormController(
-      crossValidators: widget.crossValidators,
-    );
+    _formController = BfFormController(crossValidators: widget.crossValidators);
 
     _configs = Map.of(widget.fields);
     _controllers = {};

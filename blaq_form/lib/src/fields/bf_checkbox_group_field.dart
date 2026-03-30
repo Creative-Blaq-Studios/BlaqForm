@@ -128,7 +128,9 @@ class _BfCheckboxGroupFieldState<T> extends State<BfCheckboxGroupField<T>> {
   @override
   Widget build(BuildContext context) {
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
     final selectedValues = widget.controller.value ?? <T>[];
 
     return Column(
@@ -139,7 +141,9 @@ class _BfCheckboxGroupFieldState<T> extends State<BfCheckboxGroupField<T>> {
           return CheckboxListTile(
             title: Text(widget.labelBuilder(option)),
             value: selectedValues.contains(option),
-            onChanged: widget.enabled ? (checked) => _onToggle(option, checked) : null,
+            onChanged: widget.enabled
+                ? (checked) => _onToggle(option, checked)
+                : null,
           );
         }),
         if (errorText != null)

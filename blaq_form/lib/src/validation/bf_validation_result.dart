@@ -29,11 +29,7 @@ class BfValidationResult {
   /// [message] is the human-readable error text.
   /// [code] is an optional machine-readable identifier.
   /// [params] are optional key-value pairs for interpolation.
-  const BfValidationResult(
-    this.message, {
-    this.code,
-    this.params = const {},
-  });
+  const BfValidationResult(this.message, {this.code, this.params = const {}});
 
   @override
   String toString() => 'BfValidationResult(message: $message, code: $code)';

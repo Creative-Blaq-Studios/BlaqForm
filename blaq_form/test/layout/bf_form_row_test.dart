@@ -10,12 +10,7 @@ void main() {
       // Given: an BfFormRow with two children
       await tester.pumpWidget(
         buildTestForm(
-          child: BfFormRow(
-            children: const [
-              Text('Left'),
-              Text('Right'),
-            ],
-          ),
+          child: BfFormRow(children: const [Text('Left'), Text('Right')]),
         ),
       );
 
@@ -39,18 +34,15 @@ void main() {
         buildTestForm(
           child: BfFormRow(
             flexes: const [2, 1],
-            children: const [
-              Text('Wide'),
-              Text('Narrow'),
-            ],
+            children: const [Text('Wide'), Text('Narrow')],
           ),
         ),
       );
 
       // Then: the Expanded widgets have the correct flex values
-      final expandedWidgets = tester.widgetList<Expanded>(
-        find.byType(Expanded),
-      ).toList();
+      final expandedWidgets = tester
+          .widgetList<Expanded>(find.byType(Expanded))
+          .toList();
 
       expect(expandedWidgets[0].flex, equals(2));
       expect(expandedWidgets[1].flex, equals(1));
@@ -60,20 +52,14 @@ void main() {
       // Given: an BfFormRow without flexes
       await tester.pumpWidget(
         buildTestForm(
-          child: BfFormRow(
-            children: const [
-              Text('A'),
-              Text('B'),
-              Text('C'),
-            ],
-          ),
+          child: BfFormRow(children: const [Text('A'), Text('B'), Text('C')]),
         ),
       );
 
       // Then: all Expanded widgets have flex 1
-      final expandedWidgets = tester.widgetList<Expanded>(
-        find.byType(Expanded),
-      ).toList();
+      final expandedWidgets = tester
+          .widgetList<Expanded>(find.byType(Expanded))
+          .toList();
 
       expect(expandedWidgets.length, equals(3));
       for (final expanded in expandedWidgets) {

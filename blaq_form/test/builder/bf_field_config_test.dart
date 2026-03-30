@@ -62,19 +62,21 @@ void main() {
       expect(config.fieldType, BfFieldType.date);
     });
 
-    test('buildController creates an BfFieldController with matching validators',
-        () {
-      final config = BfFieldConfig<String>.text(
-        initialValue: 'hello',
-        validators: [Bf.required()],
-      );
+    test(
+      'buildController creates an BfFieldController with matching validators',
+      () {
+        final config = BfFieldConfig<String>.text(
+          initialValue: 'hello',
+          validators: [Bf.required()],
+        );
 
-      final controller = config.buildController();
-      expect(controller.value, 'hello');
-      // Validators are applied — clearing value should produce error
-      controller.value = '';
-      expect(controller.error, isNotNull);
-      controller.dispose();
-    });
+        final controller = config.buildController();
+        expect(controller.value, 'hello');
+        // Validators are applied — clearing value should produce error
+        controller.value = '';
+        expect(controller.error, isNotNull);
+        controller.dispose();
+      },
+    );
   });
 }

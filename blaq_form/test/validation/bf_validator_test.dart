@@ -13,13 +13,15 @@ void main() {
     final alwaysPass = Bf.custom<String>((_) => null);
 
     group('.and()', () {
-      test('fails with first error if the first validator fails (short-circuit)',
-          () {
-        final validator = alwaysFail.and(alwaysPass);
-        final result = validator.validate('test');
-        expect(result, isNotNull);
-        expect(result!.code, 'first');
-      });
+      test(
+        'fails with first error if the first validator fails (short-circuit)',
+        () {
+          final validator = alwaysFail.and(alwaysPass);
+          final result = validator.validate('test');
+          expect(result, isNotNull);
+          expect(result!.code, 'first');
+        },
+      );
 
       test('fails with second error if first passes but second fails', () {
         final validator = alwaysPass.and(alwaysFailSecond);

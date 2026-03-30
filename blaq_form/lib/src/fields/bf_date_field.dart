@@ -168,23 +168,21 @@ class _BfDateFieldState extends State<BfDateField> {
   @override
   Widget build(BuildContext context) {
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
     final dateValue = widget.controller.value;
     final displayText = dateValue != null ? _formatDate(dateValue) : null;
 
-    final effectiveDecoration = widget.decoration ??
-        InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-        );
+    final effectiveDecoration =
+        widget.decoration ??
+        InputDecoration(labelText: widget.labelText, hintText: widget.hintText);
 
     return GestureDetector(
       onTap: widget.enabled ? _openPicker : null,
       child: InputDecorator(
-        decoration: effectiveDecoration.copyWith(
-          errorText: errorText,
-        ),
+        decoration: effectiveDecoration.copyWith(errorText: errorText),
         isEmpty: displayText == null,
         child: displayText != null ? Text(displayText) : null,
       ),

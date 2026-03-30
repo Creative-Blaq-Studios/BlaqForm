@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../form/form.dart';
 import '../state/bf_form_controller.dart';
 
-
 /// A submit button that integrates with [BfFormController].
 ///
 /// Automatically disables when the form is invalid or submitting, and shows a

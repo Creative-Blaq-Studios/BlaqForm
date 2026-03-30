@@ -13,16 +13,18 @@ void main() {
     testWidgets('updates controller value on selection', (tester) async {
       final controller = BfFieldController<String>(initialValue: 'a');
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfDropdownField<String>(
-          name: 'choice',
-          controller: controller,
-          items: const [
-            DropdownMenuItem(value: 'a', child: Text('A')),
-            DropdownMenuItem(value: 'b', child: Text('B')),
-          ],
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfDropdownField<String>(
+            name: 'choice',
+            controller: controller,
+            items: const [
+              DropdownMenuItem(value: 'a', child: Text('A')),
+              DropdownMenuItem(value: 'b', child: Text('B')),
+            ],
+          ),
         ),
-      ));
+      );
 
       // Open dropdown
       await tester.tap(find.byType(DropdownButtonFormField<String>));
@@ -38,17 +40,19 @@ void main() {
     testWidgets('reflects external controller value change', (tester) async {
       final controller = BfFieldController<String>(initialValue: 'a');
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfDropdownField<String>(
-          name: 'choice',
-          controller: controller,
-          items: const [
-            DropdownMenuItem(value: 'a', child: Text('A')),
-            DropdownMenuItem(value: 'b', child: Text('B')),
-            DropdownMenuItem(value: 'c', child: Text('C')),
-          ],
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfDropdownField<String>(
+            name: 'choice',
+            controller: controller,
+            items: const [
+              DropdownMenuItem(value: 'a', child: Text('A')),
+              DropdownMenuItem(value: 'b', child: Text('B')),
+              DropdownMenuItem(value: 'c', child: Text('C')),
+            ],
+          ),
         ),
-      ));
+      );
 
       // Initially shows 'A'
       expect(find.text('A'), findsOneWidget);
@@ -66,16 +70,18 @@ void main() {
     testWidgets('updates display after form reset', (tester) async {
       final controller = BfFieldController<String>(initialValue: 'a');
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfDropdownField<String>(
-          name: 'choice',
-          controller: controller,
-          items: const [
-            DropdownMenuItem(value: 'a', child: Text('A')),
-            DropdownMenuItem(value: 'b', child: Text('B')),
-          ],
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfDropdownField<String>(
+            name: 'choice',
+            controller: controller,
+            items: const [
+              DropdownMenuItem(value: 'a', child: Text('A')),
+              DropdownMenuItem(value: 'b', child: Text('B')),
+            ],
+          ),
         ),
-      ));
+      );
 
       // Change value
       controller.value = 'b';

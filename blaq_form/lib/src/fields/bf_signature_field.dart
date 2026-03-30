@@ -139,8 +139,9 @@ class _BfSignatureFieldState extends State<BfSignatureField> {
   void _onPanEnd(DragEndDetails details) {
     if (!widget.enabled || _currentStroke == null) return;
 
-    final strokes =
-        List<List<Offset>>.from(widget.controller.value ?? <List<Offset>>[]);
+    final strokes = List<List<Offset>>.from(
+      widget.controller.value ?? <List<Offset>>[],
+    );
     strokes.add(List<Offset>.from(_currentStroke!));
     _currentStroke = null;
 
@@ -160,14 +161,16 @@ class _BfSignatureFieldState extends State<BfSignatureField> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final effectiveStrokeColor = widget.strokeColor ?? theme.colorScheme.primary;
+    final effectiveStrokeColor =
+        widget.strokeColor ?? theme.colorScheme.primary;
     final effectiveBackgroundColor =
         widget.backgroundColor ?? theme.colorScheme.surface;
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
-    final allStrokes =
-        widget.controller.value ?? const <List<Offset>>[];
+    final allStrokes = widget.controller.value ?? const <List<Offset>>[];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -176,10 +179,7 @@ class _BfSignatureFieldState extends State<BfSignatureField> {
         if (widget.labelText != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              widget.labelText!,
-              style: theme.textTheme.bodyMedium,
-            ),
+            child: Text(widget.labelText!, style: theme.textTheme.bodyMedium),
           ),
         Stack(
           children: [
@@ -212,7 +212,9 @@ class _BfSignatureFieldState extends State<BfSignatureField> {
                 ),
               ),
             ),
-            if (widget.showClearButton && widget.enabled && allStrokes.isNotEmpty)
+            if (widget.showClearButton &&
+                widget.enabled &&
+                allStrokes.isNotEmpty)
               Positioned(
                 top: 4.0,
                 right: 4.0,

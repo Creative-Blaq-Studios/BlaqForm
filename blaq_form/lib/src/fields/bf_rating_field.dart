@@ -147,7 +147,9 @@ class _BfRatingFieldState extends State<BfRatingField> {
     final ratedColor = widget.color ?? Theme.of(context).colorScheme.primary;
     final emptyColor = widget.unratedColor ?? Colors.grey.shade300;
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? _controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? _controller.error?.message
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,8 +173,7 @@ class _BfRatingFieldState extends State<BfRatingField> {
               ratedColor: ratedColor,
               unratedColor: emptyColor,
               enabled: widget.enabled,
-              onTapDown: (details) =>
-                  _onStarTap(index, details.localPosition),
+              onTapDown: (details) => _onStarTap(index, details.localPosition),
             );
           }),
         ),
@@ -182,8 +183,8 @@ class _BfRatingFieldState extends State<BfRatingField> {
             child: Text(
               errorText,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
           ),
       ],
@@ -245,11 +246,7 @@ class _BfStar extends StatelessWidget {
 
     return GestureDetector(
       onTapDown: enabled ? onTapDown : null,
-      child: Icon(
-        icon,
-        size: size,
-        color: color,
-      ),
+      child: Icon(icon, size: size, color: color),
     );
   }
 }

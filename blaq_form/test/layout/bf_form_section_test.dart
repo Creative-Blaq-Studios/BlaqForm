@@ -29,10 +29,7 @@ void main() {
         buildTestForm(
           child: BfFormSection(
             title: 'Section',
-            children: const [
-              Text('Child 1'),
-              Text('Child 2'),
-            ],
+            children: const [Text('Child 1'), Text('Child 2')],
           ),
         ),
       );
@@ -42,8 +39,9 @@ void main() {
       expect(find.text('Child 2'), findsOneWidget);
     });
 
-    testWidgets('collapsible section collapses and expands on tap',
-        (tester) async {
+    testWidgets('collapsible section collapses and expands on tap', (
+      tester,
+    ) async {
       // Given: a collapsible section that starts expanded
       await tester.pumpWidget(
         buildTestForm(
@@ -51,9 +49,7 @@ void main() {
             title: 'Collapsible',
             collapsible: true,
             initiallyExpanded: true,
-            children: const [
-              Text('Hidden Content'),
-            ],
+            children: const [Text('Hidden Content')],
           ),
         ),
       );
@@ -83,17 +79,16 @@ void main() {
       expect(expandedTransition.sizeFactor.value, equals(1.0));
     });
 
-    testWidgets('non-collapsible section always shows children',
-        (tester) async {
+    testWidgets('non-collapsible section always shows children', (
+      tester,
+    ) async {
       // Given: a non-collapsible section
       await tester.pumpWidget(
         buildTestForm(
           child: BfFormSection(
             title: 'Always Visible',
             collapsible: false,
-            children: const [
-              Text('Always shown'),
-            ],
+            children: const [Text('Always shown')],
           ),
         ),
       );

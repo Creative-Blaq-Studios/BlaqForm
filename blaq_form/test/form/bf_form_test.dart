@@ -6,8 +6,9 @@ import '../helpers/test_helpers.dart';
 
 void main() {
   group('BfForm', () {
-    testWidgets('BfForm.of() provides controller to descendants',
-        (tester) async {
+    testWidgets('BfForm.of() provides controller to descendants', (
+      tester,
+    ) async {
       // Given: an BfFormController and a form with a Builder child
       final formController = BfFormController();
       BfFormController? retrievedController;
@@ -34,8 +35,9 @@ void main() {
       addTearDown(formController.dispose);
     });
 
-    testWidgets('BfForm.maybeOf() returns null when no form ancestor exists',
-        (tester) async {
+    testWidgets('BfForm.maybeOf() returns null when no form ancestor exists', (
+      tester,
+    ) async {
       // Given: a widget with no BfForm ancestor
       BfFormState? result;
 
@@ -56,8 +58,9 @@ void main() {
       expect(result, isNull);
     });
 
-    testWidgets('fields auto-register when placed inside BfForm',
-        (tester) async {
+    testWidgets('fields auto-register when placed inside BfForm', (
+      tester,
+    ) async {
       // Given: a form controller and a text field controller
       final formController = BfFormController();
       final fieldController = BfFieldController<String>(initialValue: '');
@@ -66,10 +69,7 @@ void main() {
       await tester.pumpWidget(
         buildTestForm(
           controller: formController,
-          child: BfTextField(
-            name: 'email',
-            controller: fieldController,
-          ),
+          child: BfTextField(name: 'email', controller: fieldController),
         ),
       );
 
@@ -83,8 +83,9 @@ void main() {
       });
     });
 
-    testWidgets('fields auto-unregister when removed from tree',
-        (tester) async {
+    testWidgets('fields auto-unregister when removed from tree', (
+      tester,
+    ) async {
       // Given: a form controller with a registered field
       final formController = BfFormController();
       final fieldController = BfFieldController<String>(initialValue: '');

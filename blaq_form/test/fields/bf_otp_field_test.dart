@@ -9,29 +9,26 @@ void main() {
     testWidgets('renders the correct number of text fields', (tester) async {
       final controller = BfFieldController<String>();
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfOtpField(
-          name: 'otp',
-          controller: controller,
-          length: 4,
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfOtpField(name: 'otp', controller: controller, length: 4),
         ),
-      ));
+      );
 
       // Should have 4 TextField widgets for the 4 OTP boxes
       expect(find.byType(TextField), findsNWidgets(4));
     });
 
-    testWidgets('concatenates box inputs into controller value',
-        (tester) async {
+    testWidgets('concatenates box inputs into controller value', (
+      tester,
+    ) async {
       final controller = BfFieldController<String>();
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfOtpField(
-          name: 'otp',
-          controller: controller,
-          length: 4,
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfOtpField(name: 'otp', controller: controller, length: 4),
         ),
-      ));
+      );
 
       final textFields = find.byType(TextField);
 
@@ -48,17 +45,14 @@ void main() {
       expect(controller.value, '1234');
     });
 
-    testWidgets('syncs from external controller value change',
-        (tester) async {
+    testWidgets('syncs from external controller value change', (tester) async {
       final controller = BfFieldController<String>();
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfOtpField(
-          name: 'otp',
-          controller: controller,
-          length: 4,
+      await tester.pumpWidget(
+        buildTestForm(
+          child: BfOtpField(name: 'otp', controller: controller, length: 4),
         ),
-      ));
+      );
 
       controller.value = '5678';
       await tester.pump();
@@ -71,44 +65,43 @@ void main() {
     });
 
     testWidgets(
-        'KeyboardListener focus nodes are stable across rebuilds (no leak)',
-        (tester) async {
-      final controller = BfFieldController<String>();
+      'KeyboardListener focus nodes are stable across rebuilds (no leak)',
+      (tester) async {
+        final controller = BfFieldController<String>();
 
-      await tester.pumpWidget(buildTestForm(
-        child: BfOtpField(
-          name: 'otp',
-          controller: controller,
-          length: 2,
-        ),
-      ));
-
-      // Find all KeyboardListener widgets and collect their focusNodes
-      final listenersBefore = tester
-          .widgetList<KeyboardListener>(find.byType(KeyboardListener))
-          .map((kl) => kl.focusNode)
-          .toList();
-
-      // Trigger a rebuild
-      controller.value = '12';
-      await tester.pump();
-
-      final listenersAfter = tester
-          .widgetList<KeyboardListener>(find.byType(KeyboardListener))
-          .map((kl) => kl.focusNode)
-          .toList();
-
-      // The FocusNodes should be the SAME objects (reused, not recreated).
-      // If they're different, it means new FocusNodes are leaked every rebuild.
-      expect(listenersAfter.length, listenersBefore.length);
-      for (var i = 0; i < listenersBefore.length; i++) {
-        expect(
-          identical(listenersAfter[i], listenersBefore[i]),
-          isTrue,
-          reason:
-              'KeyboardListener FocusNode at index $i was recreated on rebuild — memory leak',
+        await tester.pumpWidget(
+          buildTestForm(
+            child: BfOtpField(name: 'otp', controller: controller, length: 2),
+          ),
         );
-      }
-    });
+
+        // Find all KeyboardListener widgets and collect their focusNodes
+        final listenersBefore = tester
+            .widgetList<KeyboardListener>(find.byType(KeyboardListener))
+            .map((kl) => kl.focusNode)
+            .toList();
+
+        // Trigger a rebuild
+        controller.value = '12';
+        await tester.pump();
+
+        final listenersAfter = tester
+            .widgetList<KeyboardListener>(find.byType(KeyboardListener))
+            .map((kl) => kl.focusNode)
+            .toList();
+
+        // The FocusNodes should be the SAME objects (reused, not recreated).
+        // If they're different, it means new FocusNodes are leaked every rebuild.
+        expect(listenersAfter.length, listenersBefore.length);
+        for (var i = 0; i < listenersBefore.length; i++) {
+          expect(
+            identical(listenersAfter[i], listenersBefore[i]),
+            isTrue,
+            reason:
+                'KeyboardListener FocusNode at index $i was recreated on rebuild — memory leak',
+          );
+        }
+      },
+    );
   });
 }

@@ -252,26 +252,24 @@ class _BfPhoneFieldState extends State<BfPhoneField> {
   @override
   Widget build(BuildContext context) {
     final errorText =
-        bfShouldShowError(controller: widget.controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: widget.controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
     // Build unique dropdown items. Multiple countries can share a code (US/CA),
     // so show "code (name)" for disambiguation.
     final countries = _countries;
 
-    final effectiveDecoration = widget.decoration ??
-        InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-        );
+    final effectiveDecoration =
+        widget.decoration ??
+        InputDecoration(labelText: widget.labelText, hintText: widget.hintText);
 
     return TextField(
       controller: _textController,
       focusNode: _focusNode,
       enabled: widget.enabled,
       keyboardType: TextInputType.phone,
-      inputFormatters: [
-        FilteringTextInputFormatter.digitsOnly,
-      ],
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: effectiveDecoration.copyWith(
         errorText: errorText,
         prefixIcon: Padding(
@@ -303,10 +301,7 @@ class _BfPhoneFieldState extends State<BfPhoneField> {
             ),
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
+        prefixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
       ),
     );
   }

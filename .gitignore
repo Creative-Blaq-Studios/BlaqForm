@@ -37,3 +37,4 @@ docs-site/.astro/
 .svn/
 migrate_working_dir/
 /blaq_form/docs/api
+.superpowers/

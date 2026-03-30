@@ -169,8 +169,7 @@ class BfLogger {
     String message, {
     String? field,
     String? detail,
-  }) =>
-      log(BfLogLevel.error, category, message, field: field, detail: detail);
+  }) => log(BfLogLevel.error, category, message, field: field, detail: detail);
 
   /// Log a warning.
   void warning(
@@ -187,8 +186,7 @@ class BfLogger {
     String message, {
     String? field,
     String? detail,
-  }) =>
-      log(BfLogLevel.info, category, message, field: field, detail: detail);
+  }) => log(BfLogLevel.info, category, message, field: field, detail: detail);
 
   /// Log a debug message.
   void debug(
@@ -196,8 +194,7 @@ class BfLogger {
     String message, {
     String? field,
     String? detail,
-  }) =>
-      log(BfLogLevel.debug, category, message, field: field, detail: detail);
+  }) => log(BfLogLevel.debug, category, message, field: field, detail: detail);
 
   /// Log a verbose message.
   void verbose(

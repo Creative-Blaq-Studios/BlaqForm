@@ -77,8 +77,7 @@ mixin BfFieldMixin<W extends StatefulWidget, T> on State<W> {
       case BfAutovalidateMode.onSubmit:
         final formState = _formState;
         if (formState == null) return false;
-        return formState.hasBeenSubmitted ||
-            formState.controller.isSubmitting;
+        return formState.hasBeenSubmitted || formState.controller.isSubmitting;
     }
   }
 }

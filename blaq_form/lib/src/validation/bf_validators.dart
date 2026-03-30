@@ -199,8 +199,7 @@ abstract class Bf {
   static BfValidator<T> matchFields<T>(
     String otherFieldName, {
     String? message,
-  }) =>
-      _MatchFieldsValidator<T>(otherFieldName, message);
+  }) => _MatchFieldsValidator<T>(otherFieldName, message);
 
   // ---------------------------------------------------------------------------
   // Async validators
@@ -219,8 +218,7 @@ abstract class Bf {
   static BfAsyncValidator<T> unique<T>(
     Future<bool> Function(T?) checker, {
     String? message,
-  }) =>
-      _UniqueAsyncValidator<T>(checker, message);
+  }) => _UniqueAsyncValidator<T>(checker, message);
 }
 
 // =============================================================================
@@ -359,10 +357,7 @@ class _UrlValidator extends BfValidator<String> {
     if (value == null || value.isEmpty) return null;
 
     if (!_urlRegex.hasMatch(value)) {
-      return BfValidationResult(
-        _message ?? 'Invalid URL',
-        code: 'url',
-      );
+      return BfValidationResult(_message ?? 'Invalid URL', code: 'url');
     }
 
     return null;
@@ -372,9 +367,7 @@ class _UrlValidator extends BfValidator<String> {
 class _PhoneValidator extends BfValidator<String> {
   final String? _message;
 
-  static final _phoneRegex = RegExp(
-    r'^\+?[\d\s\-\(\)]{7,}$',
-  );
+  static final _phoneRegex = RegExp(r'^\+?[\d\s\-\(\)]{7,}$');
 
   const _PhoneValidator(this._message);
 
@@ -520,7 +513,10 @@ class _AfterDateValidator extends BfValidator<DateTime> {
         _message ??
             'Must be after ${_date.year}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}',
         code: 'after',
-        params: {'date': _date.toIso8601String(), 'actual': value.toIso8601String()},
+        params: {
+          'date': _date.toIso8601String(),
+          'actual': value.toIso8601String(),
+        },
       );
     }
 
@@ -546,7 +542,10 @@ class _BeforeDateValidator extends BfValidator<DateTime> {
         _message ??
             'Must be before ${_date.year}-${_date.month.toString().padLeft(2, '0')}-${_date.day.toString().padLeft(2, '0')}',
         code: 'before',
-        params: {'date': _date.toIso8601String(), 'actual': value.toIso8601String()},
+        params: {
+          'date': _date.toIso8601String(),
+          'actual': value.toIso8601String(),
+        },
       );
     }
 

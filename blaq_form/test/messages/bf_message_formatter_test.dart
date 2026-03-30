@@ -6,10 +6,7 @@ void main() {
     group('format()', () {
       test('replaces {field} token with fieldName', () {
         const template = '{field} is required';
-        final result = BfMessageFormatter.format(
-          template,
-          fieldName: 'Email',
-        );
+        final result = BfMessageFormatter.format(template, fieldName: 'Email');
         expect(result, 'Email is required');
       });
 
@@ -37,28 +34,27 @@ void main() {
 
       test('leaves {min} token as-is when params is empty', () {
         const template = 'Must be at least {min} characters';
-        final result = BfMessageFormatter.format(
-          template,
-          params: const {},
-        );
+        final result = BfMessageFormatter.format(template, params: const {});
         expect(result, 'Must be at least {min} characters');
       });
     });
 
     group('formatResult()', () {
-      test('formats BfValidationResult message using its params and fieldName',
-          () {
-        final result = const BfValidationResult(
-          '{field} must be at least {min} characters',
-          code: 'min_length',
-          params: {'min': 8},
-        );
-        final formatted = BfMessageFormatter.formatResult(
-          result,
-          fieldName: 'Password',
-        );
-        expect(formatted, 'Password must be at least 8 characters');
-      });
+      test(
+        'formats BfValidationResult message using its params and fieldName',
+        () {
+          final result = const BfValidationResult(
+            '{field} must be at least {min} characters',
+            code: 'min_length',
+            params: {'min': 8},
+          );
+          final formatted = BfMessageFormatter.formatResult(
+            result,
+            fieldName: 'Password',
+          );
+          expect(formatted, 'Password must be at least 8 characters');
+        },
+      );
     });
   });
 }

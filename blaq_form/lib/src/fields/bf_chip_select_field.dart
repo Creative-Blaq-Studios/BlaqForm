@@ -149,7 +149,9 @@ class _BfChipSelectFieldState<T> extends State<BfChipSelectField<T>> {
   Widget build(BuildContext context) {
     final selectedValues = _controller.value ?? <T>[];
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? _controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? _controller.error?.message
+        : null;
 
     final chips = widget.options.map((option) {
       final isSelected = selectedValues.contains(option);
@@ -172,11 +174,11 @@ class _BfChipSelectFieldState<T> extends State<BfChipSelectField<T>> {
       chipLayout = SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
-          children: chips
-              .expand(
-                  (chip) => [chip, SizedBox(width: widget.spacing)])
-              .toList()
-            ..removeLast(),
+          children:
+              chips
+                  .expand((chip) => [chip, SizedBox(width: widget.spacing)])
+                  .toList()
+                ..removeLast(),
         ),
       );
     }
@@ -200,8 +202,8 @@ class _BfChipSelectFieldState<T> extends State<BfChipSelectField<T>> {
             child: Text(
               errorText,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.error,
-                  ),
+                color: Theme.of(context).colorScheme.error,
+              ),
             ),
           ),
       ],

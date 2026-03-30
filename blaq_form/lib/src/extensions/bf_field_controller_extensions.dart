@@ -39,8 +39,7 @@ extension BfFieldControllerWidgetX<T> on BfFieldController<T> {
 }
 
 /// PNG export extension for signature field controllers.
-extension BfFieldControllerSignatureX
-    on BfFieldController<List<List<Offset>>> {
+extension BfFieldControllerSignatureX on BfFieldController<List<List<Offset>>> {
   /// Renders the current strokes to a PNG image and returns the bytes.
   ///
   /// [width] and [height] define the output image dimensions.
@@ -54,7 +53,10 @@ extension BfFieldControllerSignatureX
     Color backgroundColor = const Color(0x00000000),
   }) async {
     final recorder = ui.PictureRecorder();
-    final canvas = Canvas(recorder, Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()));
+    final canvas = Canvas(
+      recorder,
+      Rect.fromLTWH(0, 0, width.toDouble(), height.toDouble()),
+    );
 
     // Draw background
     canvas.drawRect(

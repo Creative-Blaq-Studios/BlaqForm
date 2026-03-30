@@ -114,7 +114,9 @@ class _BfRadioGroupFieldState<T> extends State<BfRadioGroupField<T>> {
   @override
   Widget build(BuildContext context) {
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
     return RadioGroup<T>(
       groupValue: widget.controller.value,

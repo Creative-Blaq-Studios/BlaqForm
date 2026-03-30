@@ -140,7 +140,9 @@ class _BfSliderFieldState extends State<BfSliderField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final errorText =
-        bfShouldShowError(controller: _controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: _controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
     final currentValue = widget.controller.value ?? widget.min;
 
     return Column(
@@ -154,10 +156,7 @@ class _BfSliderFieldState extends State<BfSliderField> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 if (widget.labelText != null)
-                  Text(
-                    widget.labelText!,
-                    style: theme.textTheme.bodyMedium,
-                  ),
+                  Text(widget.labelText!, style: theme.textTheme.bodyMedium),
                 if (widget.showValue)
                   Text(
                     currentValue.toStringAsFixed(

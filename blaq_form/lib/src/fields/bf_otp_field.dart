@@ -142,14 +142,8 @@ class _BfOtpFieldState extends State<BfOtpField> {
       widget.length,
       (_) => TextEditingController(),
     );
-    _focusNodes = List.generate(
-      widget.length,
-      (_) => FocusNode(),
-    );
-    _keyListenerFocusNodes = List.generate(
-      widget.length,
-      (_) => FocusNode(),
-    );
+    _focusNodes = List.generate(widget.length, (_) => FocusNode());
+    _keyListenerFocusNodes = List.generate(widget.length, (_) => FocusNode());
   }
 
   /// Disposes all internal controllers and focus nodes.
@@ -254,7 +248,9 @@ class _BfOtpFieldState extends State<BfOtpField> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final errorText =
-        bfShouldShowError(controller: widget.controller, formState: _formState) ? widget.controller.error?.message : null;
+        bfShouldShowError(controller: widget.controller, formState: _formState)
+        ? widget.controller.error?.message
+        : null;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -263,10 +259,7 @@ class _BfOtpFieldState extends State<BfOtpField> {
         if (widget.labelText != null)
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
-            child: Text(
-              widget.labelText!,
-              style: theme.textTheme.bodyMedium,
-            ),
+            child: Text(widget.labelText!, style: theme.textTheme.bodyMedium),
           ),
         Row(
           mainAxisSize: MainAxisSize.min,
@@ -289,9 +282,7 @@ class _BfOtpFieldState extends State<BfOtpField> {
                     textAlign: TextAlign.center,
                     maxLength: 1,
                     keyboardType: TextInputType.number,
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly,
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       counterText: '',
                       contentPadding: EdgeInsets.zero,

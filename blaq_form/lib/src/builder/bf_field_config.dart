@@ -135,10 +135,10 @@ class BfFieldConfig<T> {
     this.prefixIcon,
     this.suffixIcon,
     this.enabled = true,
-  })  : fieldType = BfFieldType.text,
-        options = null,
-        optionLabels = null,
-        widgetBuilder = null;
+  }) : fieldType = BfFieldType.text,
+       options = null,
+       optionLabels = null,
+       widgetBuilder = null;
 
   /// Creates a password field configuration.
   ///
@@ -158,10 +158,10 @@ class BfFieldConfig<T> {
     this.prefixIcon,
     this.suffixIcon,
     this.enabled = true,
-  })  : fieldType = BfFieldType.password,
-        options = null,
-        optionLabels = null,
-        widgetBuilder = null;
+  }) : fieldType = BfFieldType.password,
+       options = null,
+       optionLabels = null,
+       widgetBuilder = null;
 
   /// Creates an email field configuration.
   ///
@@ -181,10 +181,10 @@ class BfFieldConfig<T> {
     this.prefixIcon,
     this.suffixIcon,
     this.enabled = true,
-  })  : fieldType = BfFieldType.email,
-        options = null,
-        optionLabels = null,
-        widgetBuilder = null;
+  }) : fieldType = BfFieldType.email,
+       options = null,
+       optionLabels = null,
+       widgetBuilder = null;
 
   /// Creates a checkbox field configuration.
   ///
@@ -203,12 +203,12 @@ class BfFieldConfig<T> {
     this.label,
     this.hint,
     this.enabled = true,
-  })  : fieldType = BfFieldType.checkbox,
-        prefixIcon = null,
-        suffixIcon = null,
-        options = null,
-        optionLabels = null,
-        widgetBuilder = null;
+  }) : fieldType = BfFieldType.checkbox,
+       prefixIcon = null,
+       suffixIcon = null,
+       options = null,
+       optionLabels = null,
+       widgetBuilder = null;
 
   /// Creates a dropdown field configuration.
   ///
@@ -235,8 +235,8 @@ class BfFieldConfig<T> {
     this.enabled = true,
     this.options,
     this.optionLabels,
-  })  : fieldType = BfFieldType.dropdown,
-        widgetBuilder = null;
+  }) : fieldType = BfFieldType.dropdown,
+       widgetBuilder = null;
 
   /// Creates a date picker field configuration.
   ///
@@ -256,10 +256,10 @@ class BfFieldConfig<T> {
     this.prefixIcon,
     this.suffixIcon,
     this.enabled = true,
-  })  : fieldType = BfFieldType.date,
-        options = null,
-        optionLabels = null,
-        widgetBuilder = null;
+  }) : fieldType = BfFieldType.date,
+       options = null,
+       optionLabels = null,
+       widgetBuilder = null;
 
   /// Creates an [BfFieldController] from this configuration.
   ///
