@@ -5,7 +5,6 @@ import '../theme/app_theme.dart';
 import '../theme/dev_theme.dart';
 import '../theme/studio_theme.dart';
 import '../widgets/brand_scaffold.dart';
-import '../widgets/deferred_progress.dart';
 
 /// Side-by-side (tablet) or tabbed (phone) display of the exact same form
 /// rendered under Dev and Studio themes simultaneously.
@@ -145,7 +144,7 @@ class _ThemePaneState extends State<_ThemePane>
                 children: [
                   _PaneLabel(mode: widget.mode),
                   const SizedBox(height: 20),
-                  DeferredProgress(
+                  BfFormProgress(
                     controller: _formController,
                     color: const Color(0xFFFF6B00),
                     backgroundColor: widget.mode == BfAppTheme.dev
