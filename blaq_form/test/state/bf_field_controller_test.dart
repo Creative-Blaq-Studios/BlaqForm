@@ -105,29 +105,27 @@ void main() {
     });
 
     group('async validation via validate()', () {
-      test('validate() runs async validators and sets error on failure',
-          () async {
-        final controller = BfFieldController<String>(
-          initialValue: 'taken',
-          asyncValidators: [
-            Bf.unique<String>((value) async => false),
-          ],
-        );
+      test(
+        'validate() runs async validators and sets error on failure',
+        () async {
+          final controller = BfFieldController<String>(
+            initialValue: 'taken',
+            asyncValidators: [Bf.unique<String>((value) async => false)],
+          );
 
-        final result = await controller.validate();
-        expect(result, false);
-        expect(controller.error, isNotNull);
-        expect(controller.error!.code, 'unique');
-        expect(controller.isValidating, false);
-        controller.dispose();
-      });
+          final result = await controller.validate();
+          expect(result, false);
+          expect(controller.error, isNotNull);
+          expect(controller.error!.code, 'unique');
+          expect(controller.isValidating, false);
+          controller.dispose();
+        },
+      );
 
       test('validate() clears error when async validator passes', () async {
         final controller = BfFieldController<String>(
           initialValue: 'available',
-          asyncValidators: [
-            Bf.unique<String>((value) async => true),
-          ],
+          asyncValidators: [Bf.unique<String>((value) async => true)],
         );
 
         final result = await controller.validate();
@@ -157,44 +155,46 @@ void main() {
         controller.dispose();
       });
 
-      test('async validation discards stale results when value changes',
-          () async {
-        final completer1 = Completer<bool>();
-        final completer2 = Completer<bool>();
-        var callCount = 0;
+      test(
+        'async validation discards stale results when value changes',
+        () async {
+          final completer1 = Completer<bool>();
+          final completer2 = Completer<bool>();
+          var callCount = 0;
 
-        final controller = BfFieldController<String>(
-          initialValue: 'first',
-          asyncValidators: [
-            Bf.unique<String>((value) {
-              callCount++;
-              if (callCount == 1) return completer1.future;
-              return completer2.future;
-            }),
-          ],
-        );
+          final controller = BfFieldController<String>(
+            initialValue: 'first',
+            asyncValidators: [
+              Bf.unique<String>((value) {
+                callCount++;
+                if (callCount == 1) return completer1.future;
+                return completer2.future;
+              }),
+            ],
+          );
 
-        // Start first validation.
-        final future1 = controller.validate();
+          // Start first validation.
+          final future1 = controller.validate();
 
-        // While first is still pending, change value and validate again.
-        controller.value = 'second';
-        final future2 = controller.validate();
+          // While first is still pending, change value and validate again.
+          controller.value = 'second';
+          final future2 = controller.validate();
 
-        // Complete the first validation (should be discarded due to token mismatch).
-        completer1.complete(false);
-        final result1 = await future1;
-        // First call returns false because the token changed.
-        expect(result1, false);
+          // Complete the first validation (should be discarded due to token mismatch).
+          completer1.complete(false);
+          final result1 = await future1;
+          // First call returns false because the token changed.
+          expect(result1, false);
 
-        // Complete the second validation as valid.
-        completer2.complete(true);
-        final result2 = await future2;
-        expect(result2, true);
-        expect(controller.error, isNull);
+          // Complete the second validation as valid.
+          completer2.complete(true);
+          final result2 = await future2;
+          expect(result2, true);
+          expect(controller.error, isNull);
 
-        controller.dispose();
-      });
+          controller.dispose();
+        },
+      );
     });
 
     group('debounced async validation', () {
@@ -227,8 +227,9 @@ void main() {
         controller.dispose();
       });
 
-      testWidgets('cancels previous debounce when value changes rapidly',
-          (tester) async {
+      testWidgets('cancels previous debounce when value changes rapidly', (
+        tester,
+      ) async {
         var asyncCallCount = 0;
         final controller = BfFieldController<String>(
           asyncValidators: [
@@ -255,8 +256,9 @@ void main() {
         controller.dispose();
       });
 
-      testWidgets('does not schedule async when sync validation fails',
-          (tester) async {
+      testWidgets('does not schedule async when sync validation fails', (
+        tester,
+      ) async {
         var asyncCalled = false;
         final controller = BfFieldController<String>(
           validators: [Bf.required<String>()],
@@ -282,9 +284,7 @@ void main() {
 
     test('dispose() cancels debounce timers', () async {
       final controller = BfFieldController<String>(
-        asyncValidators: [
-          Bf.unique<String>((value) async => false),
-        ],
+        asyncValidators: [Bf.unique<String>((value) async => false)],
         asyncDebounce: const Duration(milliseconds: 300),
       );
 
@@ -295,6 +295,32 @@ void main() {
       // If the timer was not cancelled, it would attempt to call
       // notifyListeners() on a disposed ChangeNotifier, which throws.
       // We allow time to pass to verify no error occurs.
+    });
+
+    group('hasValidators', () {
+      test('false when no validators are provided', () {
+        final controller = BfFieldController<String>(initialValue: 'hi');
+        expect(controller.hasValidators, false);
+        controller.dispose();
+      });
+
+      test('true when sync validators are provided', () {
+        final controller = BfFieldController<String>(
+          validators: [Bf.required()],
+        );
+        expect(controller.hasValidators, true);
+        controller.dispose();
+      });
+
+      test('true when only async validators are provided', () {
+        final controller = BfFieldController<String>(
+          asyncValidators: [
+            Bf.unique<String>((v) async => true),
+          ],
+        );
+        expect(controller.hasValidators, true);
+        controller.dispose();
+      });
     });
   });
 }

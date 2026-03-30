@@ -32,11 +32,11 @@ class BfFieldController<T> extends ChangeNotifier {
     List<BfAsyncValidator<T>> asyncValidators = const [],
     Duration asyncDebounce = const Duration(milliseconds: 400),
     this.debugLabel,
-  })  : _initialValue = initialValue,
-        _value = initialValue,
-        _validators = validators,
-        _asyncValidators = asyncValidators,
-        _asyncDebounce = asyncDebounce;
+  }) : _initialValue = initialValue,
+       _value = initialValue,
+       _validators = validators,
+       _asyncValidators = asyncValidators,
+       _asyncDebounce = asyncDebounce;
 
   /// Optional label used in [BfLogger] output to identify this controller.
   ///
@@ -107,6 +107,13 @@ class BfFieldController<T> extends ChangeNotifier {
 
   /// The current validation error, or `null` if the field is valid.
   BfValidationResult? get error => _error;
+
+  /// Whether this field has any sync or async validators.
+  ///
+  /// Used by [BfFormController] to determine whether a pristine field
+  /// should count as "unproven" (has validators but hasn't been touched)
+  /// or "always valid" (no validators, nothing to fail).
+  bool get hasValidators => _validators.isNotEmpty || _asyncValidators.isNotEmpty;
 
   // ---------------------------------------------------------------------------
   // Actions
