@@ -90,11 +90,20 @@ class BfFormController extends ChangeNotifier {
   // Aggregate state
   // ---------------------------------------------------------------------------
 
-  /// Whether every registered field is valid **and** no cross-validator errors
-  /// exist.
+  /// Whether the form is ready for submission.
+  ///
+  /// A field **with validators** must be dirty (user has interacted) and
+  /// currently error-free to count as valid. A field **without validators**
+  /// is always considered valid — there is nothing to fail.
+  ///
+  /// This means a fresh form with required fields starts as `false`,
+  /// which keeps [BfSubmitButton] disabled until every validated field
+  /// has been touched and passes.
   bool get isValid {
     if (_crossErrors.isNotEmpty) return false;
-    return _fields.values.every((f) => f.isValid);
+    return _fields.values.every(
+      (f) => f.hasValidators ? (f.isDirty && f.isValid) : true,
+    );
   }
 
   /// Whether any registered field has been modified from its initial value.

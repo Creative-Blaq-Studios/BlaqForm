@@ -10,27 +10,29 @@ void main() {
         validators: [Bf.required<String>()],
       );
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: BfForm(
-            controller: formController,
-            autovalidateMode: BfAutovalidateMode.onSubmit,
-            child: Column(
-              children: [
-                BfTextField(
-                  name: 'email',
-                  controller: emailController,
-                ),
-                BfSubmitButton(
-                  onSubmit: (controller) async {
-                    await controller.submit((values) async {});
-                  },
-                ),
-              ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BfForm(
+              controller: formController,
+              autovalidateMode: BfAutovalidateMode.onSubmit,
+              child: Column(
+                children: [
+                  BfTextField(name: 'email', controller: emailController),
+                  // disableWhenInvalid: false so the button is always tappable
+                  // in onSubmit mode — the form gates submission internally.
+                  BfSubmitButton(
+                    disableWhenInvalid: false,
+                    onSubmit: (controller) async {
+                      await controller.submit((values) async {});
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ));
+      );
 
       // Initially, no error should be shown (onSubmit mode = hidden until submit)
       expect(find.text('This field is required'), findsNothing);
@@ -49,22 +51,21 @@ void main() {
         validators: [Bf.required<String>()],
       );
 
-      await tester.pumpWidget(MaterialApp(
-        home: Scaffold(
-          body: BfForm(
-            controller: formController,
-            autovalidateMode: BfAutovalidateMode.onSubmit,
-            child: Column(
-              children: [
-                BfTextField(
-                  name: 'email',
-                  controller: emailController,
-                ),
-              ],
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: BfForm(
+              controller: formController,
+              autovalidateMode: BfAutovalidateMode.onSubmit,
+              child: Column(
+                children: [
+                  BfTextField(name: 'email', controller: emailController),
+                ],
+              ),
             ),
           ),
         ),
-      ));
+      );
 
       // Touch the field and leave it empty
       emailController.markTouched();

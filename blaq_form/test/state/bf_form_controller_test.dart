@@ -25,10 +25,7 @@ void main() {
         form.register('email', email);
         form.unregister('email');
 
-        expect(
-          () => form.field<String>('email'),
-          throwsA(isA<StateError>()),
-        );
+        expect(() => form.field<String>('email'), throwsA(isA<StateError>()));
       });
 
       test('re-registering same name replaces previous controller', () {
@@ -43,10 +40,7 @@ void main() {
     });
 
     test('field<T>() throws StateError for unknown name', () {
-      expect(
-        () => form.field<String>('unknown'),
-        throwsA(isA<StateError>()),
-      );
+      expect(() => form.field<String>('unknown'), throwsA(isA<StateError>()));
     });
 
     group('aggregate isValid', () {
@@ -66,6 +60,46 @@ void main() {
         // Set empty to trigger validation error.
         a.value = '';
         expect(form.isValid, false);
+      });
+
+      test('false when a field with validators is still pristine', () {
+        final a = BfFieldController<String>(
+          validators: [Bf.required<String>()],
+        );
+        form.register('a', a);
+        // Field is pristine — not dirty, not touched, no error.
+        // But it has validators, so it's "unproven".
+        expect(form.isValid, false);
+      });
+
+      test('true when field with validators is dirty and passes', () {
+        final a = BfFieldController<String>(
+          validators: [Bf.required<String>()],
+        );
+        form.register('a', a);
+        a.value = 'hello';
+        expect(form.isValid, true);
+      });
+
+      test('true when field without validators is pristine', () {
+        final optional = BfFieldController<String>();
+        form.register('bio', optional);
+        expect(form.isValid, true);
+      });
+
+      test('mixed: pristine validated field blocks even if optional is ok', () {
+        final name = BfFieldController<String>(
+          validators: [Bf.required<String>()],
+        );
+        final bio = BfFieldController<String>();
+        form.register('name', name);
+        form.register('bio', bio);
+        // bio is optional (always valid), but name is pristine with validators.
+        expect(form.isValid, false);
+
+        // Now fill in name.
+        name.value = 'John';
+        expect(form.isValid, true);
       });
     });
 
@@ -92,9 +126,7 @@ void main() {
         initialValue: 'ok',
         validators: [Bf.required<String>()],
       );
-      final b = BfFieldController<String>(
-        validators: [Bf.required<String>()],
-      );
+      final b = BfFieldController<String>(validators: [Bf.required<String>()]);
       form.register('a', a);
       form.register('b', b);
 
@@ -174,42 +206,44 @@ void main() {
         expect(form.isSubmitting, false);
       });
 
-      test('cross-field validators run on submit and can cause failure',
-          () async {
-        form = BfFormController(
-          crossValidators: [
-            Bf.custom<Map<String, dynamic>>((values) {
-              if (values?['password'] != values?['confirm']) {
-                return const BfValidationResult(
-                  'Passwords must match',
-                  code: 'cross',
-                );
-              }
-              return null;
-            }),
-          ],
-        );
+      test(
+        'cross-field validators run on submit and can cause failure',
+        () async {
+          form = BfFormController(
+            crossValidators: [
+              Bf.custom<Map<String, dynamic>>((values) {
+                if (values?['password'] != values?['confirm']) {
+                  return const BfValidationResult(
+                    'Passwords must match',
+                    code: 'cross',
+                  );
+                }
+                return null;
+              }),
+            ],
+          );
 
-        final password = BfFieldController<String>(
-          initialValue: 'abc123',
-          validators: [Bf.required<String>()],
-        );
-        final confirm = BfFieldController<String>(
-          initialValue: 'different',
-          validators: [Bf.required<String>()],
-        );
-        form.register('password', password);
-        form.register('confirm', confirm);
+          final password = BfFieldController<String>(
+            initialValue: 'abc123',
+            validators: [Bf.required<String>()],
+          );
+          final confirm = BfFieldController<String>(
+            initialValue: 'different',
+            validators: [Bf.required<String>()],
+          );
+          form.register('password', password);
+          form.register('confirm', confirm);
 
-        var onSubmitCalled = false;
-        final result = await form.submit((values) async {
-          onSubmitCalled = true;
-        });
+          var onSubmitCalled = false;
+          final result = await form.submit((values) async {
+            onSubmitCalled = true;
+          });
 
-        expect(result, false);
-        expect(onSubmitCalled, false);
-        expect(form.isValid, false);
-      });
+          expect(result, false);
+          expect(onSubmitCalled, false);
+          expect(form.isValid, false);
+        },
+      );
     });
 
     test('reset() resets all fields', () {
