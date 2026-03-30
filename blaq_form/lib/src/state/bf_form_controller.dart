@@ -36,6 +36,8 @@ class BfFormController extends ChangeNotifier {
   final Map<String, BfFieldController> _fields = {};
   bool _isSubmitting = false;
   final List<BfValidationResult> _crossErrors = [];
+  bool _registrationNotifyScheduled = false;
+  bool _disposed = false;
 
   // ---------------------------------------------------------------------------
   // Field management
@@ -55,7 +57,7 @@ class BfFormController extends ChangeNotifier {
     controller.debugLabel ??= name;
     controller.addListener(_onFieldChanged);
     BfLogger.instance.info(BfLogCategory.form, 'Field registered', field: name);
-    notifyListeners();
+    _scheduleRegistrationNotify();
   }
 
   /// Removes the field registered under [name] and stops listening to it.
@@ -67,7 +69,7 @@ class BfFormController extends ChangeNotifier {
       'Field unregistered',
       field: name,
     );
-    notifyListeners();
+    _scheduleRegistrationNotify();
   }
 
   /// Returns the controller registered under [name], cast to
@@ -223,6 +225,7 @@ class BfFormController extends ChangeNotifier {
 
   @override
   void dispose() {
+    _disposed = true;
     for (final controller in _fields.values) {
       controller.removeListener(_onFieldChanged);
     }
@@ -233,6 +236,19 @@ class BfFormController extends ChangeNotifier {
   // ---------------------------------------------------------------------------
   // Internals
   // ---------------------------------------------------------------------------
+
+  /// Batches registration/unregistration notifications into a single microtask.
+  /// This prevents "setState() called during build" when multiple fields
+  /// register with the controller during the same build pass, and also
+  /// coalesces many registrations into one notification.
+  void _scheduleRegistrationNotify() {
+    if (_registrationNotifyScheduled) return;
+    _registrationNotifyScheduled = true;
+    Future.microtask(() {
+      _registrationNotifyScheduled = false;
+      if (!_disposed) notifyListeners();
+    });
+  }
 
   /// Called whenever any registered field notifies. Propagates the change so
   /// widgets listening to the form controller rebuild.

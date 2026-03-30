@@ -11,7 +11,7 @@ import '../state/bf_form_controller.dart';
 /// ```dart
 /// BfFormProgress(controller: formController)
 /// ```
-class BfFormProgress extends StatefulWidget {
+class BfFormProgress extends StatelessWidget {
   /// Creates a form-progress indicator.
   const BfFormProgress({
     required this.controller,
@@ -47,62 +47,24 @@ class BfFormProgress extends StatefulWidget {
   final double height;
 
   @override
-  State<BfFormProgress> createState() => _BfFormProgressState();
-}
-
-class _BfFormProgressState extends State<BfFormProgress> {
-  bool _ready = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // Defer listening by one frame so that sibling fields can register with
-    // the controller during the initial build without triggering
-    // "setState() called during build" on this widget.
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted) setState(() => _ready = true);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    if (!_ready) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          LinearProgressIndicator(
-            value: 0,
-            color: widget.color,
-            backgroundColor: widget.backgroundColor,
-            minHeight: widget.height,
-          ),
-          if (widget.showLabel) ...[
-            const SizedBox(height: 4),
-            Text(
-              widget.labelBuilder?.call(0, 0) ?? '0 of 0',
-              style: Theme.of(context).textTheme.bodySmall,
-            ),
-          ],
-        ],
-      );
-    }
-
     return ListenableBuilder(
-      listenable: widget.controller,
+      listenable: controller,
       builder: (context, _) {
-        final errors = widget.controller.errors;
+        final errors = controller.errors;
         final total = errors.length;
+        // A field counts as "valid" for progress purposes when it has been
+        // modified (dirty) and currently has no validation error.
         var valid = 0;
         for (final name in errors.keys) {
-          final field = widget.controller.field(name);
+          final field = controller.field(name);
           if (field.isDirty && errors[name] == null) {
             valid++;
           }
         }
         final progress = total == 0 ? 0.0 : valid / total;
-        final label =
-            widget.labelBuilder?.call(valid, total) ?? '$valid of $total';
+
+        final label = labelBuilder?.call(valid, total) ?? '$valid of $total';
 
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -110,11 +72,11 @@ class _BfFormProgressState extends State<BfFormProgress> {
           children: [
             LinearProgressIndicator(
               value: progress,
-              color: widget.color,
-              backgroundColor: widget.backgroundColor,
-              minHeight: widget.height,
+              color: color,
+              backgroundColor: backgroundColor,
+              minHeight: height,
             ),
-            if (widget.showLabel) ...[
+            if (showLabel) ...[
               const SizedBox(height: 4),
               Text(label, style: Theme.of(context).textTheme.bodySmall),
             ],
