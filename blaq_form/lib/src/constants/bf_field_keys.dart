@@ -199,7 +199,7 @@ abstract class BfCompanyKeys {
 
 /// Field keys for social media and online presence.
 abstract class BfSocialKeys {
-  static const twitter = 'twitter';
+  static const x = 'x';
   static const facebook = 'facebook';
   static const instagram = 'instagram';
   static const linkedin = 'linkedin';
