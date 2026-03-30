@@ -3,6 +3,7 @@ import 'package:blaq_form/blaq_form.dart';
 
 import '../theme/app_theme.dart';
 import '../widgets/brand_scaffold.dart';
+import '../widgets/deferred_progress.dart';
 
 class SignupFormExample extends StatefulWidget {
   const SignupFormExample({required this.notifier, super.key});
@@ -196,7 +197,7 @@ class _ProgressHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
-      child: BfFormProgress(
+      child: DeferredProgress(
         controller: controller,
         color: const Color(0xFFFF6B00),
         backgroundColor: const Color(0xFF1A1A1A),

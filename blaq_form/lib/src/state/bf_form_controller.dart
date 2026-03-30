@@ -54,11 +54,7 @@ class BfFormController extends ChangeNotifier {
     _fields[name] = controller;
     controller.debugLabel ??= name;
     controller.addListener(_onFieldChanged);
-    BfLogger.instance.info(
-      BfLogCategory.form,
-      'Field registered',
-      field: name,
-    );
+    BfLogger.instance.info(BfLogCategory.form, 'Field registered', field: name);
     notifyListeners();
   }
 
@@ -109,9 +105,7 @@ class BfFormController extends ChangeNotifier {
   ///
   /// Fields without errors map to `null`.
   Map<String, BfValidationResult?> get errors {
-    return {
-      for (final entry in _fields.entries) entry.key: entry.value.error,
-    };
+    return {for (final entry in _fields.entries) entry.key: entry.value.error};
   }
 
   // ---------------------------------------------------------------------------
@@ -224,9 +218,7 @@ class BfFormController extends ChangeNotifier {
 
   /// Returns a map of all registered field names to their current values.
   Map<String, dynamic> toMap() {
-    return {
-      for (final entry in _fields.entries) entry.key: entry.value.value,
-    };
+    return {for (final entry in _fields.entries) entry.key: entry.value.value};
   }
 
   @override
