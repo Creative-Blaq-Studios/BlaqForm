@@ -1,0 +1,261 @@
+---
+title: Testing
+description: How to test forms built with BlaqForm — unit tests for controllers and validators, widget tests for fields and forms.
+---
+
+BlaqForm is designed to be testable. Controllers are plain `ChangeNotifier`s, validators are pure functions, and field widgets work with Flutter's standard `flutter_test` tooling.
+
+## Running tests
+
+```bash
+# All tests
+cd blaq_form && flutter test
+
+# Single file
+flutter test test/state/bf_field_controller_test.dart
+
+# With coverage
+flutter test --coverage
+```
+
+## Test structure
+
+Tests follow the **Given-When-Then** pattern and use `flutter_test`:
+
+```dart
+testWidgets('typing updates controller value', (tester) async {
+  // Given: a text field bound to a controller
+  final controller = BfFieldController<String>();
+
+  await tester.pumpWidget(
+    buildTestForm(
+      child: BfTextField(
+        name: 'email',
+        controller: controller,
+      ),
+    ),
+  );
+
+  // When: the user types
+  await tester.enterText(find.byType(TextField), 'hello@test.com');
+  await tester.pump();
+
+  // Then: the controller has the new value
+  expect(controller.value, 'hello@test.com');
+
+  addTearDown(controller.dispose);
+});
+```
+
+## The `buildTestForm` helper
+
+Every widget test needs a `MaterialApp` → `Scaffold` → `BfForm` wrapper. The `buildTestForm` helper handles this:
+
+```dart
+// test/helpers/test_helpers.dart
+import 'package:flutter/material.dart';
+import 'package:blaq_form/blaq_form.dart';
+
+Widget buildTestForm({
+  required Widget child,
+  BfFormController? controller,
+  BfAutovalidateMode autovalidateMode = BfAutovalidateMode.always,
+}) {
+  return MaterialApp(
+    home: Scaffold(
+      body: BfForm(
+        controller: controller ?? BfFormController(),
+        autovalidateMode: autovalidateMode,
+        child: child,
+      ),
+    ),
+  );
+}
+```
+
+Import it in your tests:
+
+```dart
+import '../helpers/test_helpers.dart';
+```
+
+## What to test
+
+### Controllers (unit tests)
+
+Controllers are `ChangeNotifier`s — no widget tree needed.
+
+```dart
+test('setting value marks field as dirty', () {
+  final controller = BfFieldController<String>();
+  expect(controller.isDirty, false);
+
+  controller.value = 'changed';
+
+  expect(controller.isDirty, true);
+  controller.dispose();
+});
+```
+
+**Key things to test:**
+- `value` updates → `isDirty` becomes `true`
+- `markTouched()` → `isTouched` becomes `true`
+- `markDirty()` → runs validators on current value
+- `reset()` → clears dirty, touched, and error state
+- `isValid` reflects validator results
+
+### Validators (unit tests)
+
+Validators are pure — call `validate()` and check the result:
+
+```dart
+test('Bf.email() rejects invalid email', () {
+  final validator = Bf.email();
+  final result = validator.validate('not-an-email');
+  expect(result, isNotNull);
+  expect(result!.code, 'email');
+});
+
+test('Bf.email() accepts valid email', () {
+  final validator = Bf.email();
+  expect(validator.validate('user@example.com'), isNull);
+});
+```
+
+### Form controller (unit tests)
+
+Test aggregate state across multiple fields:
+
+```dart
+test('form.isValid is false when a validated field is pristine', () {
+  final form = BfFormController();
+  final name = BfFieldController<String>(
+    validators: [Bf.required()],
+  );
+  form.register('name', name);
+
+  // Pristine + has validators = "unproven"
+  expect(form.isValid, false);
+
+  // Fill in the field
+  name.value = 'John';
+  expect(form.isValid, true);
+
+  form.dispose();
+  name.dispose();
+});
+```
+
+### Field widgets (widget tests)
+
+Test that the widget renders, responds to interaction, and syncs with its controller:
+
+```dart
+testWidgets('BfDropdownField updates controller on selection', (tester) async {
+  final controller = BfFieldController<String>();
+
+  await tester.pumpWidget(
+    buildTestForm(
+      child: BfDropdownField<String>(
+        name: 'country',
+        controller: controller,
+        items: const [
+          DropdownMenuItem(value: 'US', child: Text('US')),
+          DropdownMenuItem(value: 'UK', child: Text('UK')),
+        ],
+      ),
+    ),
+  );
+
+  // Open dropdown
+  await tester.tap(find.byType(DropdownButton<String>));
+  await tester.pumpAndSettle();
+
+  // Select an option
+  await tester.tap(find.text('UK').last);
+  await tester.pumpAndSettle();
+
+  expect(controller.value, 'UK');
+
+  addTearDown(controller.dispose);
+});
+```
+
+### Submit button (widget tests)
+
+Test that the button respects form validity:
+
+```dart
+testWidgets('button is disabled on pristine form', (tester) async {
+  final form = BfFormController();
+  final field = BfFieldController<String>(
+    validators: [Bf.required()],
+  );
+
+  await tester.pumpWidget(
+    buildTestForm(
+      controller: form,
+      child: Column(
+        children: [
+          BfTextField(name: 'name', controller: field),
+          BfSubmitButton(onSubmit: (_) async {}),
+        ],
+      ),
+    ),
+  );
+  await tester.pump(); // flush registration
+
+  // Pristine → disabled
+  final button = tester.widget<ElevatedButton>(
+    find.byType(ElevatedButton),
+  );
+  expect(button.onPressed, isNull);
+
+  // Fill field → enabled
+  field.value = 'John';
+  await tester.pump();
+
+  final enabled = tester.widget<ElevatedButton>(
+    find.byType(ElevatedButton),
+  );
+  expect(enabled.onPressed, isNotNull);
+
+  addTearDown(() {
+    form.dispose();
+    field.dispose();
+  });
+});
+```
+
+## Custom test validators
+
+For tests that need specific validation behavior, create simple validator classes:
+
+```dart
+/// Always fails — useful for testing error display.
+class AlwaysInvalidValidator extends BfValidator<String> {
+  final String errorMessage;
+  const AlwaysInvalidValidator([this.errorMessage = 'Invalid']);
+
+  @override
+  BfValidationResult? validate(String? value, [BfValidationContext? context]) {
+    return BfValidationResult(errorMessage);
+  }
+}
+```
+
+Use it in tests:
+
+```dart
+final controller = BfFieldController<String>(
+  validators: [const AlwaysInvalidValidator('Must be special')],
+);
+```
+
+## Tips
+
+- **Always call `addTearDown(controller.dispose)`** to avoid "A ChangeNotifier was used after being disposed" errors between tests.
+- **Use `await tester.pump()`** after changing controller values to flush rebuilds.
+- **Use `await tester.pumpAndSettle()`** for animations (date pickers, dropdowns opening).
+- **Test behavior, not implementation** — assert on controller values and widget state, not internal widget structure.
+- **`BfFormProgress` defers its first listen by one frame** — add an extra `await tester.pump()` after `pumpWidget` in tests that assert progress values immediately.

@@ -68,6 +68,7 @@ export default defineConfig({
             { label: 'Indicators & UX', link: '/guides/indicators/' },
             { label: 'Persistence', link: '/guides/persistence/' },
             { label: 'Logging', link: '/guides/logging/' },
+            { label: 'Testing', link: '/guides/testing/' },
           ],
         },
         {
