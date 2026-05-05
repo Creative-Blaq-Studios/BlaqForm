@@ -27,7 +27,7 @@ class BfDirtyGuard extends StatelessWidget {
     super.key,
   });
 
-  /// The form controller whose [isDirty] state is monitored.
+  /// The form controller whose [BfFormController.isDirty] state is monitored.
   final BfFormController controller;
 
   /// The widget subtree to display.

@@ -7,7 +7,7 @@ import '../state/bf_field_controller.dart';
 ///
 /// Renders a [SwitchListTile] and keeps it synchronized with the provided
 /// [BfFieldController]. Validation errors are displayed below the tile when
-/// [shouldShowError] is `true`.
+/// [BfFieldMixin.shouldShowError] is `true`.
 class BfSwitchField extends StatefulWidget {
   /// Creates a switch field bound to [controller].
   const BfSwitchField({

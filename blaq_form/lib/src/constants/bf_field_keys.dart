@@ -1,3 +1,8 @@
+// ignore_for_file: public_member_api_docs
+// Each constant is named identically to the string it holds (e.g.
+// `email = 'email'`). Per-member doc comments would be pure noise — the
+// class-level documentation explains the pattern.
+
 /// Predefined field name constants for common form fields.
 ///
 /// Eliminates magic strings and gives you IDE autocomplete for field names.

@@ -1,0 +1,8 @@
+build/
+*.log
+*.iml
+.idea/
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+coverage/
