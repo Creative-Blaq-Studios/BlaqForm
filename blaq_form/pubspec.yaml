@@ -1,9 +1,9 @@
 name: blaq_form
 description: "A composable, extensible Flutter forms package with prebuilt validations, adaptive field types, and a developer-first API."
 version: 0.0.1
-homepage: https://github.com/creativeblaq/BlaqForm
-repository: https://github.com/creativeblaq/BlaqForm
-issue_tracker: https://github.com/creativeblaq/BlaqForm/issues
+homepage: https://github.com/Creative-Blaq-Studios/BlaqForm
+repository: https://github.com/Creative-Blaq-Studios/BlaqForm
+issue_tracker: https://github.com/Creative-Blaq-Studios/BlaqForm/issues
 topics:
   - forms
   - validation

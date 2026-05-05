@@ -3,12 +3,12 @@ import starlight from '@astrojs/starlight';
 import { blaqformDarkTheme } from './src/styles/blaqform-dark-theme.mjs';
 
 // Deploy target switches site/base. Defaults to GitHub Pages.
-//   DEPLOY_TARGET=github-pages  → https://creativeblaq.github.io/BlaqForm
+//   DEPLOY_TARGET=github-pages  → https://creative-blaq-studios.github.io/BlaqForm
 //   DEPLOY_TARGET=coolify       → set SITE_URL to your custom domain
 const target = process.env.DEPLOY_TARGET ?? 'github-pages';
 const site = target === 'coolify'
   ? (process.env.SITE_URL ?? 'https://docs.blaqform.dev')
-  : 'https://creativeblaq.github.io';
+  : 'https://creative-blaq-studios.github.io';
 const base = target === 'github-pages' ? '/BlaqForm' : undefined;
 
 export default defineConfig({
@@ -32,7 +32,7 @@ export default defineConfig({
         alt: 'BlaqForm',
       },
       social: {
-        github: 'https://github.com/creativeblaq/BlaqForm',
+        github: 'https://github.com/Creative-Blaq-Studios/BlaqForm',
       },
       head: [
         {

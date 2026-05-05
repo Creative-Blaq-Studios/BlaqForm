@@ -135,7 +135,7 @@ BlaqForm is layered so each piece is independently usable:
 
 ## Contributing
 
-Issues and PRs welcome at [github.com/creativeblaq/BlaqForm](https://github.com/creativeblaq/BlaqForm).
+Issues and PRs welcome at [github.com/Creative-Blaq-Studios/BlaqForm](https://github.com/Creative-Blaq-Studios/BlaqForm).
 
 ## License
 
