@@ -9,7 +9,7 @@ import '../theme/bf_form_theme.dart';
 ///
 /// Wraps a standard [TextField] and keeps it in sync with the provided
 /// [BfFieldController]. Validation errors are displayed automatically when
-/// [shouldShowError] is `true` (i.e. the field has been touched or the form
+/// [BfFieldMixin.shouldShowError] is `true` (i.e. the field has been touched or the form
 /// has been submitted).
 ///
 /// Use the convenience constructors [BfTextField.password] and
@@ -41,7 +41,7 @@ class BfTextField extends StatefulWidget {
   /// Convenience constructor for password fields.
   ///
   /// Sets [obscureText] to `true` and [maxLines] to `1`.
-  BfTextField.password({
+  const BfTextField.password({
     super.key,
     required this.name,
     required this.controller,
@@ -65,7 +65,7 @@ class BfTextField extends StatefulWidget {
   /// Convenience constructor for email fields.
   ///
   /// Sets [keyboardType] to [TextInputType.emailAddress].
-  BfTextField.email({
+  const BfTextField.email({
     super.key,
     required this.name,
     required this.controller,

@@ -7,7 +7,7 @@ import '../state/bf_field_controller.dart';
 ///
 /// Renders a [CheckboxListTile] and keeps it synchronized with the provided
 /// [BfFieldController]. Validation errors are displayed below the tile when
-/// [shouldShowError] is `true`.
+/// [BfFieldMixin.shouldShowError] is `true`.
 class BfCheckboxField extends StatefulWidget {
   /// Creates a checkbox field bound to [controller].
   const BfCheckboxField({

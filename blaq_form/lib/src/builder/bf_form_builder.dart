@@ -36,7 +36,7 @@ class BfFormBuilder extends StatefulWidget {
   /// Creates a form builder.
   ///
   /// [fields] maps field names to their configurations. Controllers are
-  /// created automatically in [initState] from each config's
+  /// created automatically in `initState` from each config's
   /// [BfFieldConfig.buildController].
   ///
   /// [builder] receives an [BfFormBuilderScope] for rendering fields.
