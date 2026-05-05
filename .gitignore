@@ -39,3 +39,7 @@ migrate_working_dir/
 /blaq_form/docs/api
 .superpowers/
 /.superpowers
+
+# ── Local-only / private (kept out of public history) ─────────────
+/CLAUDE.md
+/blaq_form/docs/
