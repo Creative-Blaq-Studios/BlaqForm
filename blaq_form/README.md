@@ -15,6 +15,7 @@ BlaqForm is **state-management agnostic** — it works with `setState`, Riverpod
 - **Tiny core** — zero external dependencies (Flutter SDK only).
 
 ## Getting started
+see full [documentation](https://creative-blaq-studios.github.io/BlaqForm/) 
 
 Add the dependency:
 
